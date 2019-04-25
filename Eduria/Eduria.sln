@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eduria", "Eduria\Eduria.csproj", "{409CAF9E-EE51-43A2-9777-D84F4F9A9221}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F96D907-5D39-4805-B5DC-4D6A633B9572}
+	EndGlobalSection
+EndGlobal
