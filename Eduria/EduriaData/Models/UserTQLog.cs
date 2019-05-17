@@ -7,12 +7,9 @@ namespace EduriaData.Models
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Id")]
-        public int TestId { get; set; }
-        [ForeignKey("Id")]
-        public int QuestionId { get; set; }
-        [ForeignKey("Id")]
-        public int UserId { get; set; }
+        public Test Test { get; set; } 
+        public Question Question { get; set; }
+        public User User { get; set; }
         public int TimesWrong { get; set; }
     }
 }

@@ -5,8 +5,6 @@ namespace EduriaData.Models
 {
     public class User : IdentityUser
     {
-        [Key]
-        public new int Id { get; set; }
         [Required, MaxLength(45, ErrorMessage = "Vul een voornaam in.")]
         public string Firstname { get; set; }
         [MaxLength(10)]

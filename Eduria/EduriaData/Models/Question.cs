@@ -9,9 +9,8 @@ namespace EduriaData.Models
         public int Id { get; set; }
         [Required, MaxLength(500, ErrorMessage = "Vul een vraag in.")]
         public string Text { get; set; }
-        [MaxLength()]
+        [MaxLength(500)]
         public string MediaLink { get; set; }
-        [ForeignKey("Id")]
-        public int Category { get; set; }
+        public Category Category { get; set; }
     }
 }

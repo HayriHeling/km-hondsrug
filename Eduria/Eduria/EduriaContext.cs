@@ -11,5 +11,8 @@ namespace Eduria
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<UserTest> UserTests { get; set; }
+        public DbSet<TestQuestion> TestQuestions { get; set; }
+        public DbSet<UserTQLog> UserTQLogs { get; set; }
     }
 }

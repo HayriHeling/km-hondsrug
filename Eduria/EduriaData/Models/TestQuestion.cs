@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduriaData.Models
 {
     public class TestQuestion
     {
-        [ForeignKey("Id")]
-        public int TestId { get; set; }
-        [ForeignKey("Id")]
-        public int QuestionId { get; set; }
+        [Key]
+        public int Id { get; set; }
+        public Test Test { get; set; }
+        public Question Question{ get; set; }
     }
 }

@@ -7,7 +7,6 @@ namespace EduriaData.Models
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Id")]
-        public string Category { get; set; }
+        public Category Category { get; set; }
     }
 }

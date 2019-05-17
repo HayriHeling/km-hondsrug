@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    [Migration("20190517113530_Init migration")]
+    [Migration("20190517124525_Init migration")]
     partial class Initmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,8 @@ namespace Eduria.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("Answers");
                 });
 
@@ -60,15 +62,18 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Category");
+                    b.Property<int?>("CategoryId");
 
-                    b.Property<string>("MediaLink");
+                    b.Property<string>("MediaLink")
+                        .HasMaxLength(500);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(500);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Questions");
                 });
@@ -79,11 +84,82 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Category");
+                    b.Property<int?>("CategoryId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Tests");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.TestQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("QuestionId");
+
+                    b.Property<int?>("TestId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("TestQuestions");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.UserTest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("FinishedAt");
+
+                    b.Property<int>("Score");
+
+                    b.Property<DateTime>("StartedAt");
+
+                    b.Property<int?>("TestId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTests");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.UserTQLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("QuestionId");
+
+                    b.Property<int?>("TestId");
+
+                    b.Property<int>("TimesWrong");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTQLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -140,6 +216,9 @@ namespace Eduria.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -179,6 +258,8 @@ namespace Eduria.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -245,6 +326,95 @@ namespace Eduria.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<int>("ClassId");
+
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasMaxLength(45);
+
+                    b.Property<string>("Infix")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasMaxLength(45);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<int>("StudNum");
+
+                    b.Property<int>("UserType");
+
+                    b.ToTable("User");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.Answer", b =>
+                {
+                    b.HasOne("EduriaData.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EduriaData.Models.Question", b =>
+                {
+                    b.HasOne("EduriaData.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.Test", b =>
+                {
+                    b.HasOne("EduriaData.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.TestQuestion", b =>
+                {
+                    b.HasOne("EduriaData.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("EduriaData.Models.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.UserTest", b =>
+                {
+                    b.HasOne("EduriaData.Models.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId");
+
+                    b.HasOne("EduriaData.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.UserTQLog", b =>
+                {
+                    b.HasOne("EduriaData.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("EduriaData.Models.Test", "Test")
+                        .WithMany()
+                        .HasForeignKey("TestId");
+
+                    b.HasOne("EduriaData.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
