@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Eduria", "Eduria\Eduria.csproj", "{409CAF9E-EE51-43A2-9777-D84F4F9A9221}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduriaData", "EduriaData\EduriaData.csproj", "{C2A079AC-483C-450A-A29B-16719FA5E6CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eduria", "Eduria\Eduria.csproj", "{409CAF9E-EE51-43A2-9777-D84F4F9A9221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{409CAF9E-EE51-43A2-9777-D84F4F9A9221}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2A079AC-483C-450A-A29B-16719FA5E6CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2A079AC-483C-450A-A29B-16719FA5E6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2A079AC-483C-450A-A29B-16719FA5E6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2A079AC-483C-450A-A29B-16719FA5E6CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
