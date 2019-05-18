@@ -1,7 +1,34 @@
-﻿
+﻿@model Eduria.Models.UserTestModel
+
 @{
-    ViewData["Title"] = "TestResults";
+    ViewData["Title"] = "Toets Resultaten";
 }
 
 <h2>Toets resultaten</h2>
+@using (Html.BeginForm("FilterTest", "Student", FormMethod.Post))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Voornaam</td>
+                <td>Achternaam</td>
+                <td>Toets</td>
+                <td>Begonnen</td>
+                <td>Afgerond</td>
+                <td>Score</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.UserId.Firstname</td>
+                <td>@Model.UserId.Lastname</td>
+                <td>@Model.TestId.Category.CategoryName</td>
+                <td>@Model.StartedAt</td>
+                <td>@Model.FinishedAt</td>
+                <td>@Model.Score</td>
+            </tr>
+        </tbody>
+    </table>
 
+
+}
