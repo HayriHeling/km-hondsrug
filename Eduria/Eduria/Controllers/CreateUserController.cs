@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Eduria.Models;
+using Eduria.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,13 @@ namespace Eduria.Controllers
 {
     public class CreateUserController : Controller
     {
+        private UserService Service { get; set; }
+
+        public CreateUserController(UserService service)
+        {
+            Service = service;
+        }
+
         // GET: CreateUser
         public ActionResult Index()
         {
@@ -35,8 +43,17 @@ namespace Eduria.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
-
+                EduriaData.Models.User dataUser = new EduriaData.Models.User
+                {
+                    Firstname = user.FirstName,
+                    Lastname = user.LastName,
+                    Email = user.Email,
+                    StudNum = user.UserNum,
+                    UserType = user.UserType,
+                    ClassId = user.ClassId,
+                    Password = user.Password
+                };
+                Service.Add(dataUser);
                 return RedirectToAction(nameof(Index));
             }
             catch
