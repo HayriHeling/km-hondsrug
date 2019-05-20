@@ -8,10 +8,6 @@ namespace Eduria.Services
     public abstract class AService<T>
     {
         private EduriaContext Context { get; set; }
-        public AService(EduriaContext context)
-        {
-            Context = context;
-        }
 
         /// <summary>
         /// Add an item to the database.

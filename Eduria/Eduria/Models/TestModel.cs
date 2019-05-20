@@ -9,6 +9,7 @@ namespace Eduria.Models
     public class TestModel
     {
         public List<CombinedQuestionAnswer> CombinedQuestionAnswers;
+        public 
 
 
         public TestModel()

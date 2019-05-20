@@ -11,6 +11,7 @@ namespace Eduria.Models
     {
         public IQuestion QuestionModel { get; set; }
         public AnswerModel AnswerModel { get; set; }
+
         public CombinedQuestionAnswer()
         {
             QuestionModel = new TextQuestionModel();
