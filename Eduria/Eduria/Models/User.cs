@@ -24,6 +24,9 @@ namespace Eduria.Models
         [StringLength(128)]
         [Required(ErrorMessage = "Dit veld is verplicht.")]
         public string Email { get; set; }
+        [Display(Name = "Gebruikerstype")]
+        [Required(ErrorMessage = "Dit veld is verplicht.")]
+        public int UserType { get; set; }
         [Display(Name = "Identificatie code")]
         [Required(ErrorMessage = "Dit veld is verplicht.")]
         public int UserNum { get; set; }
