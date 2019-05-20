@@ -8,6 +8,8 @@ namespace Eduria.Models.Interfaces
 {
     public interface IQuestion
     {
+        int Id { get; set; }
+        string Text { get; set; }
         IActionResult GetView();
     }
 }

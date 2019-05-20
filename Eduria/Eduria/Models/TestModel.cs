@@ -8,6 +8,8 @@ namespace Eduria.Models
 {
     public class TestModel
     {
-        public List<IQuestion> Questions;
+        public List<QAComboModel> QaComboModels;
+
+
     }
 }
