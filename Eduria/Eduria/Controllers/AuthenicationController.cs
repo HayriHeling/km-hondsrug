@@ -10,6 +10,8 @@ namespace Eduria.Controllers
     {
         public IActionResult Index()
         {
+
+
             return View();
         }
     }
