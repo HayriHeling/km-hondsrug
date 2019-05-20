@@ -1,7 +1,6 @@
 ﻿using Eduria.Models;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,9 +8,9 @@ namespace Eduria.Controllers
 {
     public class StudentController : Controller
     {
-        private Service<UserTest> Service { get; set; }
+        private UserTestService Service { get; set; }
 
-        public StudentController(Service<UserTest> service)
+        public StudentController(UserTestService service)
         {
             Service = service;
         }
@@ -39,11 +38,11 @@ namespace Eduria.Controllers
 
             if(userTestModels.Count() > 0)
             {
-                return Content("Geen resultaten gevonden.");
+                return View(userTestModels);
             }
             else
             {
-                return View(userTestModels);
+                return Content("Geen resultaten gevonden.");
             }
         }
     }

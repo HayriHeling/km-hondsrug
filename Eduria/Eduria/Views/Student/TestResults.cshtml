@@ -1,12 +1,11 @@
-﻿@model Eduria.Models.UserTestModel
+﻿@model IEnumerable<Eduria.Models.UserTestModel>
 
 @{
     ViewData["Title"] = "Toets Resultaten";
 }
 
 <h2>Toets resultaten</h2>
-@using (Html.BeginForm("FilterTest", "Student", FormMethod.Post))
-{
+
     <table class="table">
         <thead>
             <tr>
@@ -19,16 +18,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>@Model.User.Firstname</td>
-                <td>@Model.User.Lastname</td>
-                <td>@Model.Test.Category.CategoryName</td>
-                <td>@Model.StartedAt</td>
-                <td>@Model.FinishedAt</td>
-                <td>@Model.Score</td>
-            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Test</td>
+                </tr>
+            }
         </tbody>
     </table>
 
-
-}
