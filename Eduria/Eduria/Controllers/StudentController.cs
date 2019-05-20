@@ -2,16 +2,18 @@
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Eduria.Controllers
 {
     public class StudentController : Controller
     {
-        private EduriaContext Context { get; set; }
+        private Service<UserTest> Service { get; set; }
 
-        public StudentController(EduriaContext context)
+        public StudentController(Service<UserTest> service)
         {
-            Context = context;
+            Service = service;
         }
 
         public IActionResult Index()
@@ -19,33 +21,30 @@ namespace Eduria.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult TestResults()
         {
-            UserTestModel userTest = new UserTestModel
+            IEnumerable<UserTest> userTests = Service.GetAll();
+            IEnumerable<UserTestModel> userTestModels = userTests.Select(result => new UserTestModel
             {
-                Id = 1,
-                Test = new Test
-                {
-                    Id = 1,
-                    Category = new Category
-                    {
-                        Id = 1,
-                        CategoryName = "Romeinen"
-                    }
-                },
-                User = new User
-                {
-                    Id = "1",
-                    Firstname = "Hayri",
-                    Lastname = "Heling",
-                },
-                StartedAt = DateTime.Now,
-                FinishedAt = DateTime.Now.AddHours(2.00),
-                Score = 40
+                Test = result.Test,
+                User = result.User,
+                StartedAt = result.StartedAt,
+                FinishedAt = result.FinishedAt,
+                Score = result.Score     
+            });
 
-            };
-
-            return View(userTest);
+            if(userTestModels.Count() > 0)
+            {
+                return Content("Geen resultaten gevonden.");
+            }
+            else
+            {
+                return View(userTestModels);
+            }
         }
     }
 }
