@@ -24,7 +24,7 @@ namespace Eduria.Controllers
             UserTestModel userTest = new UserTestModel
             {
                 Id = 1,
-                TestId = new Test
+                Test = new Test
                 {
                     Id = 1,
                     Category = new Category
@@ -33,7 +33,7 @@ namespace Eduria.Controllers
                         CategoryName = "Romeinen"
                     }
                 },
-                UserId = new User
+                User = new User
                 {
                     Id = "1",
                     Firstname = "Hayri",

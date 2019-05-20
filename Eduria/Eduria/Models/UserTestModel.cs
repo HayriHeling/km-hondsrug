@@ -9,8 +9,8 @@ namespace Eduria.Models
     public class UserTestModel
     {
         public int Id { get; set; }
-        public Test TestId { get; set; }
-        public User UserId { get; set; }
+        public Test Test { get; set; }
+        public User User { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public int Score { get; set; }
