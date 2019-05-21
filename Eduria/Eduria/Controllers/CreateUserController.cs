@@ -13,6 +13,7 @@ namespace Eduria.Controllers
 {
     public class CreateUserController : Controller
     {
+       
         private UserService Service { get; set; }
 
         public CreateUserController(UserService service)
@@ -118,5 +119,27 @@ namespace Eduria.Controllers
                 return View();
             }
         }
+
+        // POST: CreateUser/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdatePassword(int id)
+        {
+            try
+            {
+                EduriaData.Models.User dataUser = new EduriaData.Models.User
+                {
+                    Password = user.Password
+                };
+               
+                Service.Update(dataUser);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
     }
 }
