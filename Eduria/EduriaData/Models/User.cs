@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace EduriaData.Models
@@ -16,7 +17,11 @@ namespace EduriaData.Models
         public int StudNum { get; set; }
         public int UserType { get; set; }
         public int ClassId { get; set; }
-        [Required, MaxLength(20, ErrorMessage = "Vul een wachtwoord in.")]
+        [Required(ErrorMessage = "Vul een wachtwoord in."), MaxLength(20, ErrorMessage = "Het wachtwoord mag maximaal 20 karakters lang zijn.")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [DisplayName("Username")]
+        [Required(ErrorMessage = "Vul een username in.")]
+        public override string UserName { get ; set; }
     }
 }
