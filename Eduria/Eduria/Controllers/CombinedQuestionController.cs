@@ -40,7 +40,7 @@ namespace Eduria.Controllers
                 List<AnswerModel> currentAnswerModels = tempAnswerModels.FindAll(o => o.QuestionId == allQuestions[i].Id);
                 
                 allCombinedQuestionAnswers.Add(new CombinedQuestionAnswer(
-                    new TextQuestionModel(allQuestions[i].Id, allQuestions[i].Text), 
+                    new QuestionModel(allQuestions[i].Id, allQuestions[i].Text), 
                     currentAnswerModels));
             }
             return allCombinedQuestionAnswers;
