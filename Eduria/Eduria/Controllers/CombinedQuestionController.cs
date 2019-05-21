@@ -12,7 +12,13 @@ namespace Eduria.Controllers
     {
         private QuestionService qService;
         private AnswerService aService;
-        
+
+        public CombinedQuestionController(QuestionService questionService, AnswerService answerService)
+        {
+            qService = questionService;
+            aService = answerService;
+        }
+
         public IActionResult Index()
         {
             return View();
