@@ -12,10 +12,10 @@ namespace Eduria.Models
         public IQuestion QuestionModel { get; set; }
         public AnswerModel AnswerModel { get; set; }
 
-        public CombinedQuestionAnswer()
+        public CombinedQuestionAnswer(IQuestion question, AnswerModel answerModel)
         {
-            QuestionModel = new TextQuestionModel();
-            AnswerModel = new AnswerModel();
+            question = new TextQuestionModel();
+            answerModel = new AnswerModel();
         }
 
 
