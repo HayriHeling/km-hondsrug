@@ -33,8 +33,9 @@ namespace Eduria.Controllers
         }
 
         // GET: CreateUser/Create
-        public ActionResult Create()
+        public ActionResult Create(int success = 0)
         {
+            ViewBag.success = success;
             return View();
         }
 
@@ -51,7 +52,7 @@ namespace Eduria.Controllers
                     Lastname = user.LastName,
                     Email = user.Email,
                     StudNum = user.UserNum,
-                    UserType = user.UserType,
+                    UserType = (int)user.UserType,
                     ClassId = user.ClassId,
                     Password = user.Password
                 };
@@ -64,7 +65,7 @@ namespace Eduria.Controllers
                 }
                 dataUser.Password = builder.ToString();
                 Service.Add(dataUser);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", new { success = 1 });
             }
             catch
             {
