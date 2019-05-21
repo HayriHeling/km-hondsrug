@@ -8,6 +8,7 @@ namespace Eduria.Models
     public class AnswerModel
     {
         public int Id;
+        public int QuestionId;
         public string Text;
         public bool CorrectAnswer;
 
@@ -16,9 +17,10 @@ namespace Eduria.Models
 
         }
 
-        public AnswerModel(int id, string text, bool correctAnswer)
+        public AnswerModel(int id, int questionId, string text, bool correctAnswer)
         {
             this.Id = id;
+            this.QuestionId = questionId;
             this.Text = text;
             this.CorrectAnswer = correctAnswer;
         }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eduria.Controllers;
 
 namespace Eduria.Models
 {
@@ -10,9 +11,9 @@ namespace Eduria.Models
     {
         public List<CombinedQuestionAnswer> CombinedQuestionAnswers;
 
-        public TestModel()
+        public TestModel(CombinedQuestionController combinedQuestionController)
         {
-            throw new NotImplementedException();
+            CombinedQuestionAnswers = combinedQuestionController.GetAllCombinedQuestions();
         }
 
         public bool CheckAnswer(int id, int givenAnswer = 0, string givenAnswerString = "")
@@ -22,7 +23,7 @@ namespace Eduria.Models
 
         public void InsertQuestion(int id)
         {
-            CombinedQuestionAnswers.Insert(1, new CombinedQuestionAnswer());
+            //CombinedQuestionAnswers.Insert(1, new CombinedQuestionAnswer());
         }
     }
 }
