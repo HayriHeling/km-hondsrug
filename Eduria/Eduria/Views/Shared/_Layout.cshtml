@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - Eduria</title>
 
     <environment include="Development">
@@ -17,17 +17,32 @@
     </environment>
 </head>
 <body>
-    <partial name="_CookieConsentPartial" />
+    @*<partial name="_CookieConsentPartial" />*@
     <header id="header">
-        <div class="row">
+        <div class="row xlarge">
             <div class="medium-2 columns">
                 <p>LOGO</p>
             </div>
             <div class="medium-6 columns">
-                <p>menu</p>
+                <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                    <li>
+                        <a href="#">Tijdlijn</a>
+                        @*<ul class="vertical menu">
+                            <li>
+                                <a href="#">Item 1A</a>
+                                <ul class="vertical menu">
+                                    <li><a href="#">Item 1A</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Item 1B</a></li>
+                        </ul>*@
+                    </li>
+                    <li><a href="#">Resultaten</a></li>
+                    <li><a href="#">Prikbord</a></li>
+                </ul>
             </div>
             <div class="medium-2 columns">
-                <p>zoeken..</p>
+                <input type="text" placeholder="Zoeken..." />
             </div>
             <div class="medium-2 columns">
                 <p>mijn account</p>
@@ -37,7 +52,13 @@
     <div class="container body-content">
         @RenderBody()
     </div>
-
+    <footer>
+        <div class="row">
+            <div class="medium-12 columns text-center">
+                Copyright &copy; @DateTime.Now.Year - Eduria kennisapplicatie
+            </div>
+        </div>
+    </footer>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/foundation.js" asp-append-version="true"></script>
@@ -50,7 +71,7 @@
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        
+        <script src="~/js/foundation.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 

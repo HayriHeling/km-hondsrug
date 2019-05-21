@@ -1,0 +1,43 @@
+﻿body {
+    font-family: 'Open Sans', sans-serif; 
+}
+
+.large  {
+    max-width: 90%;
+}
+
+.xlarge {
+    max-width: 100%;
+}
+
+
+/* General Header*/
+#header {
+    background-color: #1e1e1e;
+    color:  #fff;
+}
+
+/* General Footer */
+
+footer {
+    background-color: #f7f7f9;
+    padding: 10px 0;
+    color: #808080;
+    font-size: 12px;
+}
+
+/* Dashboard */
+
+#dashboardContent {
+    background-color: #f7f7f9;
+    padding: 100px 0;
+}
+
+.dashboardItem {
+    background-color: #fff;
+    box-shadow: 0 0 5px #eeeded;
+    height: 100px;
+
+}
+
+
