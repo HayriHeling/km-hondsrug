@@ -9,6 +9,7 @@ namespace Eduria.Services
 {
     public class UserService : AService<User>
     {
+       private EduriaContext Context { get; set; }
        public UserService(EduriaContext context)
         {
             Context = context;
