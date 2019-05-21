@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers
 {
+    /// <summary>
+    /// This is deprecated.
+    /// </summary>
     public class CombinedQuestionController : Controller
     {
         private QuestionService qService;
