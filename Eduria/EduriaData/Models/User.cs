@@ -17,7 +17,7 @@ namespace EduriaData.Models
         public int StudNum { get; set; }
         public int UserType { get; set; }
         public int ClassId { get; set; }
-        [Required, MaxLength(20, ErrorMessage = "Vul een wachtwoord in.")]
+        [Required, MaxLength(500, ErrorMessage = "Vul een wachtwoord in.")]
         public string Password { get; set; }
     }
 }

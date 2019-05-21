@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
+using EduriaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +55,14 @@ namespace Eduria.Controllers
                     ClassId = user.ClassId,
                     Password = user.Password
                 };
+                Logic hash = new Logic(dataUser.Password);
+                byte[] HashBytes = hash.ToArray();
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < HashBytes.Length; i++)
+                {
+                    builder.Append(HashBytes[i].ToString("x2"));
+                }
+                dataUser.Password = builder.ToString();
                 Service.Add(dataUser);
                 return RedirectToAction(nameof(Index));
             }
