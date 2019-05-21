@@ -11,15 +11,15 @@ namespace Eduria.Controllers
     {
         private UserTestService UserTestService { get; set; }
         private UserService UserService { get; set; }
+        private CategoryService CategoryService { get; set; }
 
-        //TODO: Add the Service for Test and Category
-        //      Then Remove this context
         private EduriaContext Context { get; set; }
 
-        public StudentController(UserTestService userTestService, UserService userService, EduriaContext eduriaContext)
+        public StudentController(UserTestService userTestService, UserService userService, CategoryService categoryService, EduriaContext eduriaContext)
         {
             UserTestService = userTestService;
             UserService = userService;
+            CategoryService = categoryService;
             Context = eduriaContext;
         }
 
@@ -33,15 +33,15 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Show the results from various tests in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An IActionResult that contains an IEnumerable<UserTest> with all its data.</returns>
         public IActionResult TestResults()
         {
             IEnumerable<UserTest> userTests = UserTestService.GetAll();
-            IEnumerable<EduriaData.Models.User> users = UserService.GetAll();
+            IEnumerable<User> users = UserService.GetAll();
             IEnumerable<Test> tests = Context.Tests;
-            IEnumerable<Category> categories = Context.Categories;
+            IEnumerable<Category> categories = CategoryService.GetAll();
 
             var result = (from ut in userTests
                           join u in users on ut.UserId equals u.Id
