@@ -11,4 +11,12 @@ namespace Eduria
         Docent,
         Student
     }
+
+    public enum MediaType
+    {
+        None,
+        Audio,
+        Image,
+        Video
+    }
 }
