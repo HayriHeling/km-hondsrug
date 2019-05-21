@@ -11,6 +11,8 @@ namespace Eduria.Models
     {
         public int Id { get; set; }
         public string Text { get; set; }
+        public MediaType Type { get; set; }
+        public string Link { get; set; }
 
         public TextQuestionModel()
         {
