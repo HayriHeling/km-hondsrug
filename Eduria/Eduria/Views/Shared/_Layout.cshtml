@@ -6,11 +6,11 @@
     <title>@ViewData["Title"] - Eduria</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/js/foundation.js" />
+        <link rel="stylesheet" href="~/css/foundation.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        <link rel="stylesheet" href="http://cdn.foundation5.zurb.com/foundation.css"
               asp-fallback-href="~/js/foundation.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
@@ -18,13 +18,29 @@
 </head>
 <body>
     <partial name="_CookieConsentPartial" />
-
+    <header id="header">
+        <div class="row">
+            <div class="medium-2 columns">
+                <p>LOGO</p>
+            </div>
+            <div class="medium-6 columns">
+                <p>menu</p>
+            </div>
+            <div class="medium-2 columns">
+                <p>zoeken..</p>
+            </div>
+            <div class="medium-2 columns">
+                <p>mijn account</p>
+            </div>
+        </div>    
+    </header>
     <div class="container body-content">
         @RenderBody()
     </div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/foundation.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
