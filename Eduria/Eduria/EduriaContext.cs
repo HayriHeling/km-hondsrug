@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Eduria
 {
-    public class EduriaContext : IdentityDbContext
+    public class EduriaContext : DbContext
     {
         public EduriaContext(DbContextOptions options) : base(options) { }
         public DbSet<Question> Questions { get; set; }
@@ -14,5 +14,6 @@ namespace Eduria
         public DbSet<UserTest> UserTests { get; set; }
         public DbSet<TestQuestion> TestQuestions { get; set; }
         public DbSet<UserTQLog> UserTQLogs { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
