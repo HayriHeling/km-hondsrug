@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\images\" />
@@ -33,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EduriaData\EduriaData.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\ShowTest\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>
