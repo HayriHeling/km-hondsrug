@@ -12,27 +12,39 @@ using Microsoft.AspNetCore.Mvc;
 namespace Eduria.Controllers
 {
     public class CreateUserController : Controller
-    {
-       
+    {      
         private UserService Service { get; set; }
 
         public CreateUserController(UserService service)
         {
             Service = service;
         }
-
+        /// <summary>
+        /// Shows list of all users.
+        /// </summary>
+        /// <returns></returns>
         // GET: CreateUser
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Shows details of a user based on id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: CreateUser/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
+        /// <summary>
+        /// Shows Add user form in cshtml. optional parameter gives succes message if 1.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <returns></returns>
         // GET: CreateUser/Create
         public ActionResult Create(int success = 0)
         {
@@ -40,6 +52,11 @@ namespace Eduria.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates user from form information given and saves it in database.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         // POST: CreateUser/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -74,12 +91,23 @@ namespace Eduria.Controllers
             }
         }
 
+        /// <summary>
+        /// Shows view to change user information based on id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: CreateUser/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
+        /// <summary>
+        /// changes given changes to user and saves it in database.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         // POST: CreateUser/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -97,12 +125,23 @@ namespace Eduria.Controllers
             }
         }
 
+        /// <summary>
+        /// Shows view where a user can be deleted.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: CreateUser/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
+        /// <summary>
+        /// Deletes a user from database.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         // POST: CreateUser/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
