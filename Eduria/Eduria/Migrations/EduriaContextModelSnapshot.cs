@@ -27,7 +27,7 @@ namespace Eduria.Migrations
 
                     b.Property<int>("Correct");
 
-                    b.Property<int>("QuestionId");
+                    b.Property<int?>("QuestionId");
 
                     b.Property<string>("Text")
                         .IsRequired()
