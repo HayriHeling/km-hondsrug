@@ -7,15 +7,17 @@ using EduriaData.Models;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 using EduriaData;
+using Eduria.Services;
 
 namespace Eduria.Controllers
 {
     public class LoginController : Controller
     {
-        EduriaContext EC = null;
-        public LoginController(EduriaContext eC)
+        private UserService Service { get; set; }
+
+        public LoginController(UserService service)
         {
-            EC = eC;
+            Service = service;
         }
 
         public IActionResult Index()
@@ -39,11 +41,12 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Login(User user)
         {
-            byte[] hashBytes = Encoding.ASCII.GetBytes(x.Password);
-            Logic hash = new Logic(hashBytes);
-            if (hash.Verify(user.Password)) { }
+            //byte[] hashBytes = Encoding.ASCII.GetBytes(x.Password);
+            //Logic hash = new Logic(hashBytes);
+            //if (hash.Verify(user.Password)) { }
 
-            User LoggedInUser = EC.Users.Where(x => x.StudNum == user.StudNum && x.Password == user.Password).FirstOrDefault();
+            //User LoggedInUser = EC.Users.Where(x => x.StudNum == user.StudNum && x.Password == user.Password).FirstOrDefault();
+            User LoggedInUser = Service.GetUserByStudNumAndPassword(user.StudNum, user.Password);
 
             if (LoggedInUser == null)
             {
@@ -83,11 +86,5 @@ namespace Eduria.Controllers
 
             return RedirectToAction("Login");
         }
-
-        //[HttpPost]
-        //public IActionResult Authorize(EduriaData.Models.User userModel)
-        //{
-        //    return View();
-        //}
     }
 }
