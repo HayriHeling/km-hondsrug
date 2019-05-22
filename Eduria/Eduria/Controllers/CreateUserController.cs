@@ -77,12 +77,7 @@ namespace Eduria.Controllers
                 };
                 Logic hash = new Logic(dataUser.Password);
                 byte[] HashBytes = hash.ToArray();
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < HashBytes.Length; i++)
-                {
-                    builder.Append(HashBytes[i].ToString("x2"));
-                }
-                dataUser.Password = builder.ToString();
+                dataUser.Password = Convert.ToBase64String(HashBytes);
                 Service.Add(dataUser);
                 return RedirectToAction("Create", new { success = 1 });
             }
