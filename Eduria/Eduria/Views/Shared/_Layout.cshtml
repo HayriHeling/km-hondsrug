@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <title>@ViewData["Title"] - Eduria</title>
 
     <environment include="Development">
@@ -22,30 +23,23 @@
     <header id="header">
         <div class="row xlarge">
             <div class="medium-2 columns">
-                <p>LOGO</p>
+                <img src="~/images/logo.png" class="logo"/>
             </div>
-            <div class="medium-6 columns">
-                <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
-                    <li>
-                        <a href="#">Tijdlijn</a>
-                        @*<ul class="vertical menu">
-                            <li>
-                                <a href="#">Item 1A</a>
-                                <ul class="vertical menu">
-                                    <li><a href="#">Item 1A</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Item 1B</a></li>
-                        </ul>*@
-                    </li>
-                    <li><a href="#">Resultaten</a></li>
-                    <li><a href="#">Prikbord</a></li>
-                </ul>
+            <div class="medium-6 columns menu">
+                <div class="topnav" id="myTopnav">
+                    <a href="#" class="active"><i class="fas fa-home"></i></a>
+                    <a href="#">Tijdlijn</a>
+                    <a href="#">Prikboard</a>
+                    <a href="#">Resultaten</a>
+                    <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                </div>
             </div>
-            <div class="medium-2 columns">
+            <div class="medium-2 columns search">
                 <input type="text" placeholder="Zoeken..." />
             </div>
-            <div class="medium-2 columns">
+            <div class="medium-2 columns myAccount">
                 <p>mijn account</p>
             </div>
         </div>    
@@ -62,7 +56,6 @@
     </footer>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/js/foundation.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
@@ -72,7 +65,6 @@
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        <script src="~/js/foundation.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
