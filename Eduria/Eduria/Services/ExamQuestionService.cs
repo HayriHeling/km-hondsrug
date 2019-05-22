@@ -6,20 +6,20 @@ using EduriaData.Models;
 
 namespace Eduria.Services
 {
-    public class ExamQuestionService : AService<TestQuestion>
+    public class ExamQuestionService : AService<ExamQuestion>
     {
         public ExamQuestionService(EduriaContext context)
         {
             Context = context;
         }
-        public override IEnumerable<TestQuestion> GetAll()
+        public override IEnumerable<ExamQuestion> GetAll()
         {
-            return Context.TestQuestions;
+            return Context.ExamQuestions;
         }
 
-        public override TestQuestion GetById(int id)
+        public override ExamQuestion GetById(int id)
         {
-            return Context.TestQuestions.Find(id);
+            return Context.ExamQuestions.Find(id);
         }
     }
 }

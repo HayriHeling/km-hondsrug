@@ -31,7 +31,7 @@ namespace Eduria.Controllers
         //}
 
         // GET: Exam/Details/5
-        public ActionResult Show(int id)
+        public IActionResult Show(int id)
         {
             return View(GetExamDataById(id));
         }
@@ -62,7 +62,7 @@ namespace Eduria.Controllers
             {
                 outputList.Add(new QuestionModel()
                 {
-                    Category = "",
+                    Category = question.CategoryId.ToString(),
                     MediaLink = question.MediaLink,
                     MediaType = 0,
                     QuestionId = question.Id,
@@ -82,7 +82,7 @@ namespace Eduria.Controllers
                 {
                     AnswerId = answer.Id,
                     CorrectAnswer = answer.Correct.Equals(0),
-                    QuestionId = answer.QuestionId,
+                    QuestionId = answer.Question.Id,
                     Text = answer.Text
                 });
             }

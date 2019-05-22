@@ -60,7 +60,7 @@ namespace Eduria.Controllers
         // POST: CreateUser/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(User user)
+        public ActionResult Create(UserModel user)
         {
             try
             {
