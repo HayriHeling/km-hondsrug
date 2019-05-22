@@ -3,7 +3,7 @@
 namespace Eduria.Models
 {
     /// <summary>
-    /// UserTest model with the Test and User data.
+    /// UserTest model with the Exam and User data.
     /// </summary>
     public class UserTestModel
     {
