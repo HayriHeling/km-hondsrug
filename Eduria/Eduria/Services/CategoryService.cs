@@ -8,7 +8,6 @@ namespace Eduria.Services
 {
     public class CategoryService : AService<Category>
     {
-        private EduriaContext Context { get; set; } 
         public CategoryService(EduriaContext context)
         {
             Context = context;

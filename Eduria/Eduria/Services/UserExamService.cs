@@ -7,8 +7,6 @@ namespace Eduria
 {
     public class UserExamService : AService<UserExam>
     {
-        public EduriaContext Context { get; set; }
-
         public UserExamService(EduriaContext context)
         {
             Context = context;
