@@ -56,7 +56,7 @@ namespace Eduria.Controllers
                 return View();
             }
 
-            byte[] hashBytes = Encoding.ASCII.GetBytes(LoggedInUser.Password);
+            byte[] hashBytes = Convert.FromBase64String(LoggedInUser.Password);
             Logic hash = new Logic(hashBytes);
 
             if (!hash.Verify(user.Password))
