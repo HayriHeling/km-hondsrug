@@ -5,16 +5,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\lib\bootstrap\**" />
-    <Content Remove="wwwroot\lib\bootstrap\**" />
-    <EmbeddedResource Remove="wwwroot\lib\bootstrap\**" />
-    <None Remove="wwwroot\lib\bootstrap\**" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <Compile Remove="Models\Interfaces\**" />
+    <Content Remove="Models\Interfaces\**" />
+    <EmbeddedResource Remove="Models\Interfaces\**" />
+    <None Remove="Models\Interfaces\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EduriaData\EduriaData.csproj" />
   </ItemGroup>
 
 </Project>
