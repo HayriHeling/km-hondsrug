@@ -7,25 +7,25 @@ namespace Eduria.Models
 {
     public class ExamModel
     {
-        public List<CombinedQuestionAnswer> Questions;
-        public string Category;
+        public int ExamId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Category { get; set; }
 
-        public int CalculateTotalPoints()
+        public List<QuestionModel> QuestionModels;
+        public List<AnswerModel> AnswerModels;
+
+        public List<AnswerModel> GetAnswersById(int questionId)
         {
-            return 0;
-        }
-
-        public void RemoveQuestion(CombinedQuestionAnswer question)
-        {
-
-        }
-        public void AddQuestion()
-        {
-
-        }
-        public void AddQuestion(CombinedQuestionAnswer question)
-        {
-
+            List<AnswerModel> answerList = new List<AnswerModel>();
+            foreach(AnswerModel answer in AnswerModels)
+            {
+                if(answer.QuestionId == questionId)
+                {
+                    answerList.Add(answer);
+                }
+            }
+            return answerList;
         }
     }
 }
