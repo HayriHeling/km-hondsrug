@@ -5,7 +5,7 @@
 
 @if (ViewBag.Role != null)
 {
-    <h1>Welkom @ViewBag.Firstname</h1>
+    <h1>Welkom @User.Identity.Name</h1>
 }
 else
 {

@@ -1,4 +1,5 @@
 ﻿using Eduria.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +31,7 @@ namespace Eduria
 
             services.AddDistributedMemoryCache();
             services.AddSession();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -56,6 +58,7 @@ namespace Eduria
             app.UseCookiePolicy();
 
             app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

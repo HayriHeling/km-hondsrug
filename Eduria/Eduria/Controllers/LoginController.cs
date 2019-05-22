@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 using EduriaData;
 using Eduria.Services;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
@@ -41,12 +45,10 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Login(User user)
         {
-            //byte[] hashBytes = Encoding.ASCII.GetBytes(x.Password);
-            //Logic hash = new Logic(hashBytes);
-            //if (hash.Verify(user.Password)) { }
+            ClaimsIdentity identity = null;
+            bool isAuthenticated = false;
 
-            //User LoggedInUser = EC.Users.Where(x => x.StudNum == user.StudNum && x.Password == user.Password).FirstOrDefault();
-            User LoggedInUser = Service.GetUserByStudNumAndPassword(user.StudNum, user.Password);
+            User LoggedInUser = Service.GetUserByStudNum(user.StudNum);
 
             if (LoggedInUser == null)
             {
@@ -54,13 +56,61 @@ namespace Eduria.Controllers
                 return View();
             }
 
-            // Save user information in session
-            HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
-            HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
-            HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
-            HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
-            
-            Response.Cookies.Append("LastLoggedInTime", DateTime.Now.ToString());
+            byte[] hashBytes = Encoding.ASCII.GetBytes(LoggedInUser.Password);
+            Logic hash = new Logic(hashBytes);
+
+            if (!hash.Verify(user.Password))
+            {
+                ViewBag.Message = "Verkeerd username/password combinatie, probeer het nog eens.";
+                return View();
+            }
+
+            int role = LoggedInUser.UserType;
+
+            if (role == 0)
+            {
+                identity = new ClaimsIdentity(
+                    new[] {
+                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
+                        new Claim(ClaimTypes.Role, "Admin")
+                    }, CookieAuthenticationDefaults.AuthenticationScheme
+                );
+                isAuthenticated = true;
+            }
+            else if (role == 1)
+            {
+                identity = new ClaimsIdentity(
+                    new[] {
+                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
+                        new Claim(ClaimTypes.Role, "Teacher")
+                    }, CookieAuthenticationDefaults.AuthenticationScheme
+                );
+                isAuthenticated = true;
+            }
+            else
+            {
+                identity = new ClaimsIdentity(
+                    new[] {
+                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
+                        new Claim(ClaimTypes.Role, "Admin")
+                    }, CookieAuthenticationDefaults.AuthenticationScheme
+                );
+                isAuthenticated = true;
+            }
+
+            if (isAuthenticated)
+            {
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                // Save user information in session
+                HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
+                HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
+                HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
+                HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
+
+                Response.Cookies.Append("LastLoggedInTime", DateTime.Now.ToString());
+            }
 
             return RedirectToAction("LoggedIn");
         }
@@ -83,6 +133,7 @@ namespace Eduria.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            Task login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login");
         }
