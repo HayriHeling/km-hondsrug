@@ -64,8 +64,18 @@ a {
     color: #29abe2;
 }
 
-/* Responsive menu */
+[type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea {
 
+    border: unset;
+    box-shadow: unset;
+    border-radius: 1px;
+}
+
+[type='text']::placeholder {
+    font-size: 12px;
+}
+
+/* Responsive menu */
 .topnav {
     overflow: hidden;
     width: 100%;
@@ -79,7 +89,7 @@ a {
     text-align: center;
     padding: 17px 16px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 14px;
 }
 
 .topnav a:hover {
