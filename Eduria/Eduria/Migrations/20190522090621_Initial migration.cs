@@ -4,10 +4,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eduria.Migrations
 {
-    public partial class newmigration : Migration
+    public partial class Initialmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Answers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    QuestionId = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(maxLength: 200, nullable: false),
+                    Correct = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answers", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -33,11 +48,32 @@ namespace Eduria.Migrations
                     StudNum = table.Column<int>(nullable: false),
                     UserType = table.Column<int>(nullable: false),
                     ClassId = table.Column<int>(nullable: false),
-                    Password = table.Column<string>(maxLength: 20, nullable: false)
+                    Password = table.Column<string>(maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Exams",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CategoryId = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Exams_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,9 +82,10 @@ namespace Eduria.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Text = table.Column<string>(maxLength: 500, nullable: false),
+                    CategoryId = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(nullable: true),
                     MediaLink = table.Column<string>(maxLength: 500, nullable: true),
-                    CategoryId = table.Column<int>(nullable: true)
+                    MediaType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,82 +95,16 @@ namespace Eduria.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tests_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Answers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    QuestionId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(maxLength: 200, nullable: false),
-                    Correct = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Answers_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestQuestions",
+                name: "UserExams",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TestId = table.Column<int>(nullable: true),
-                    QuestionId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestQuestions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestQuestions_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TestQuestions_Tests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "Tests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserTests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TestId = table.Column<int>(nullable: true),
+                    ExamId = table.Column<int>(nullable: true),
                     UserId = table.Column<int>(nullable: true),
                     StartedAt = table.Column<DateTime>(nullable: false),
                     FinishedAt = table.Column<DateTime>(nullable: false),
@@ -141,17 +112,43 @@ namespace Eduria.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTests", x => x.Id);
+                    table.PrimaryKey("PK_UserExams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserTests_Tests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "Tests",
+                        name: "FK_UserExams_Exams_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserTests_Users_UserId",
+                        name: "FK_UserExams_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExamQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ExamId = table.Column<int>(nullable: true),
+                    QuestionId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExamQuestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExamQuestions_Exams_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamQuestions_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -162,7 +159,7 @@ namespace Eduria.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TestId = table.Column<int>(nullable: true),
+                    ExamId = table.Column<int>(nullable: true),
                     QuestionId = table.Column<int>(nullable: true),
                     UserId = table.Column<int>(nullable: true),
                     TimesWrong = table.Column<int>(nullable: false)
@@ -171,15 +168,15 @@ namespace Eduria.Migrations
                 {
                     table.PrimaryKey("PK_UserTQLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserTQLogs_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
+                        name: "FK_UserTQLogs_Exams_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserTQLogs_Tests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "Tests",
+                        name: "FK_UserTQLogs_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -191,9 +188,19 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_QuestionId",
-                table: "Answers",
+                name: "IX_ExamQuestions_ExamId",
+                table: "ExamQuestions",
+                column: "ExamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamQuestions_QuestionId",
+                table: "ExamQuestions",
                 column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exams_CategoryId",
+                table: "Exams",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_CategoryId",
@@ -201,39 +208,24 @@ namespace Eduria.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestQuestions_QuestionId",
-                table: "TestQuestions",
-                column: "QuestionId");
+                name: "IX_UserExams_ExamId",
+                table: "UserExams",
+                column: "ExamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestQuestions_TestId",
-                table: "TestQuestions",
-                column: "TestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_CategoryId",
-                table: "Tests",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTests_TestId",
-                table: "UserTests",
-                column: "TestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTests_UserId",
-                table: "UserTests",
+                name: "IX_UserExams_UserId",
+                table: "UserExams",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTQLogs_ExamId",
+                table: "UserTQLogs",
+                column: "ExamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTQLogs_QuestionId",
                 table: "UserTQLogs",
                 column: "QuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTQLogs_TestId",
-                table: "UserTQLogs",
-                column: "TestId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTQLogs_UserId",
@@ -247,19 +239,19 @@ namespace Eduria.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "TestQuestions");
+                name: "ExamQuestions");
 
             migrationBuilder.DropTable(
-                name: "UserTests");
+                name: "UserExams");
 
             migrationBuilder.DropTable(
                 name: "UserTQLogs");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Exams");
 
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Users");

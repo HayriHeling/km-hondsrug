@@ -33,9 +33,11 @@ namespace Eduria
 
             //Add own DbContext and use Sql Server.
             services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaDevelopment")));
-            services.AddScoped<QuestionService>();
-            services.AddScoped<AnswerService>();
+            //Add over services.
+            services.AddScoped<UserExamService>();
             services.AddScoped<UserService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<ExamService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +61,7 @@ namespace Eduria
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Index}/{id?}");
             });
         }
     }

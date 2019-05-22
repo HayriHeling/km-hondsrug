@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 
 namespace Eduria.Services
 {
-    public class ExamService : AService<Exam>
+    public class CategoryService : AService<Category>
     {
-        public ExamService(EduriaContext context)
+        public CategoryService(EduriaContext context)
         {
             Context = context;
         }
 
         /// <summary>
-        /// Get all exams from the database.
+        /// Get all categories from the database.
         /// </summary>
-        /// <returns>A List with all exams.</returns>
-        public override IEnumerable<Exam> GetAll()
+        /// <returns>A List with all categories.</returns>
+        public override IEnumerable<Category> GetAll()
         {
-            return Context.Exams;
+            return Context.Categories;
         }
 
         /// <summary>
-        /// Get an specific exam. 
+        /// Get an specific category. 
         /// </summary>
-        /// <param name="id">The id from the exam.</param>
+        /// <param name="id">The id from the category.</param>
         /// <returns>The specific category.</returns>
-        public override Exam GetById(int id)
+        public override Category GetById(int id)
         {
             return GetAll().FirstOrDefault(x => x.Id == id);
         }
