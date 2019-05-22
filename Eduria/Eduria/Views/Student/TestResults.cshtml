@@ -4,30 +4,33 @@
     ViewData["Title"] = "Toets Resultaten";
 }
 
-<h2>Toets resultaten</h2>
+    <div class="row medium">
+       
+        <h2>Toets resultaten</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <td>Voornaam</td>
-            <td>Achternaam</td>
-            <td>Toets</td>
-            <td>Begonnen</td>
-            <td>Afgerond</td>
-            <td>Score</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Firstname</td>
-                <td>@item.Lastname</td>
-                <td>@item.Category</td>
-                <td>@item.StartedAt</td>
-                <td>@item.FinishedAt</td>
-                <td>@item.Score</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Voornaam</td>
+                    <td>Achternaam</td>
+                    <td>Toets</td>
+                    <td>Begonnen</td>
+                    <td>Afgerond</td>
+                    <td>Score</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Firstname</td>
+                        <td>@item.Lastname</td>
+                        <td>@item.Category</td>
+                        <td>@item.StartedAt</td>
+                        <td>@item.FinishedAt</td>
+                        <td>@item.Score</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
