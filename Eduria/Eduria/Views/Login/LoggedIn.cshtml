@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "LoggedIn";
+}
+
+@if (ViewBag.Role != null)
+{
+    <h1>Welkom @ViewBag.Firstname</h1>
+}
+else
+{
+    <h1>Beter ga je inloggen.</h1>
+}
