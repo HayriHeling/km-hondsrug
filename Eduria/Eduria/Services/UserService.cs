@@ -37,10 +37,5 @@ namespace Eduria.Services
         {
             return Context.Users.FirstOrDefault(x => x.StudNum == studNum);
         }
-
-        public User GetUserByStudNumAndPassword(int studNum, string password)
-        {
-            return Context.Users.Where(x => x.StudNum == studNum && x.Password == password).FirstOrDefault();
-        }
     }
 }

@@ -17,7 +17,11 @@ else
     <p class="text-muted">Je was voor het laastst ingelogd op @ViewBag.LLIT</p>
 }
 
-@if (string.IsNullOrEmpty(ViewBag.LoggedIn))
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Je bent al ingelogd gap</p>
+}
+else
 {
     <div class="row">
         <div class="col-md-4">
@@ -42,8 +46,3 @@ else
         </div>
     </div>
 }
-else
-{
-    <p>Je bent al ingelogd gap</p>
-}
-

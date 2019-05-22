@@ -11,7 +11,6 @@ using Eduria.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
@@ -32,8 +31,6 @@ namespace Eduria.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            ViewBag.LoggedIn = HttpContext.Session.GetString("Firstname");
-
             if (Request.Cookies["LastLoggedInTime"] != null)
             {
                 ViewBag.LLIT = Request.Cookies["LastLoggedInTime"].ToString();
@@ -46,7 +43,6 @@ namespace Eduria.Controllers
         public IActionResult Login(User user)
         {
             ClaimsIdentity identity = null;
-            bool isAuthenticated = false;
 
             User LoggedInUser = Service.GetUserByStudNum(user.StudNum);
 
@@ -65,52 +61,33 @@ namespace Eduria.Controllers
                 return View();
             }
 
-            int role = LoggedInUser.UserType;
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, LoggedInUser.Firstname + " " + LoggedInUser.Lastname));
 
-            if (role == 0)
+            if (LoggedInUser.UserType == 0)
             {
-                identity = new ClaimsIdentity(
-                    new[] {
-                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
-                        new Claim(ClaimTypes.Role, "Admin")
-                    }, CookieAuthenticationDefaults.AuthenticationScheme
-                );
-                isAuthenticated = true;
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
-            else if (role == 1)
+            else if (LoggedInUser.UserType == 1)
             {
-                identity = new ClaimsIdentity(
-                    new[] {
-                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
-                        new Claim(ClaimTypes.Role, "Teacher")
-                    }, CookieAuthenticationDefaults.AuthenticationScheme
-                );
-                isAuthenticated = true;
+                claims.Add(new Claim(ClaimTypes.Role, "Teacher"));
             }
             else
             {
-                identity = new ClaimsIdentity(
-                    new[] {
-                        new Claim(ClaimTypes.Name, LoggedInUser.StudNum.ToString()),
-                        new Claim(ClaimTypes.Role, "Admin")
-                    }, CookieAuthenticationDefaults.AuthenticationScheme
-                );
-                isAuthenticated = true;
+                claims.Add(new Claim(ClaimTypes.Role, "Student"));
             }
 
-            if (isAuthenticated)
-            {
-                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-                Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                // Save user information in session
-                HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
-                HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
-                HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
-                HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
+            // Save user information in session
+            HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
+            HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
+            HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
+            HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
 
-                Response.Cookies.Append("LastLoggedInTime", DateTime.Now.ToString());
-            }
+            Response.Cookies.Append("LastLoggedInTime", DateTime.Now.ToString());
 
             return RedirectToAction("LoggedIn");
         }

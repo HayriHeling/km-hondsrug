@@ -3,11 +3,13 @@
     ViewData["Title"] = "LoggedIn";
 }
 
-@if (ViewBag.Role != null)
+@if (!User.Identity.IsAuthenticated)
 {
-    <h1>Welkom @User.Identity.Name</h1>
+    <h1>Beter ga je inloggen.</h1>
 }
 else
 {
-    <h1>Beter ga je inloggen.</h1>
+    @if (User.IsInRole("Admin")) { <h1>Welkom @User.Identity.Name (Administrator)</h1> }
+    else if (User.IsInRole("Teacher")) { <h1>Welkom @User.Identity.Name (Docent)</h1> }
+    else { <h1>Welkom @User.Identity.Name (Leerling)</h1> }
 }
