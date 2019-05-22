@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData;
+using EduriaData.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,7 +65,7 @@ namespace Eduria.Controllers
         {
             try
             {
-                EduriaData.Models.User dataUser = new EduriaData.Models.User
+                User dataUser = new User
                 {
                     Firstname = user.FirstName,
                     Lastname = user.LastName,
