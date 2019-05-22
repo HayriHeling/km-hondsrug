@@ -21,5 +21,10 @@ namespace Eduria.Services
         {
             return Context.ExamQuestions.Find(id);
         }
+
+        public IEnumerable<ExamQuestion> GetAllQuestionIdsAsList(int examId)
+        {
+            return Context.ExamQuestions.Where(x => x.ExamId == examId);
+        }
     }
 }

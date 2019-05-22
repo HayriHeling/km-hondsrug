@@ -23,9 +23,19 @@ namespace Eduria.Services
             return Context.Questions.Find(id);
         }
 
-        public List<Question> GetQuestionsByExamId(int examId)
+        public IEnumerable<Question> GetQuestionsByExamQuestionList(IEnumerable<ExamQuestion> examQuestions)
         {
-            return null;
+            List<Question> questions = new List<Question>();
+            foreach (ExamQuestion eq in examQuestions)
+            {
+                IEnumerable<Question> tempQuestions = Context.Questions.Where(x => x.Id == eq.QuestionId);
+                foreach (Question question in tempQuestions)
+                {
+                    questions.Add(question);
+                }
+            }
+            
+            return questions;
         }
     }
 }

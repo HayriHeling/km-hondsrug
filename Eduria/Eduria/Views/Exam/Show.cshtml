@@ -5,7 +5,14 @@
 
 <h2>Show</h2>
 
-<button></button>
+@foreach (var item in @Model.QuestionModels)
+{
+    <p>@item.QuestionId</p>
+    <p>@item.Text</p>
+}
 
-<script>
-</script>
+@foreach (var answer in @Model.AnswerModels)
+{
+    <p>@answer.Text</p>
+    <p>@answer.CorrectAnswer</p>
+}

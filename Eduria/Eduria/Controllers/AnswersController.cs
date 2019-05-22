@@ -22,7 +22,7 @@ namespace Eduria.Controllers
         // GET: Answers
         public async Task<IActionResult> Index()
         {
-            var eduriaContext = _context.Answers.Include(a => a.Question);
+            var eduriaContext = _context.Answers.Include(a => a.QuestionId);
             return View(await eduriaContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace Eduria.Controllers
             }
 
             var answer = await _context.Answers
-                .Include(a => a.Question)
+                .Include(a => a.QuestionId)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (answer == null)
             {
@@ -131,7 +131,7 @@ namespace Eduria.Controllers
             }
 
             var answer = await _context.Answers
-                .Include(a => a.Question)
+                .Include(a => a.QuestionId)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (answer == null)
             {

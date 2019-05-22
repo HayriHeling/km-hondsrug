@@ -17,11 +17,12 @@ namespace Eduria.Controllers
         private AnswerService _answerService;
         private ExamQuestionService _examQuestionService;
 
-        public ExamController(ExamService examService, QuestionService questionService, ExamQuestionService examQuestionService)
+        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService, ExamQuestionService examQuestionService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
             this._questionService = questionService;
+            this._answerService = answerService;
         }
 
         // GET: Exam
@@ -31,9 +32,27 @@ namespace Eduria.Controllers
         //}
 
         // GET: Exam/Details/5
-        public IActionResult Show(int id)
+        public IActionResult Show(int id=1)
         {
-            return View(GetExamDataById(id));
+            //return View(GetExamDataById(id));
+            return View(GetExamModelByExamId(id));
+        }
+
+        public ExamModel GetExamModelByExamId(int id)
+        {
+            IEnumerable<ExamQuestion> tempExamQuestions = _examQuestionService.GetAllQuestionIdsAsList(id);
+            IEnumerable<Question> tempQuestions = _questionService.GetQuestionsByExamQuestionList(tempExamQuestions);
+            IEnumerable<Answer> tempAnswers = _answerService.GetAnswersByQuestionsList(tempQuestions);
+
+            return new ExamModel()
+            {
+                AnswerModels = CreateAnswerModels(tempAnswers.ToList()),
+                Category = "",
+                Description = "",
+                ExamId = id,
+                Name = "None",
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
+            };
         }
 
         public ExamModel GetExamDataById(int id)
@@ -82,7 +101,7 @@ namespace Eduria.Controllers
                 {
                     AnswerId = answer.Id,
                     CorrectAnswer = answer.Correct.Equals(0),
-                    QuestionId = answer.Question.Id,
+                    QuestionId = answer.QuestionId,
                     Text = answer.Text
                 });
             }

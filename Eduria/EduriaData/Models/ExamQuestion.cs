@@ -6,7 +6,7 @@ namespace EduriaData.Models
     {
         [Key]
         public int Id { get; set; }
-        public Exam Exam { get; set; }
-        public Question Question { get; set; }
+        public int ExamId { get; set; }
+        public int QuestionId { get; set; }
     }
 }
