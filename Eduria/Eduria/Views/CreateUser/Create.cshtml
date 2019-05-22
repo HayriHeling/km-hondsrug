@@ -5,6 +5,12 @@
 }
 
 <h4>Gebruiker aanmaken</h4>
+@{ 
+    if(ViewBag.success == 1)
+    {
+        <p style="color:green;">Nieuwe gebruiker is toegevoegd!</p>
+    }
+}
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -33,7 +39,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="UserType" class="control-label"></label>
-                <input asp-for="UserType" class="form-control" />
+                @Html.DropDownListFor(x => x.UserType,
+                    new SelectList(Enum.GetValues(typeof(UserRoles))),
+                    "",
+                    new { @class = "form-control" })
                 <span asp-validation-for="UserType" class="text-danger"></span>
             </div>
             <div class="form-group">

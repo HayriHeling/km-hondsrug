@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduriaData.Models
 {
@@ -7,10 +6,9 @@ namespace EduriaData.Models
     {
         [Key]
         public int Id { get; set; }
-        public int QuestionId { get; set; }
+        public Question Question { get; set; }
         [Required, MaxLength(200, ErrorMessage = "Vul een antwoord in.")]
         public string Text { get; set; }
         public int Correct { get; set; }
-        public Question Question { get; set; }
     }
 }
