@@ -5,7 +5,22 @@
 
 <h2>Show</h2>
 
-@foreach (var item in @Model.QuestionModels)
+<form id="exam">
+    <div id="noneToday">
+        <p id="Question">Empty</p>
+        <button type="button" id="1" value="None1" onclick="CreateSingleButton('hallo')">None1</button>
+        <button type="button" id="2" value="None2" onclick="function"></button>
+        <button type="button" id="3" value="None3" onclick="function"></button>
+        <button type="button" id="4" value="None4" onclick="function"></button>
+        <button type="button" id="5" value="None5" onclick="function"></button>
+        <button type="button" id="6" value="None6" onclick="function"></button>
+        <button type="button" id="7" value="None7" onclick="function"></button>
+        <button type="button" id="8" value="None8" onclick="function"></button>
+        <button type="button" id="9" value="None9" onclick="function"></button>
+    </div>
+</form>
+
+@*@foreach (var item in @Model.QuestionModels)
 {
     <p>@item.QuestionId</p>
     <p>@item.Text</p>
@@ -15,4 +30,44 @@
 {
     <p>@answer.Text</p>
     <p>@answer.CorrectAnswer</p>
-}
+}*@
+
+<script language="javascript">
+    function ShowQuestion(Question) {
+    document.getElementById("Question").innerHTML = Question;
+    }
+
+    function CreateButtons(names) {
+        var button = document.createElement("input");
+        button.type = "button";
+        var foo = document.getElementById("noneToday");
+        for (i = 1; i == names.length; i++) {
+            button.innerHTML = names[i];
+
+            foo.appendChild(button);
+        }
+        
+    }
+
+    function ChangeButtons(names) {
+        // TODO
+    }
+
+    function CheckAnswer() {
+        // TODO
+    }
+
+    function NextQuestion(object) {
+        ShowQuestion(object.question);
+        ChangeButtons(object.answers);
+    }
+
+    function FinisedExam() {
+        // TODO
+    }
+
+    var input = ["Answer one", "Answer two", "Answer three", "Answer four"];
+
+    ShowQuestion("Wat deden de Duitsers fout in de tweede wereldoorlog?");
+    CreateButtons(input);
+</script>
