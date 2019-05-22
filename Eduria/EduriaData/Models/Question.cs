@@ -7,9 +7,10 @@ namespace EduriaData.Models
         [Key]
         public int Id { get; set; }
         [Required, MaxLength(500, ErrorMessage = "Vul een vraag in.")]
+        public int CategoryId { get; set; }
         public string Text { get; set; }
         [MaxLength(500)]
         public string MediaLink { get; set; }
-        public Category Category { get; set; }
+        public int MediaType { get; set; }
     }
 }
