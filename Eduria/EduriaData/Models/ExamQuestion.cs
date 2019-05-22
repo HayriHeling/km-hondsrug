@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduriaData.Models
 {
-    public class Test
+    public class ExamQuestion
     {
         [Key]
         public int Id { get; set; }
-        public int CategoryId { get; set; }
+        public Exam Exam { get; set; }
+        public Question Question{ get; set; }
     }
 }
