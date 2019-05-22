@@ -75,6 +75,21 @@ a {
     font-size: 12px;
 }
 
+
+.profile {
+    width: 35px;
+    margin: 0 10px;
+}
+
+.myAccount {
+    font-size: 12px;
+}
+
+.myAccount i {
+    color: #808080;
+    font-size: 16px;
+}
+
 /* Responsive menu */
 .topnav {
     overflow: hidden;
