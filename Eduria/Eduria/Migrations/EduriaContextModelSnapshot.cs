@@ -60,9 +60,12 @@ namespace Eduria.Migrations
 
                     b.Property<int?>("CategoryId");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("MediaLink")
+                        .HasMaxLength(500);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500);
 
                     b.HasKey("Id");
 
@@ -96,20 +99,17 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CategoryId");
+                    b.Property<int?>("QuestionId");
 
-                    b.Property<string>("MediaLink")
-                        .HasMaxLength(500);
+                    b.Property<int?>("TestId");
 
                     b.Property<int>("MediaType");
 
-                    b.Property<string>("Text");
+                    b.HasIndex("QuestionId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("TestId");
 
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Questions");
+                    b.ToTable("TestQuestions");
                 });
 
             modelBuilder.Entity("EduriaData.Models.User", b =>
@@ -195,7 +195,15 @@ namespace Eduria.Migrations
                     b.ToTable("UserTQLogs");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.Exam", b =>
+            modelBuilder.Entity("EduriaData.Models.Answer", b =>
+                {
+                    b.HasOne("EduriaData.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EduriaData.Models.Question", b =>
                 {
                     b.HasOne("EduriaData.Models.Category", "Category")
                         .WithMany()
@@ -217,8 +225,7 @@ namespace Eduria.Migrations
                 {
                     b.HasOne("EduriaData.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TestId");
                 });
 
             modelBuilder.Entity("EduriaData.Models.UserExam", b =>
