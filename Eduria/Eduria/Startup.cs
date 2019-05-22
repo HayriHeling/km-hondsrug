@@ -29,6 +29,7 @@ namespace Eduria
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Creates session, cookies and adds authentication.
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
