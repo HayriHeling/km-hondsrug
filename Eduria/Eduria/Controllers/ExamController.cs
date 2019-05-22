@@ -33,15 +33,44 @@ namespace Eduria.Controllers
         // GET: Exam/Details/5
         public ActionResult Show(int id)
         {
-            return View();
+            return View(GetExamDataById(id));
         }
 
-        public List<ExamModel> GetExamDataById(int id)
+        public ExamModel GetExamDataById(int id)
         {
             List<Question> allQuestions = _questionService.GetAll().ToList();
             List<Answer> allAnswers = _answerService.GetAll().ToList();
 
+            List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
+            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);
 
+            return new ExamModel()
+            {
+                AnswerModels = answerModels,
+                Category = "",
+                Description = "",
+                ExamId = 0,
+                Name = "None",
+                QuestionModels = questionModels
+            };
+        }
+
+        public List<QuestionModel> CreateQuestionModelsList(List<Question> questions)
+        {
+            List<QuestionModel> outputList = new List<QuestionModel>();
+            foreach (Question question in questions)
+            {
+                outputList.Add(new QuestionModel()
+                {
+                    Category = "",
+                    MediaLink = question.MediaLink,
+                    MediaType = 0,
+                    QuestionId = question.Id,
+                    Text = question.Text
+                });
+            }
+
+            return outputList;
         }
 
         public List<AnswerModel> CreateAnswerModels(List<Answer> answers)
@@ -49,8 +78,13 @@ namespace Eduria.Controllers
             List<AnswerModel> tempAnswerModels = new List<AnswerModel>();
             foreach (Answer answer in answers)
             {
-                tempAnswerModels.Add(new AnswerModel(answer.Id,
-                    answer.QuestionId, answer.Text, answer.Correct.Equals(0)));
+                tempAnswerModels.Add(new AnswerModel()
+                {
+                    AnswerId = answer.Id,
+                    CorrectAnswer = answer.Correct.Equals(0),
+                    QuestionId = answer.QuestionId,
+                    Text = answer.Text
+                });
             }
 
             return tempAnswerModels;
