@@ -8,7 +8,7 @@ namespace Eduria.Models
 {
     public class QuestionModel
     {
-        public int Id { get; set; }
+        public int QuestionId { get; set; }
         public string Text { get; set; }
         public MediaType Type { get; set; }
         public string Link { get; set; }
@@ -18,9 +18,9 @@ namespace Eduria.Models
 
         }
 
-        public QuestionModel(int id, string text)
+        public QuestionModel(int id, string text, MediaType mediaType=MediaType.None, string link="")
         {
-            this.Id = id;
+            this.QuestionId = id;
             this.Text = text;
         }
         public IActionResult GetView()
