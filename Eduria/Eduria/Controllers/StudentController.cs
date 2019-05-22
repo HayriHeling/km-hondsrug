@@ -12,7 +12,6 @@ namespace Eduria.Controllers
         private UserTestService UserTestService { get; set; }
         private UserService UserService { get; set; }
         private CategoryService CategoryService { get; set; }
-
         private EduriaContext Context { get; set; }
 
         public StudentController(UserTestService userTestService, UserService userService, CategoryService categoryService, EduriaContext eduriaContext)
@@ -56,9 +55,7 @@ namespace Eduria.Controllers
                               StartedAt = ut.StartedAt,
                               FinishedAt = ut.FinishedAt,
                               Score = ut.Score
-                          }
-
-                          );
+                          });
 
             return View(result);
         }
