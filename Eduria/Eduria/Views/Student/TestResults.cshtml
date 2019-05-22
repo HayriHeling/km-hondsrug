@@ -3,34 +3,53 @@
 @{
     ViewData["Title"] = "Toets Resultaten";
 }
+    <section id="testResults">
+        <div class="row medium">
 
-    <div class="row medium">
-       
-        <h2>Toets resultaten</h2>
+            <div class="medium-12 columns">
+                <h2>Toets resultaten</h2>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Voornaam</strong>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Achternaam</strong>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Toets</strong>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Begonnen</strong>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Afgerond</strong>
+            </div>
+            <div class="medium-2 columns">
+                <strong>Score</strong>
+            </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>Voornaam</td>
-                    <td>Achternaam</td>
-                    <td>Toets</td>
-                    <td>Begonnen</td>
-                    <td>Afgerond</td>
-                    <td>Score</td>
-                </tr>
-            </thead>
-            <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.Firstname</td>
-                        <td>@item.Lastname</td>
-                        <td>@item.Category</td>
-                        <td>@item.StartedAt</td>
-                        <td>@item.FinishedAt</td>
-                        <td>@item.Score</td>
-                    </tr>
+
+                    <div class="medium-2 columns">
+                        <p>@item.Firstname</p>
+                    </div>
+                    <div class="medium-2 columns">
+                        <p>@item.Lastname</p>
+                    </div>
+                    <div class="medium-2 columns">
+                        <p>@item.Category</p>
+                    </div>
+                    <div class="medium-2 columns">
+                        <p>@item.StartedAt</p>
+                    </div>
+                    <div class="medium-2 columns">
+                        <p>@item.FinishedAt</p>
+                    </div>
+                    <div class="medium-2 columns">
+                        <p>@item.Score</p>
+                    </div>
+
                 }
-            </tbody>
-        </table>
-    </div>
+        </div>
+    </section>
