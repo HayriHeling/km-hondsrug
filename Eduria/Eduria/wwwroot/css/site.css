@@ -2,6 +2,11 @@
     font-family: 'Open Sans', sans-serif; 
 }
 
+
+.medium {
+    max-width: 80%;
+}
+
 .large  {
     max-width: 90%;
 }
@@ -168,4 +173,15 @@ a {
     .menu {
         width: 100%;
     }
+}
+
+/* Users*/
+
+#addUser [type='text'], [type='number'], [type='password'], [type='email']{
+    background-color: #ddd;
+}
+
+#addUser {
+    padding: 50px 0;
+    width: 100%:
 }
