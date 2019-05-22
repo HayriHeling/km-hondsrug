@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Eduria
 {
-    public class UserTestService : AService<UserTest>
+    public class UserExamService : AService<UserExam>
     {
         public EduriaContext Context { get; set; }
 
-        public UserTestService(EduriaContext context)
+        public UserExamService(EduriaContext context)
         {
             Context = context;
         }
@@ -18,9 +18,9 @@ namespace Eduria
         /// Get all the UserTest data from the database.
         /// </summary>
         /// <returns>An list with the data.</returns>
-        public override IEnumerable<UserTest> GetAll()
+        public override IEnumerable<UserExam> GetAll()
         {
-            return Context.UserTests;
+            return Context.UserExams;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Eduria
         /// </summary>
         /// <param name="id"></param>
         /// <returns>The UserTest datamodel.</returns>
-        public override UserTest GetById(int id)
+        public override UserExam GetById(int id)
         {
             return GetAll().FirstOrDefault(usertest => usertest.Id == id);
         }

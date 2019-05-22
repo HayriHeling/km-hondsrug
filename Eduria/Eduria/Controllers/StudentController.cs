@@ -9,17 +9,17 @@ namespace Eduria.Controllers
 {
     public class StudentController : Controller
     {
-        private UserTestService UserTestService { get; set; }
+        private UserExamService UserExamService { get; set; }
         private UserService UserService { get; set; }
         private CategoryService CategoryService { get; set; }
-        private EduriaContext Context { get; set; }
+        private ExamService ExamService { get; set; }
 
-        public StudentController(UserTestService userTestService, UserService userService, CategoryService categoryService, EduriaContext eduriaContext)
+        public StudentController(UserExamService userExamService, UserService userService, CategoryService categoryService, ExamService examService)
         {
-            UserTestService = userTestService;
+            UserExamService = userExamService;
             UserService = userService;
             CategoryService = categoryService;
-            Context = eduriaContext;
+            ExamService = examService;
         }
 
         /// <summary>
@@ -37,24 +37,24 @@ namespace Eduria.Controllers
         /// <returns>An IActionResult that contains an IEnumerable<UserTest> with all its data.</returns>
         public IActionResult TestResults()
         {
-            IEnumerable<UserTest> userTests = UserTestService.GetAll();
+            IEnumerable<UserExam> userExams = UserExamService.GetAll();
             IEnumerable<User> users = UserService.GetAll();
-            IEnumerable<Test> tests = Context.Tests;
+            IEnumerable<Exam> exams = ExamService.GetAll();
             IEnumerable<Category> categories = CategoryService.GetAll();
 
-            var result = (from ut in userTests
-                          join u in users on ut.UserId equals u.Id
-                          join t in tests on ut.TestId equals t.Id
-                          join c in categories on ut.TestId equals c.Id
+            var result = (from ue in userExams
+                          join u in users on ue.UserId equals u.Id
+                          join e in exams on ue.ExamId equals e.Id
+                          join c in categories on ue.ExamId equals c.Id
 
                           select new UserTestModel
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
                               Category = c.CategoryName,
-                              StartedAt = ut.StartedAt,
-                              FinishedAt = ut.FinishedAt,
-                              Score = ut.Score
+                              StartedAt = ue.StartedAt,
+                              FinishedAt = ue.FinishedAt,
+                              Score = ue.Score
                           });
 
             return View(result);
