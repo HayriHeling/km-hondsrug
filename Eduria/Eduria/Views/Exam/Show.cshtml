@@ -13,28 +13,29 @@
                 <form>
                     <div class="cc-selector">
                         <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
-                        <label class="timeperiod prehistorie" for="prehistorie"></label>
+                        <label class="timeperiod prehistorie" for="1"></label>
                         <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
-                        <label class="timeperiod oudheid" for="oudheid"></label>
+                        <label class="timeperiod oudheid" for="2"></label>
                         <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
-                        <label class="timeperiod vmiddeleeuwen" for="vmiddeleeuwen"></label>
+                        <label class="timeperiod vmiddeleeuwen" for="3"></label>
                         <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
-                        <label class="timeperiod lmiddeleeuwen" for="lmiddeleeuwen"></label>
+                        <label class="timeperiod lmiddeleeuwen" for="4"></label>
                         <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
-                        <label class="timeperiod nieuwetijd" for="nieuwetijd"></label>
+                        <label class="timeperiod nieuwetijd" for="5"></label>
                         <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
-                        <label class="timeperiod goudeneeuw" for="goudeneeuw"></label>
+                        <label class="timeperiod goudeneeuw" for="6"></label>
                         <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
-                        <label class="timeperiod verlichting" for="verlichting"></label>
+                        <label class="timeperiod verlichting" for="7"></label>
                         <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
-                        <label class="timeperiod industrie" for="industrie"></label>
+                        <label class="timeperiod industrie" for="8"></label>
                         <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
-                        <label class="timeperiod oorlog" for="oorlog"></label>
+                        <label class="timeperiod oorlog" for="9"></label>
                         <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
-                        <label class="timeperiod tv" for="tv"></label>
+                        <label class="timeperiod tv" for="10"></label>
                     </div>
                     <div class="medium-offset-10 medium-2 columns">
-                        <input type="text" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                        <p id="answer">Answer</p>
+                        <input type="text" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)" class="button"/>
                     </div>
                 </form>
             </div>
@@ -59,7 +60,6 @@
 
     function eventListener(element) {
         selected = element.id;
-        console.log(element);
     }
 
     @foreach (var d in Model.QuestionModels)
@@ -83,7 +83,6 @@
     function CheckAnswer(tempAnswerArray, clickedId) {
         var output = false;
         console.log(clickedId);
-        console.log(tempAnswerArray[clickedId - 1]);
         if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
             output = true;
         }
@@ -105,7 +104,7 @@
 
     function NextQuestion(questionArray, answerArray, id) {
         if (id !== 0) {
-            console.log(CheckAnswer(currentAnswersArray, selected));
+            document.getElementById("answer").innerHTML = CheckAnswer(currentAnswersArray, selected);
         }
         ShowQuestion(questionArray[id].Text);
         count++;
