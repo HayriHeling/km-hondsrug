@@ -12,7 +12,7 @@ namespace Eduria
         public DbSet<Category> Categories { get; set; }
         public DbSet<UserExam> UserExams { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
-        public DbSet<UserTQLog> UserTQLogs { get; set; }
+        public DbSet<UserEQLog> UserEQLogs { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }
