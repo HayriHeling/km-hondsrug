@@ -2,6 +2,43 @@
     font-family: 'Open Sans', sans-serif; 
 }
 
+label {
+    margin-left: 0rem;
+}
+
+h1 {
+    font-size: 30px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+    font-size: 24px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h3 {
+    font-size: 20px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+h4 {
+    font-size: 16px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.medium {
+    max-width: 80%;
+}
+
 .large  {
     max-width: 90%;
 }
@@ -168,4 +205,143 @@ a {
     .menu {
         width: 100%;
     }
+}
+
+/* Users*/
+
+#addUser [type='text'], [type='number'], [type='password'], [type='email']{
+    background-color: #ddd;
+}
+
+#addUser {
+    padding: 50px 0;
+    width: 100%:
+}
+
+/* Test Results*/
+
+#testResults {
+    padding: 50px 0;
+}
+
+/* Inloggen*/
+
+#login {
+    padding: 50px 0;
+}
+
+#login {
+    width: 400px;
+}
+
+.center-screen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 400px;
+    height: 400px;
+    padding: 20px;
+    background-color: #f7f7f9;
+}
+
+.cc-selector input {
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.prehistorie {
+    background-image: url(/images/prehistorieimg.png);
+    background-size: 100px 100px;
+}
+
+.oudheid {
+    background-image: url(/images/oudheid.png);
+    background-size: 100px 100px;
+}
+
+.vmiddeleeuwen {
+    background-image: url(/images/vroegmiddeleeuwen.png);
+}
+
+.lmiddeleeuwen {
+    background-image: url(/images/latemiddeleeuwen.png);
+}
+
+.nieuwetijd {
+    background-image: url(/images/nieuwetijd.png);
+}
+
+.goudeneeuw {
+    background-image: url(/images/goudeneeuw.png);
+}
+
+.verlichting {
+    background-image: url(/images/verlichting.png);
+}
+
+.industrie {
+    background-image: url(/images/industrie.png);
+}
+
+.oorlog {
+    background-image: url(/images/oorlog.png);
+}
+
+.tv {
+    background-image: url(/images/tv.png);
+}
+
+.cc-selector input:active + .timeperiod {
+    opacity: .9;
+}
+
+.cc-selector input:checked + .timeperiod {
+    -webkit-filter: none;
+    -moz-filter: none;
+    filter: none;
+}
+
+.timeperiod {
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    -webkit-transition: all 100ms ease-in;
+    -moz-transition: all 100ms ease-in;
+    transition: all 100ms ease-in;
+    width: 200px;
+    height: 200px;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+    -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+    filter: grayscale(1) opacity(.7);
+}
+
+.timeperiod:hover {
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+[type='radio'] + label {
+    margin-left: 0;
+    margin-right: 0;
+}
+/* Extras */
+a:visited {
+    color: #888
+}
+
+a {
+    color: #444;
+    text-decoration: none;
+}
+
+p {
+    margin-bottom: .3em;
 }
