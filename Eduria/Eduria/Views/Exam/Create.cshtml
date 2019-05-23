@@ -13,28 +13,71 @@
         Add Question
     </button>
 </div>
+<div id="log">
+
+</div>
 
 <script>       
     var questions = [];
     var questionBox;
+    var questionIndex;
     window.onload = function () {
         questionBox = $("#questionBox");
     }
     function AddQuestion() {
-        questions.push(new Question(questions.length-1));
-        DrawQuestion(questions.length-1);
+        if (questions.length == 0) {
+            questionIndex = 0;
+        }
+        questions.push(new Question(questionIndex));
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == questionIndex) {
+                DrawQuestion(questionIndex);
+            }
+        }
+        questionIndex++;
+        OnChange();
     }
     function AddAnswer(index) {
-        questions[index].answers.push(new Answer(questions.length, index));
-        DrawAnswer(index);
+        var question = questions[index];
+        var arr = questions[index].answers;
+        if (arr.length == 0) {
+            question.answerIndex = 0;
+        }
+
+        arr.push(new Answer(question.answerIndex, index));
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id == question.answerIndex) {
+                DrawAnswer(index);               
+            }
+        }
+        question.answerIndex++;
+        OnChange();
     }
     function RemoveQuestion(index) {
         var div = "#question" + index + "";
         var questionDiv = $(div);
         questionDiv.remove();
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == index) {
+                questions.splice(i, 1);
+                break;
+            }
+        }
+        OnChange();
     }
-    function RemoveAnswer(answerId) {
-
+    function RemoveAnswer(questionId, answerId) {
+        var div = "#answer" + questionId + "-" + answerId + "";
+        var answerDiv = $(div);
+        answerDiv.remove();
+        var arr = questions[questionId].answers;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id == answerId) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+        OnChange();
     }
     function DrawQuestion(index) {  
         var string = "<div id='question" + index + "'>";
@@ -50,12 +93,26 @@
         var div = "#answers" + index + "";
         var answersbox = $(div);
         var string = "<div id='answer" + index + "-" + (questions[index].answers.length-1) + "'>";
-        string += "<p><input type='text' name='" + questions[index].id + (questions[index].answers.length) + "'placeholder='answer'/></p>";
+        string += "<p><input type='text' name='" + questions[index].id + (questions[index].answers.length-1) + "'placeholder='answer'/>";
+        string += "<button onClick = 'RemoveAnswer(" + index + ", " + (questions[index].answers.length-1) + ")'>Verwijder</button></p>";
         string += "</div>";
         answersbox.append(string);
     }
+
+    function OnChange() {
+        var div = $("#log");
+        div.empty();
+        for (var i = 0; i < questions.length; i++) {
+            div.append("<p>question " + questions[i].id + ".</p>");
+            for (var j = 0; j < questions[i].answers.length; j++) {
+                div.append(questions[i].answers[j].id);
+            }
+        }
+    }
+
     function Question(id) {
         this.id = id;
+        this.answerIndex = 0;
         this.answers = [];
     }   
     function Answer(id, questionId) {
