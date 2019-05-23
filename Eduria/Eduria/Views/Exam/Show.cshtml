@@ -5,36 +5,61 @@
 
 <h2>Show</h2>
 
-<form id="exam">
+
     <p id="Question">Empty</p>
     <div id="noneToday">
-        <button type="button" id="1" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)">Start</button>
+        <div class="row large">
+            <div class="medium-12 columns">
+                <form>
+                    <div class="cc-selector">
+                        <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
+                        <label class="timeperiod prehistorie" for="prehistorie"></label>
+                        <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
+                        <label class="timeperiod oudheid" for="oudheid"></label>
+                        <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
+                        <label class="timeperiod vmiddeleeuwen" for="vmiddeleeuwen"></label>
+                        <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
+                        <label class="timeperiod lmiddeleeuwen" for="lmiddeleeuwen"></label>
+                        <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
+                        <label class="timeperiod nieuwetijd" for="nieuwetijd"></label>
+                        <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
+                        <label class="timeperiod goudeneeuw" for="goudeneeuw"></label>
+                        <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
+                        <label class="timeperiod verlichting" for="verlichting"></label>
+                        <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
+                        <label class="timeperiod industrie" for="industrie"></label>
+                        <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
+                        <label class="timeperiod oorlog" for="oorlog"></label>
+                        <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
+                        <label class="timeperiod tv" for="tv"></label>
+                    </div>
+                    <div class="medium-offset-10 medium-2 columns">
+                        <input type="text" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
-
-@*@foreach (var item in @Model.QuestionModels)
-{
-    <p>@item.QuestionId</p>
-    <p>@item.Text</p>
-}
-
-@foreach (var answer in @Model.AnswerModels)
-{
-    <p>@answer.Text</p>
-    <p>@answer.CorrectAnswer</p>
-}*@
 
 <script language="javascript">
     var QuestionModelArray = [];
     var AnswerModelArray = [];
+    var currentAnswersArray = [];
     var count = 0;
+
+    var selected = 0;
 
     function createTempQuestion(id, text) {
         return { QuestionId: id, Text: text };
     }
 
     function createTempAnswer(id, questionId, text, correctAnswer) {
-        return {AnswerId: id, QuestionId:questionId, Text: text, CorrectAnswer:correctAnswer};
+        return { AnswerId: id, QuestionId: questionId, Text: text, CorrectAnswer: correctAnswer };
+    }
+
+    function eventListener(element) {
+        selected = element.id;
+        console.log(element);
     }
 
     @foreach (var d in Model.QuestionModels)
@@ -42,9 +67,9 @@
         @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text"));
     }
 
-    @foreach (var e in Model.AnswerModels)
+@foreach (var e in Model.AnswerModels)
     {
-        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", @e.CorrectAnswer));
+        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
     }
 
     function ShowQuestion(Question) {
@@ -55,14 +80,40 @@
         // TODO
     }
 
-    function CheckAnswer(id, question) {
-        return question.answer[id].CorrectAnswer;
+    function CheckAnswer(tempAnswerArray, clickedId) {
+        var output = false;
+        console.log(clickedId);
+        console.log(tempAnswerArray[clickedId - 1]);
+        if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
+            output = true;
+        }
+        return output;
+    }
+
+    function GetAnswersByQuestionId(answerArray, questionId) {
+        var outputArray = [];
+        //console.log("Kiekeboe");
+        answerArray.forEach(function (element) {
+            //console.log(element.QuestionId + ":" + questionId);
+            if (element.QuestionId === questionId) {
+                outputArray.push(element);
+                console.log(element);
+            }
+        });
+        return outputArray;
     }
 
     function NextQuestion(questionArray, answerArray, id) {
+        if (id !== 0) {
+            console.log(CheckAnswer(currentAnswersArray, selected));
+        }
         ShowQuestion(questionArray[id].Text);
         count++;
-        console.log((questionArray.length - 1) + ":" + id);
+        //console.log((questionArray.length - 1) + ":" + id);
+
+        currentAnswersArray = GetAnswersByQuestionId(answerArray, (id + 1));
+        console.log(answerArray);
+        console.log(currentAnswersArray);
 
         if (id >= (questionArray.length - 1)) {
             FinishedExam();
