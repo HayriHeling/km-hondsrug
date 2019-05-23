@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Eduria.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols;
 
 namespace Eduria.Controllers
 {
@@ -14,11 +15,15 @@ namespace Eduria.Controllers
         private QuestionService _questionService;
         private AnswerService _answerService;
 
-        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService)
+        //public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService)
+        //{
+        //    this._answerService = answerService;
+        //    this._examService = examService;
+        //    this._questionService = questionService;
+        //}
+        public ExamController()
         {
-            this._answerService = answerService;
-            this._examService = examService;
-            this._questionService = questionService;
+
         }
 
         // GET: Exam
@@ -32,29 +37,28 @@ namespace Eduria.Controllers
         {
             return View();
         }
-
         // GET: Exam/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+        public ActionResult Create()
+        {
+            return View();
+        }
 
         // POST: Exam/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
+        {
+            try
+            {
+                // TODO: Add insert logic here
 
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+                return RedirectToAction("Create");
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
         // GET: Exam/Edit/5
         //public ActionResult Edit(int id)

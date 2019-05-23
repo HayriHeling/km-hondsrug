@@ -43,7 +43,11 @@ namespace Eduria.Controllers
                 List<AnswerModel> currentAnswerModels = tempAnswerModels.FindAll(o => o.QuestionId == allQuestions[i].Id);
                 
                 allCombinedQuestionAnswers.Add(new CombinedQuestionAnswer(
-                    new QuestionModel(allQuestions[i].Id, allQuestions[i].Text), 
+                    new QuestionModel()
+                    {
+                        QuestionId = allQuestions[i].Id,
+                        Text = allQuestions[i].Text
+                    }, 
                     currentAnswerModels));
             }
             return allCombinedQuestionAnswers;
@@ -54,8 +58,13 @@ namespace Eduria.Controllers
             List<AnswerModel> tempAnswerModels = new List<AnswerModel>();
             foreach (Answer answer in answers)
             {
-                tempAnswerModels.Add(new AnswerModel(answer.Id,
-                    answer.QuestionId, answer.Text, answer.Correct.Equals(0)));
+                tempAnswerModels.Add(new AnswerModel()
+                {
+                    AnswerId = answer.Id,
+                    QuestionId = answer.QuestionId,
+                    Text = answer.Text,
+                    CorrectAnswer = answer.Correct.Equals(0)
+                });
             }
 
             return tempAnswerModels;
