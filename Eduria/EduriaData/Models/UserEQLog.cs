@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EduriaData.Models
 {
-    public class UserTQLog
+    public class UserEQLog
     {
         [Key]
         public int Id { get; set; }
