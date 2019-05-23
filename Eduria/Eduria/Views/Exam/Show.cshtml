@@ -6,17 +6,9 @@
 <h2>Show</h2>
 
 <form id="exam">
+    <p id="Question">Empty</p>
     <div id="noneToday">
-        <p id="Question">Empty</p>
-        <button type="button" id="1" value="None1" onclick="CreateSingleButton('hallo')">None1</button>
-        <button type="button" id="2" value="None2" onclick="function"></button>
-        <button type="button" id="3" value="None3" onclick="function"></button>
-        <button type="button" id="4" value="None4" onclick="function"></button>
-        <button type="button" id="5" value="None5" onclick="function"></button>
-        <button type="button" id="6" value="None6" onclick="function"></button>
-        <button type="button" id="7" value="None7" onclick="function"></button>
-        <button type="button" id="8" value="None8" onclick="function"></button>
-        <button type="button" id="9" value="None9" onclick="function"></button>
+        <button type="button" id="1" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)">Start</button>
     </div>
 </form>
 
@@ -33,41 +25,55 @@
 }*@
 
 <script language="javascript">
-    function ShowQuestion(Question) {
-    document.getElementById("Question").innerHTML = Question;
+    var QuestionModelArray = [];
+    var AnswerModelArray = [];
+    var count = 0;
+
+    function createTempQuestion(id, text) {
+        return { QuestionId: id, Text: text };
     }
 
-    function CreateButtons(names) {
-        var button = document.createElement("input");
-        button.type = "button";
-        var foo = document.getElementById("noneToday");
-        for (i = 1; i == names.length; i++) {
-            button.innerHTML = names[i];
+    function createTempAnswer(id, questionId, text, correctAnswer) {
+        return {AnswerId: id, QuestionId:questionId, Text: text, CorrectAnswer:correctAnswer};
+    }
 
-            foo.appendChild(button);
-        }
-        
+    @foreach (var d in Model.QuestionModels)
+    { 
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text"));
+    }
+
+    @foreach (var e in Model.AnswerModels)
+    {
+        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", @e.CorrectAnswer));
+    }
+
+    function ShowQuestion(Question) {
+        document.getElementById("Question").innerHTML = Question;
     }
 
     function ChangeButtons(names) {
         // TODO
     }
 
-    function CheckAnswer() {
-        // TODO
+    function CheckAnswer(id, question) {
+        return question.answer[id].CorrectAnswer;
     }
 
-    function NextQuestion(object) {
-        ShowQuestion(object.question);
-        ChangeButtons(object.answers);
+    function NextQuestion(questionArray, answerArray, id) {
+        ShowQuestion(questionArray[id].Text);
+        count++;
+        console.log((questionArray.length - 1) + ":" + id);
+
+        if (id >= (questionArray.length - 1)) {
+            FinishedExam();
+            
+        }
+        //ChangeButtons(object.answers);
     }
 
-    function FinisedExam() {
-        // TODO
+    function FinishedExam() {
+        console.log("klaar");
     }
 
-    var input = ["Answer one", "Answer two", "Answer three", "Answer four"];
-
-    ShowQuestion("Wat deden de Duitsers fout in de tweede wereldoorlog?");
-    CreateButtons(input);
+    ShowQuestion(QuestionModelArray[0].Text);
 </script>
