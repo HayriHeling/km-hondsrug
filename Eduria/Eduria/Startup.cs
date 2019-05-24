@@ -1,4 +1,5 @@
 ﻿using Eduria.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,14 +29,22 @@ namespace Eduria
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Creates session, cookies and adds authentication.
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Add own DbContext and use Sql Server.
             services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaDevelopment")));
+            //Add over services.
+            services.AddScoped<UserExamService>();
             services.AddScoped<QuestionService>();
             services.AddScoped<AnswerService>();
             services.AddScoped<UserService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<ExamService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,11 +64,14 @@ namespace Eduria
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseSession();
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Index}/{id?}");
             });
         }
     }

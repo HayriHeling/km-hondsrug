@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData;
+using EduriaData.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,11 +61,11 @@ namespace Eduria.Controllers
         // POST: CreateUser/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(User user)
+        public ActionResult Create(UserModel user)
         {
             try
             {
-                EduriaData.Models.User dataUser = new EduriaData.Models.User
+                User dataUser = new User
                 {
                     Firstname = user.FirstName,
                     Lastname = user.LastName,
@@ -76,12 +77,7 @@ namespace Eduria.Controllers
                 };
                 Logic hash = new Logic(dataUser.Password);
                 byte[] HashBytes = hash.ToArray();
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < HashBytes.Length; i++)
-                {
-                    builder.Append(HashBytes[i].ToString("x2"));
-                }
-                dataUser.Password = builder.ToString();
+                dataUser.Password = Convert.ToBase64String(HashBytes);
                 Service.Add(dataUser);
                 return RedirectToAction("Create", new { success = 1 });
             }

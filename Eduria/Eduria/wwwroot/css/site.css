@@ -1,0 +1,221 @@
+﻿body {
+    font-family: 'Open Sans', sans-serif; 
+}
+
+h1 {
+    font-size: 30px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+    font-size: 24px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h3 {
+    font-size: 20px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+h4 {
+    font-size: 16px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.medium {
+    max-width: 80%;
+}
+
+.large  {
+    max-width: 90%;
+}
+
+.xlarge {
+    max-width: 100%;
+}
+
+/* General Header*/
+#header {
+    background-color: #1e1e1e;
+    color:  #fff;
+}
+
+/* General Footer */
+
+footer {
+    background-color: #f7f7f9;
+    padding: 10px 0;
+    color: #808080;
+    font-size: 12px;
+}
+
+/* Dashboard */
+
+#dashboardContent {
+    background-color: #f7f7f9;
+    padding: 100px 0;
+}
+
+.dashboardItem {
+    background-color: #fff;
+    box-shadow: 0 0 5px #eeeded;
+    min-height: 200px;
+    padding: 20px;
+}
+
+.logo {
+    width: 150px;
+}
+
+.button {
+    background-color: #29abe2;
+    color: #fff;
+    border-radius: unset;
+}
+
+.button:hover {
+    background-color: #ed1c24;
+}
+
+.ghost {
+    background-color: unset;
+    border: 1px solid #ed1c24;
+    border-radius: unset;
+    color: #ed1c24;
+}
+
+a {
+    color: #29abe2;
+}
+
+[type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea {
+
+    border: unset;
+    box-shadow: unset;
+    border-radius: 1px;
+}
+
+[type='text']::placeholder {
+    font-size: 12px;
+}
+
+
+.profile {
+    width: 35px;
+    margin: 0 10px;
+}
+
+.myAccount {
+    font-size: 12px;
+}
+
+.myAccount i {
+    color: #808080;
+    font-size: 16px;
+}
+
+/* Responsive menu */
+.topnav {
+    overflow: hidden;
+    width: 100%;
+}
+
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    line-height: 30px;
+    text-align: center;
+    padding: 17px 16px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: #29abe2;
+        
+}
+
+.active {
+    color: #29abe2;
+}
+
+.topnav .icon {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    .topnav a:not(:first-child) {
+        display: none;
+    }
+
+    .topnav a.icon {
+        float: right;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav.responsive {
+        position: relative;
+        width:100%;
+    }
+
+    .topnav.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .topnav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .myAccount {
+        display:none;
+    }
+
+    .logo {
+        display: none;
+
+    }
+
+    .search {
+        display: none;
+    }
+
+    .menu {
+        width: 100%;
+    }
+}
+
+/* Users*/
+
+#addUser [type='text'], [type='number'], [type='password'], [type='email']{
+    background-color: #ddd;
+}
+
+#addUser {
+    padding: 50px 0;
+    width: 100%:
+}
+
+/* Test Results*/
+
+#testResults {
+    padding: 50px 0;
+}

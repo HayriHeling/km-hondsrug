@@ -1,32 +1,38 @@
-﻿@model Eduria.Models.User
+﻿@model Eduria.Models.UserModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h4>Gebruiker aanmaken</h4>
+
 @{ 
     if(ViewBag.success == 1)
     {
         <p style="color:green;">Nieuwe gebruiker is toegevoegd!</p>
     }
 }
-<hr />
-<div class="row">
-    <div class="col-md-4">
+
+<section id="addUser" class="row">
+    <div class="medium-6 columns">
+        <h4>Gebruiker aanmaken</h4>
+        <p>Voeg hier een gebruiker toe:</p>
+    </div>
+    <div class="medium-6 columns">
+
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
+                <input asp-for="FirstName" type="text" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+           
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
+        
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -61,12 +67,11 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Aanmaken" class="btn btn-default" />
+                <input type="submit" value="Aanmaken" class="button" />
             </div>
         </form>
     </div>
-</div>
-
+</section>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
