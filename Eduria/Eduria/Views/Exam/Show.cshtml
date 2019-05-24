@@ -35,7 +35,7 @@
                     </div>
                     <div class="medium-offset-10 medium-2 columns">
                         <p id="answer">Answer</p>
-                        <input type="text" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)" class="button"/>
+                        <input type="text" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button"/>
                     </div>
                 </form>
             </div>
@@ -46,7 +46,9 @@
     var QuestionModelArray = [];
     var AnswerModelArray = [];
     var currentAnswersArray = [];
+    var tempCurrentQuestion;
     var count = 0;
+    var score = 0;
 
     var selected = 0;
 
@@ -67,13 +69,9 @@
         @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text"));
     }
 
-@foreach (var e in Model.AnswerModels)
+    @foreach (var e in Model.AnswerModels)
     {
         @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
-    }
-
-    function ShowQuestion(Question) {
-        document.getElementById("Question").innerHTML = Question;
     }
 
     function ChangeButtons(names) {
@@ -82,48 +80,65 @@
 
     function CheckAnswer(tempAnswerArray, clickedId) {
         var output = false;
-        console.log(clickedId);
         if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
             output = true;
+            score++;
         }
+        console.log(clickedId + " is " + output);
         return output;
     }
 
     function GetAnswersByQuestionId(answerArray, questionId) {
         var outputArray = [];
-        //console.log("Kiekeboe");
         answerArray.forEach(function (element) {
-            //console.log(element.QuestionId + ":" + questionId);
             if (element.QuestionId === questionId) {
                 outputArray.push(element);
-                console.log(element);
             }
         });
         return outputArray;
     }
 
-    function NextQuestion(questionArray, answerArray, id) {
-        if (id !== 0) {
-            document.getElementById("answer").innerHTML = CheckAnswer(currentAnswersArray, selected);
+    function ExamLogic(questionArray, answerArray, id) {
+        console.log(questionArray);
+        if (id === 0) {
+            StartExam(questionArray.splice(0, 1)[0], answerArray);
+        } else if (0 === questionArray.length) {
+            FinishedExam(score);
+        } else {
+            if (CheckAnswer(currentAnswersArray, selected)) {
+                document.getElementById("answer").innerHTML = true;
+            } else {
+                questionArray.push(tempCurrentQuestion);
+                document.getElementById("answer").innerHTML = false;
+            }
+            NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
         }
-        ShowQuestion(questionArray[id].Text);
         count++;
-        //console.log((questionArray.length - 1) + ":" + id);
-
-        currentAnswersArray = GetAnswersByQuestionId(answerArray, (id + 1));
-        console.log(answerArray);
-        console.log(currentAnswersArray);
-
-        if (id >= (questionArray.length - 1)) {
-            FinishedExam();
-            
-        }
-        //ChangeButtons(object.answers);
     }
 
-    function FinishedExam() {
+    function StartExam(question, answerArray) {
+        SetupQuestion(question, answerArray, 0);
+    }
+
+    function NextQuestion(question, answerArray, id) {
+        SetupQuestion(question, answerArray, id);
+    }
+
+    function SetupQuestion(question, answerArray, id) {
+        console.log(question);
+        tempCurrentQuestion = question;
+        document.getElementById("Question").innerHTML = question.Text;
+        currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
+    }
+
+    function FinishedExam(numCorrect) {
+        document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed!";
         console.log("klaar");
     }
 
-    ShowQuestion(QuestionModelArray[0].Text);
+    function SetupExam() {
+        QuestionModelArray.reverse();
+
+    }
+
 </script>

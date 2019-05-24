@@ -100,7 +100,7 @@ namespace Eduria.Controllers
                 tempAnswerModels.Add(new AnswerModel()
                 {
                     AnswerId = answer.Id,
-                    CorrectAnswer = answer.Correct.Equals(0),
+                    CorrectAnswer = answer.Correct.Equals(1),
                     QuestionId = answer.QuestionId,
                     Text = answer.Text
                 });
