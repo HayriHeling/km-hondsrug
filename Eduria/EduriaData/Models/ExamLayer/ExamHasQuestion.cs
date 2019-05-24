@@ -5,8 +5,10 @@ namespace EduriaData.Models
     public class ExamQuestion
     {
         [Key]
-        public int Id { get; set; }
+        public int ExamHasQuestionId { get; set; }
+        [Required]
         public int ExamId { get; set; }
+        [Required]
         public int QuestionId { get; set; }
     }
 }
