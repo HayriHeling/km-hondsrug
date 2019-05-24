@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Eduria
 {
-    public class UserExamService : AService<UserExam>
+    public class ExamResultService : AService<ExamResult>
     {
-        public UserExamService(EduriaContext context)
+        public ExamResultService(EduriaContext context)
         {
             Context = context;
         }
@@ -16,9 +16,9 @@ namespace Eduria
         /// Get all the UserTest data from the database.
         /// </summary>
         /// <returns>An list with the data.</returns>
-        public override IEnumerable<UserExam> GetAll()
+        public override IEnumerable<ExamResult> GetAll()
         {
-            return Context.UserExams;
+            return Context.ExamResults;
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace Eduria
         /// </summary>
         /// <param name="id"></param>
         /// <returns>The UserTest datamodel.</returns>
-        public override UserExam GetById(int id)
+        public override ExamResult GetById(int id)
         {
-            return GetAll().FirstOrDefault(usertest => usertest.Id == id);
+            return GetAll().FirstOrDefault(x => x.ExamResultId == id);
         }
     }
 }
