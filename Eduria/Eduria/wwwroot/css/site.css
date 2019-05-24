@@ -2,6 +2,39 @@
     font-family: 'Open Sans', sans-serif; 
 }
 
+h1 {
+    font-size: 30px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+    font-size: 24px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h3 {
+    font-size: 20px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+h4 {
+    font-size: 16px;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.medium {
+    max-width: 80%;
+}
+
 .large  {
     max-width: 90%;
 }
@@ -168,4 +201,21 @@ a {
     .menu {
         width: 100%;
     }
+}
+
+/* Users*/
+
+#addUser [type='text'], [type='number'], [type='password'], [type='email']{
+    background-color: #ddd;
+}
+
+#addUser {
+    padding: 50px 0;
+    width: 100%:
+}
+
+/* Test Results*/
+
+#testResults {
+    padding: 50px 0;
 }

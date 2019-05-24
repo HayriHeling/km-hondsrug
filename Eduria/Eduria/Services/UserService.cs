@@ -29,5 +29,15 @@ namespace Eduria.Services
         {
             return Context.Users.FirstOrDefault(x => x.UserId == id);
         }
+
+        /// <summary>
+        /// Get a user by the specified student number.
+        /// </summary>
+        /// <param name="studNum">The student number from the user.</param>
+        /// <returns>The user with the specific student number</returns>
+        public User GetUserByStudNum(int studNum)
+        {
+            return Context.Users.FirstOrDefault(x => x.StudNum == studNum);
+        }
     }
 }
