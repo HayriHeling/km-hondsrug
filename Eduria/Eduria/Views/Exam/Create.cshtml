@@ -24,6 +24,7 @@
     window.onload = function () {
         questionBox = $("#questionBox");
     }
+
     function AddQuestion() {
         if (questions.length == 0) {
             questionIndex = 0;
@@ -81,9 +82,9 @@
     }
     function DrawQuestion(index) {  
         var string = "<div id='question" + index + "'>";
-        string += "<p><input type='text' name='text' placeholder='Question'/>";
+        string += "<p><input type='text' name='text" + index + "' placeholder='Question'/>";
         string += "<button onClick = 'RemoveQuestion(" + index + ")'>Verwijder</button ></p>";
-        string += "<p><input type='text' name='category' placeholder='category'/></p>";
+        string += "<p><input type='text' name='category" + index + "' placeholder='category'/></p>";
         string += "<div id='answers" + index + "'></div>";
         string += "<p><button onclick='AddAnswer(" + index + ")'>Add Answer</button></p>";
         string += "</div>"
@@ -93,7 +94,8 @@
         var div = "#answers" + index + "";
         var answersbox = $(div);
         var string = "<div id='answer" + index + "-" + (questions[index].answers.length-1) + "'>";
-        string += "<p><input type='text' name='" + questions[index].id + (questions[index].answers.length-1) + "'placeholder='answer'/>";
+        string += "<p><input type='text' name='" + questions[index].id + (questions[index].answers.length - 1) + "'placeholder='answer'/>";
+        string += "<input type='checkbox' id='correct" + index + "' name='correct" + index + "'>";
         string += "<button onClick = 'RemoveAnswer(" + index + ", " + (questions[index].answers.length-1) + ")'>Verwijder</button></p>";
         string += "</div>";
         answersbox.append(string);
@@ -113,11 +115,13 @@
     function Question(id) {
         this.id = id;
         this.answerIndex = 0;
+        this.text = "";
         this.answers = [];
     }   
     function Answer(id, questionId) {
         this.id = id;
         this.questionId = questionId;
+        this.text = "";
     }
 
 </script>
