@@ -1,7 +1,129 @@
-﻿@model IEnumerable<Eduria.Models.ExamModel>
+﻿@model Eduria.Models.ExamModel
 @{
     ViewData["Title"] = "Show";
 }
 
 <h2>Show</h2>
 
+
+    <p id="Question">Empty</p>
+    <div id="noneToday">
+        <div class="row large">
+            <div class="medium-12 columns">
+                <form>
+                    <div class="cc-selector">
+                        <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
+                        <label class="timeperiod prehistorie" for="1"></label>
+                        <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
+                        <label class="timeperiod oudheid" for="2"></label>
+                        <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
+                        <label class="timeperiod vmiddeleeuwen" for="3"></label>
+                        <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
+                        <label class="timeperiod lmiddeleeuwen" for="4"></label>
+                        <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
+                        <label class="timeperiod nieuwetijd" for="5"></label>
+                        <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
+                        <label class="timeperiod goudeneeuw" for="6"></label>
+                        <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
+                        <label class="timeperiod verlichting" for="7"></label>
+                        <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
+                        <label class="timeperiod industrie" for="8"></label>
+                        <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
+                        <label class="timeperiod oorlog" for="9"></label>
+                        <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
+                        <label class="timeperiod tv" for="10"></label>
+                    </div>
+                    <div class="medium-offset-10 medium-2 columns">
+                        <p id="answer">Answer</p>
+                        <input type="text" value="Start" onclick="NextQuestion(QuestionModelArray, AnswerModelArray, count)" class="button"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script language="javascript">
+    var QuestionModelArray = [];
+    var AnswerModelArray = [];
+    var currentAnswersArray = [];
+    var count = 0;
+
+    var selected = 0;
+
+    function createTempQuestion(id, text) {
+        return { QuestionId: id, Text: text };
+    }
+
+    function createTempAnswer(id, questionId, text, correctAnswer) {
+        return { AnswerId: id, QuestionId: questionId, Text: text, CorrectAnswer: correctAnswer };
+    }
+
+    function eventListener(element) {
+        selected = element.id;
+    }
+
+    @foreach (var d in Model.QuestionModels)
+    { 
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text"));
+    }
+
+@foreach (var e in Model.AnswerModels)
+    {
+        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
+    }
+
+    function ShowQuestion(Question) {
+        document.getElementById("Question").innerHTML = Question;
+    }
+
+    function ChangeButtons(names) {
+        // TODO
+    }
+
+    function CheckAnswer(tempAnswerArray, clickedId) {
+        var output = false;
+        console.log(clickedId);
+        if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
+            output = true;
+        }
+        return output;
+    }
+
+    function GetAnswersByQuestionId(answerArray, questionId) {
+        var outputArray = [];
+        //console.log("Kiekeboe");
+        answerArray.forEach(function (element) {
+            //console.log(element.QuestionId + ":" + questionId);
+            if (element.QuestionId === questionId) {
+                outputArray.push(element);
+                console.log(element);
+            }
+        });
+        return outputArray;
+    }
+
+    function NextQuestion(questionArray, answerArray, id) {
+        if (id !== 0) {
+            document.getElementById("answer").innerHTML = CheckAnswer(currentAnswersArray, selected);
+        }
+        ShowQuestion(questionArray[id].Text);
+        count++;
+        //console.log((questionArray.length - 1) + ":" + id);
+
+        currentAnswersArray = GetAnswersByQuestionId(answerArray, (id + 1));
+        console.log(answerArray);
+        console.log(currentAnswersArray);
+
+        if (id >= (questionArray.length - 1)) {
+            FinishedExam();
+            
+        }
+        //ChangeButtons(object.answers);
+    }
+
+    function FinishedExam() {
+        console.log("klaar");
+    }
+
+    ShowQuestion(QuestionModelArray[0].Text);
+</script>

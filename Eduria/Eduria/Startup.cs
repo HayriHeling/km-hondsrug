@@ -40,11 +40,12 @@ namespace Eduria
             services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaDevelopment")));
             //Add over services.
             services.AddScoped<UserExamService>();
-            services.AddScoped<QuestionService>();
-            services.AddScoped<AnswerService>();
             services.AddScoped<UserService>();
             services.AddScoped<CategoryService>();
             services.AddScoped<ExamService>();
+            services.AddScoped<ExamQuestionService>();
+            services.AddScoped<QuestionService>();
+            services.AddScoped<AnswerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

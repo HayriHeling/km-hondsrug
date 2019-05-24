@@ -22,5 +22,20 @@ namespace Eduria.Services
         {
             return Context.Answers.Find(id);
         }
+
+        public IEnumerable<Answer> GetAnswersByQuestionsList(IEnumerable<Question> questions)
+        {
+            IEnumerable<Answer> answers = GetAll();
+            List<Answer> tempAnswers = new List<Answer>();
+            foreach (Question question in questions)
+            {
+                foreach(Answer answer in answers.Where(x => x.QuestionId == question.Id))
+                {
+                    tempAnswers.Add(answer);
+                }
+            }
+
+            return tempAnswers;
+        }
     }
 }
