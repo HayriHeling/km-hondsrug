@@ -34,7 +34,7 @@ namespace Eduria.Controllers
             }
 
             var question = await _context.Questions
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace Eduria.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Text,MediaLink")] Question question)
         {
-            if (id != question.Id)
+            if (id != question.QuestionId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace Eduria.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!QuestionExists(question.Id))
+                    if (!QuestionExists(question.QuestionId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace Eduria.Controllers
             }
 
             var question = await _context.Questions
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
                 return NotFound();
@@ -147,7 +147,7 @@ namespace Eduria.Controllers
 
         private bool QuestionExists(int id)
         {
-            return _context.Questions.Any(e => e.Id == id);
+            return _context.Questions.Any(e => e.QuestionId == id);
         }
     }
 }

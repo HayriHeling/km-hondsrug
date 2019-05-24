@@ -84,7 +84,7 @@ namespace Eduria.Controllers
                     Category = question.CategoryId.ToString(),
                     MediaLink = question.MediaLink,
                     MediaType = 0,
-                    QuestionId = question.Id,
+                    QuestionId = question.QuestionId,
                     Text = question.Text
                 });
             }
@@ -99,7 +99,7 @@ namespace Eduria.Controllers
             {
                 tempAnswerModels.Add(new AnswerModel()
                 {
-                    AnswerId = answer.Id,
+                    AnswerId = answer.AnswerId,
                     CorrectAnswer = answer.Correct.Equals(1),
                     QuestionId = answer.QuestionId,
                     Text = answer.Text

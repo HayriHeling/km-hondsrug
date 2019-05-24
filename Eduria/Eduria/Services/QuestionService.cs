@@ -28,7 +28,7 @@ namespace Eduria.Services
             List<Question> questions = new List<Question>();
             foreach (ExamQuestion eq in examQuestions)
             {
-                IEnumerable<Question> tempQuestions = Context.Questions.Where(x => x.Id == eq.QuestionId);
+                IEnumerable<Question> tempQuestions = Context.Questions.Where(x => x.QuestionId == eq.QuestionId);
                 foreach (Question question in tempQuestions)
                 {
                     questions.Add(question);

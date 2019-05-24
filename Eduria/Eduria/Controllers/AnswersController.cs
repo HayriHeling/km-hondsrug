@@ -36,7 +36,7 @@ namespace Eduria.Controllers
 
             var answer = await _context.Answers
                 .Include(a => a.QuestionId)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.AnswerId == id);
             if (answer == null)
             {
                 return NotFound();
@@ -93,7 +93,7 @@ namespace Eduria.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,QuestionId,Text,Correct")] Answer answer)
         {
-            if (id != answer.Id)
+            if (id != answer.AnswerId)
             {
                 return NotFound();
             }
@@ -107,7 +107,7 @@ namespace Eduria.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnswerExists(answer.Id))
+                    if (!AnswerExists(answer.AnswerId))
                     {
                         return NotFound();
                     }
@@ -132,7 +132,7 @@ namespace Eduria.Controllers
 
             var answer = await _context.Answers
                 .Include(a => a.QuestionId)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.AnswerId == id);
             if (answer == null)
             {
                 return NotFound();
@@ -154,7 +154,7 @@ namespace Eduria.Controllers
 
         private bool AnswerExists(int id)
         {
-            return _context.Answers.Any(e => e.Id == id);
+            return _context.Answers.Any(e => e.AnswerId == id);
         }
     }
 }
