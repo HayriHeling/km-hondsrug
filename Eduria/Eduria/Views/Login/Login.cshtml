@@ -44,8 +44,9 @@
                             <input asp-for="Password" class="form-control" type="password" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-
-                        <a asp-controller="ForgotPassword" asp-action="ForgotPassword">Wachtwoord vergeten? </a>
+                        <a asp-controller="Password" asp-action="Password">
+                            Wachtwoord vergeten?
+                        </a>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn btn-default" />
                         </div>

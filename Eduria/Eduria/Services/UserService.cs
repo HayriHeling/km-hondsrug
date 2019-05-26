@@ -42,5 +42,25 @@ namespace Eduria.Services
         {
             return Context.Users.FirstOrDefault(x => x.StudNum == studNum);
         }
+
+        /// <summary>
+        /// Get a user by the specified email.
+        /// </summary>
+        /// <param name="studNum">The student number from the user.</param>
+        /// <returns>The user with the specific student number</returns>
+        public User GetUserByEmail(string email)
+        {
+            return Context.Users.FirstOrDefault(x => x.Email == email);
+        }
+
+        /// <summary>
+        /// Get a user by the specified email.
+        /// </summary>
+        /// <param name="token">The student number from the user.</param>
+        /// <returns>The user with the specific student number</returns>
+        public User GetUserByToken(string token)
+        {
+            return Context.Users.FirstOrDefault(x => x.Token == token);
+        }
     }
 }
