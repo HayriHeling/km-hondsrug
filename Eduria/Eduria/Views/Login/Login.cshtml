@@ -44,15 +44,38 @@
                             <input asp-for="Password" class="form-control" type="password" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-                        <a asp-controller="Password" asp-action="Password">
-                            Wachtwoord vergeten?
-                        </a>
+                            <label id="myBtn">Wachtwoord vergeten?</label>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn btn-default" />
                         </div>
+
+
                     </form>
+
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <form asp-action="ForgotPassword" method="post">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Reset wachtwoord" class="button" />
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         }
+
+
+        <script src="~/js/site.js"></script>
     </body>
 </html>
