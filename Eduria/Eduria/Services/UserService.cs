@@ -1,9 +1,6 @@
 ﻿using EduriaData.Models;
-using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Eduria.Services
 {
@@ -30,7 +27,17 @@ namespace Eduria.Services
         /// <returns>The specific user.</returns>
         public override User GetById(int id)
         {
-            return Context.Users.FirstOrDefault(x => x.Id == id);
+            return Context.Users.FirstOrDefault(x => x.UserId == id);
+        }
+
+        /// <summary>
+        /// Get a user by the specified student number.
+        /// </summary>
+        /// <param name="studNum">The student number from the user.</param>
+        /// <returns>The user with the specific student number</returns>
+        public User GetUserByStudNum(int studNum)
+        {
+            return Context.Users.FirstOrDefault(x => x.StudNum == studNum);
         }
     }
 }

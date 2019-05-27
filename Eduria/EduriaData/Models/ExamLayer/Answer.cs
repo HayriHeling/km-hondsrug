@@ -5,10 +5,12 @@ namespace EduriaData.Models
     public class Answer
     {
         [Key]
-        public int Id { get; set; }
+        public int AnswerId { get; set; }
+        [Required]
         public int QuestionId { get; set; }
-        [Required, MaxLength(200, ErrorMessage = "Vul een antwoord in.")]
+        [Required, MaxLength(200)]
         public string Text { get; set; }
+        [Required]
         public int Correct { get; set; }
     }
 }

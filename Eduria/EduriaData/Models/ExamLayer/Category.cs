@@ -5,8 +5,8 @@ namespace EduriaData.Models
     public class Category
     {
         [Key]
-        public int Id { get; set; }
-        [MaxLength(45)]
+        public int CategoryId { get; set; }
+        [Required, MaxLength(45)]
         public string CategoryName { get; set; }
     }
 }
