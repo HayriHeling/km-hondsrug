@@ -39,7 +39,7 @@ namespace Eduria
             //Add own DbContext and use Sql Server.
             services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaDevelopment")));
             //Add over services.
-            services.AddScoped<UserExamService>();
+            services.AddScoped<ExamResultService>();
             services.AddScoped<UserService>();
             services.AddScoped<CategoryService>();
             services.AddScoped<ExamService>();

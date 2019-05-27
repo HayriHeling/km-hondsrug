@@ -1,4 +1,6 @@
 ﻿using EduriaData.Models;
+using EduriaData.Models.ExamLayer;
+using EduriaData.Models.AnalyticLayer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eduria
@@ -10,9 +12,17 @@ namespace Eduria
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<UserExam> UserExams { get; set; }
+        public DbSet<ExamResult> ExamResults { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<UserEQLog> UserEQLogs { get; set; }
+        public DbSet<AnswerT> AnswerTs { get; set; }
+        public DbSet<QuestionHasAnswerT> QuestionHasAnswerTs { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<AnalyticData> AnalyticDatas { get; set; }
+        public DbSet<AnalyticGoal> AnalyticGoals { get; set; }
+        public DbSet<AnalyticMethod> AnalyticMethods { get; set; }
+        public DbSet<DataHasGoal> DataHasGoals { get; set; }
+        public DbSet<DataHasMethod> DataHasMethods { get; set; }
+        public DbSet<DataHasSubject> DataHasSubjects { get; set; }
     }
 }
