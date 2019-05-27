@@ -20,5 +20,7 @@ namespace EduriaData.Models
         public int ClassId { get; set; }
         [Required, MaxLength(20)]
         public string Password { get; set; }
+        [MaxLength(200)]
+        public string Token { get; set; }
     }
 }

@@ -21,8 +21,5 @@ namespace Eduria
         public DbSet<AnalyticData> AnalyticDatas { get; set; }
         public DbSet<AnalyticGoal> AnalyticGoals { get; set; }
         public DbSet<AnalyticMethod> AnalyticMethods { get; set; }
-        public DbSet<DataHasGoal> DataHasGoals { get; set; }
-        public DbSet<DataHasMethod> DataHasMethods { get; set; }
-        public DbSet<DataHasSubject> DataHasSubjects { get; set; }
     }
 }

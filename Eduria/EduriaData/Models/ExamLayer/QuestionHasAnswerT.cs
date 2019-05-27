@@ -9,6 +9,6 @@ namespace EduriaData.Models.ExamLayer
         [Required]
         public int QuestionId { get; set; }
         [Required]
-        public int AnserTId { get; set; }
+        public int AnswerTId { get; set; }
     }
 }
