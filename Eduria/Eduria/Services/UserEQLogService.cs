@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 
 namespace Eduria.Services
 {
-    public class UserTQLogService : AService<UserTQLog>
+    public class UserTQLogService : AService<UserEQLog>
     {
         public UserTQLogService(EduriaContext context)
         {
             Context = context;
         }
 
-        public override IEnumerable<UserTQLog> GetAll()
+        public override IEnumerable<UserEQLog> GetAll()
         {
-            return Context.UserTQLogs;
+            return Context.UserEQLogs;
         }
 
-        public override UserTQLog GetById(int id)
+        public override UserEQLog GetById(int id)
         {
-            return Context.UserTQLogs.Find(id);
+            return Context.UserEQLogs.Find(id);
         }
 
         public void AddLogs(int userId, int examId, IDictionary<int, int> log)
         {
             foreach (KeyValuePair<int, int> logItem in log)
             {
-                Add(new UserTQLog
+                Add(new UserEQLog
                 {
                     UserId = userId,
                     ExamId = examId,
