@@ -1,8 +1,6 @@
 ﻿using EduriaData.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Eduria.Services
 {
@@ -29,7 +27,7 @@ namespace Eduria.Services
         /// <returns>The specific category.</returns>
         public override Category GetById(int id)
         {
-            return GetAll().FirstOrDefault(x => x.Id == id);
+            return GetAll().FirstOrDefault(x => x.CategoryId == id);
         }
     }
 }

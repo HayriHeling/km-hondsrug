@@ -5,17 +5,22 @@ namespace EduriaData.Models
     public class User
     {
         [Key]
-        public int Id { get; set; }
-        [Required, MaxLength(45, ErrorMessage = "Vul een voornaam in.")]
+        public int UserId { get; set; }
+        [Required, MaxLength(45)]
         public string Firstname { get; set; }
-        [Required, MaxLength(45, ErrorMessage = "Vul een achternaam in.")]
+        [Required, MaxLength(45)]
         public string Lastname { get; set; }
-        [Required, MaxLength(100, ErrorMessage = "Vul een e-mailadres in.")]
+        [Required, MaxLength(100)]
         public string Email { get; set; }
+        [Required]
         public int StudNum { get; set; }
+        [Required]
         public int UserType { get; set; }
+        [Required]
         public int ClassId { get; set; }
-        [Required, MaxLength(500, ErrorMessage = "Vul een wachtwoord in.")]
+        [Required, MaxLength(20)]
         public string Password { get; set; }
+        [MaxLength(200)]
+        public string Token { get; set; }
     }
 }
