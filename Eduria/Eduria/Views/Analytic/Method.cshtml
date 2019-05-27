@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Eduria.Models.AnalyticMethodModel>
+
+@{
+    ViewData["Title"] = "Werkwijze";
+}
+
+@using (Html.BeginForm("AddMethod", "Analytic", FormMethod.Post))
+{
+    @foreach (var item in Model)
+    {
+        <p>@Html.CheckBox(@item.Id.ToString(), false)@item.Name</p>
+    }
+}
+

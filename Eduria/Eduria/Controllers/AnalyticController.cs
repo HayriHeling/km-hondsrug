@@ -17,8 +17,13 @@ namespace Eduria.Controllers
         public IActionResult Index()
         {
             IEnumerable<AnalyticDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(1);
-
             return View(analyticDefaultModels);
+        }
+
+        public IActionResult Method()
+        {
+            IEnumerable<AnalyticMethodModel> analyticMethodModels = Service.GetAllAnalyticMethods();
+            return View(analyticMethodModels);
         }
 
         public IActionResult AddMethod()

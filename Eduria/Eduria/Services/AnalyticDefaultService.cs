@@ -37,6 +37,11 @@ namespace Eduria.Services
             return Context.DataHasDefaults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IEnumerable<AnalyticDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
@@ -53,6 +58,20 @@ namespace Eduria.Services
                     };
 
             return query.ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<AnalyticMethodModel> GetAllAnalyticMethods()
+        {
+            return Context.AnalyticDefaults.Select(result => new AnalyticMethodModel
+            {
+                Id = result.AnalyticDefaultId,
+                Name = result.AnalyticDefaultName,
+                Category = result.CategoryId
+            }).Where(x => x.Category == 1);
         }
     }
 }
