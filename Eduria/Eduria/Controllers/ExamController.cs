@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Eduria.Models;
@@ -111,29 +112,50 @@ namespace Eduria.Controllers
         }
 
         //GET: Exam/Create
-        public ActionResult Create()
+        public ActionResult Create(int success = 0)
         {
-            return View();
-        }
-        // GET: Exam/Create
-        public ActionResult Create()
-        {
+            ViewBag.success = success;
             return View();
         }
 
         // POST: Exam/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(string[] questionText, string[] questionCategory, int[] questionMediaType, string[] questionMediaLink, string[] answerText, int[] answerCorrect, int[] answerQuestionId)
         {
             try
             {
-                // TODO: Add insert logic here
+                ExamModel em = new ExamModel();
+                em.QuestionModels = new List<QuestionModel>();
+                em.AnswerModels = new List<AnswerModel>();
+                for(int i = 0; i < questionText.Length; i++)
+                {
+                    QuestionModel qm = new QuestionModel()
+                    {
+                        Category = questionCategory[i],
+                        Text = questionText[i],
+                        MediaType = (MediaType)questionMediaType[i],
+                        MediaLink = questionMediaLink[i]
+                    };
+                    em.QuestionModels.Add(qm);
+                }
+                for(int i = 0; i < answerText.Length; i++)
+                {
+                    AnswerModel am = new AnswerModel()
+                    {
+                        QuestionId = answerQuestionId[i],
+                        Text = answerText[i],
+                        CorrectAnswer = answerCorrect[i] != 0
+                    };
+                    em.AnswerModels.Add(am);
+                }
 
-                return RedirectToAction("Create");
+                return RedirectToAction("Create", new { success = 1 });
             }
-            catch
+            catch (NullReferenceException ex)
             {
+                Debug.WriteLine(ex.Message + " --------------------------");
+                Debug.WriteLine(ex);
                 return View();
             }
         }
