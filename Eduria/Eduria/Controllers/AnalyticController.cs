@@ -31,5 +31,10 @@ namespace Eduria.Controllers
 
             return View(analyticMethodModels);
         }
+
+        public IActionResult AddMethod()
+        {
+            return RedirectToAction("Index");
+        }
     }
 }

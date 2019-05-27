@@ -29,14 +29,5 @@ namespace Eduria.Services
         {
             return GetAll().FirstOrDefault(x => x.AnalyticMethodId == id);
         }
-
-        /// <summary>
-        /// Return all DataHasMethod objects.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<DataHasMethod> GetAllData()
-        {
-            return Context.DataHasMethods;
-        }
     }
 }
