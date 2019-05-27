@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    [Migration("20190527080259_Sprint 2 migration changes")]
-    partial class Sprint2migrationchanges
+    [Migration("20190527111053_Sprint 2 edited")]
+    partial class Sprint2edited
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,12 +32,6 @@ namespace Eduria.Migrations
 
                     b.Property<int>("Period");
 
-                    b.Property<string>("Reflection");
-
-                    b.Property<string>("UniqueMethodName");
-
-                    b.Property<int>("UniqueMethodScore");
-
                     b.Property<int>("UserId");
 
                     b.Property<int>("Year");
@@ -47,42 +41,69 @@ namespace Eduria.Migrations
                     b.ToTable("AnalyticDatas");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.AnalyticGoal", b =>
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.AnalyticDefault", b =>
                 {
-                    b.Property<int>("AnalyticGoalId")
+                    b.Property<int>("AnalyticDefaultId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AnalyticDataId");
+                    b.Property<string>("AnalyticDefaultName")
+                        .IsRequired();
 
-                    b.Property<string>("AnalyticGoalName")
-                        .IsRequired()
-                        .HasMaxLength(200);
+                    b.Property<int>("CategoryId");
 
-                    b.Property<int>("AnalyticGoalScore");
+                    b.HasKey("AnalyticDefaultId");
 
-                    b.HasKey("AnalyticGoalId");
-
-                    b.ToTable("AnalyticGoals");
+                    b.ToTable("AnalyticDefaults");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.AnalyticMethod", b =>
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.AnalyticInputDefault", b =>
                 {
-                    b.Property<int>("AnalyticMethodId")
+                    b.Property<int>("AnalyticInputDefaultId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AnalyticInputDefaultName");
+
+                    b.Property<int>("CategoryId");
+
+                    b.HasKey("AnalyticInputDefaultId");
+
+                    b.ToTable("AnalyticInputDefaults");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DataHasDefault", b =>
+                {
+                    b.Property<int>("DataHasDefaultId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AnalyticDataId");
 
-                    b.Property<string>("AnalyticMethodName")
-                        .IsRequired()
-                        .HasMaxLength(200);
+                    b.Property<int>("AnalyticDefaultId");
 
-                    b.Property<int>("AnalyticMethodScore");
+                    b.Property<int>("Score");
 
-                    b.HasKey("AnalyticMethodId");
+                    b.HasKey("DataHasDefaultId");
 
-                    b.ToTable("AnalyticMethods");
+                    b.ToTable("DataHasDefaults");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DataHasInput", b =>
+                {
+                    b.Property<int>("DataHasInputId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AnalyticDataId");
+
+                    b.Property<int>("AnalyticInputDefaultId");
+
+                    b.Property<int>("AnalyticInputDefaultText");
+
+                    b.HasKey("DataHasInputId");
+
+                    b.ToTable("DataHasInputs");
                 });
 
             modelBuilder.Entity("EduriaData.Models.Answer", b =>

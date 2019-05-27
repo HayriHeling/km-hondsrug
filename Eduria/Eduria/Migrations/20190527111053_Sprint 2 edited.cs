@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eduria.Migrations
 {
-    public partial class Sprint2migrationchanges : Migration
+    public partial class Sprint2edited : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,10 +17,7 @@ namespace Eduria.Migrations
                     UserId = table.Column<int>(nullable: false),
                     Period = table.Column<int>(nullable: false),
                     Year = table.Column<int>(nullable: false),
-                    ExamCode = table.Column<string>(nullable: false),
-                    Reflection = table.Column<string>(nullable: true),
-                    UniqueMethodName = table.Column<string>(nullable: true),
-                    UniqueMethodScore = table.Column<int>(nullable: false)
+                    ExamCode = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,33 +25,31 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnalyticGoals",
+                name: "AnalyticDefaults",
                 columns: table => new
                 {
-                    AnalyticGoalId = table.Column<int>(nullable: false)
+                    AnalyticDefaultId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AnalyticDataId = table.Column<int>(nullable: false),
-                    AnalyticGoalName = table.Column<string>(maxLength: 200, nullable: false),
-                    AnalyticGoalScore = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(nullable: false),
+                    AnalyticDefaultName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnalyticGoals", x => x.AnalyticGoalId);
+                    table.PrimaryKey("PK_AnalyticDefaults", x => x.AnalyticDefaultId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnalyticMethods",
+                name: "AnalyticInputDefaults",
                 columns: table => new
                 {
-                    AnalyticMethodId = table.Column<int>(nullable: false)
+                    AnalyticInputDefaultId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AnalyticDataId = table.Column<int>(nullable: false),
-                    AnalyticMethodName = table.Column<string>(maxLength: 200, nullable: false),
-                    AnalyticMethodScore = table.Column<int>(nullable: false)
+                    CategoryId = table.Column<int>(nullable: false),
+                    AnalyticInputDefaultName = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnalyticMethods", x => x.AnalyticMethodId);
+                    table.PrimaryKey("PK_AnalyticInputDefaults", x => x.AnalyticInputDefaultId);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,6 +92,36 @@ namespace Eduria.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DataHasDefaults",
+                columns: table => new
+                {
+                    DataHasDefaultId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AnalyticDataId = table.Column<int>(nullable: false),
+                    AnalyticDefaultId = table.Column<int>(nullable: false),
+                    Score = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DataHasDefaults", x => x.DataHasDefaultId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DataHasInputs",
+                columns: table => new
+                {
+                    DataHasInputId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AnalyticDataId = table.Column<int>(nullable: false),
+                    AnalyticInputDefaultId = table.Column<int>(nullable: false),
+                    AnalyticInputDefaultText = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DataHasInputs", x => x.DataHasInputId);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,10 +245,10 @@ namespace Eduria.Migrations
                 name: "AnalyticDatas");
 
             migrationBuilder.DropTable(
-                name: "AnalyticGoals");
+                name: "AnalyticDefaults");
 
             migrationBuilder.DropTable(
-                name: "AnalyticMethods");
+                name: "AnalyticInputDefaults");
 
             migrationBuilder.DropTable(
                 name: "Answers");
@@ -233,6 +258,12 @@ namespace Eduria.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "DataHasDefaults");
+
+            migrationBuilder.DropTable(
+                name: "DataHasInputs");
 
             migrationBuilder.DropTable(
                 name: "ExamQuestions");
