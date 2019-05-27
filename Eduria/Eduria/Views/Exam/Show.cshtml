@@ -3,45 +3,44 @@
     ViewData["Title"] = "Show";
 }
 
-<h2>Show</h2>
-
-
-    <p id="Question">Empty</p>
-    <div id="noneToday">
-        <div class="row large">
-            <div class="medium-12 columns">
-                <form>
-                    <div class="cc-selector">
-                        <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
-                        <label class="timeperiod prehistorie" for="1"></label>
-                        <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
-                        <label class="timeperiod oudheid" for="2"></label>
-                        <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
-                        <label class="timeperiod vmiddeleeuwen" for="3"></label>
-                        <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
-                        <label class="timeperiod lmiddeleeuwen" for="4"></label>
-                        <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
-                        <label class="timeperiod nieuwetijd" for="5"></label>
-                        <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
-                        <label class="timeperiod goudeneeuw" for="6"></label>
-                        <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
-                        <label class="timeperiod verlichting" for="7"></label>
-                        <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
-                        <label class="timeperiod industrie" for="8"></label>
-                        <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
-                        <label class="timeperiod oorlog" for="9"></label>
-                        <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
-                        <label class="timeperiod tv" for="10"></label>
-                    </div>
-                    <div class="medium-offset-10 medium-2 columns">
-                        <p id="answer">Answer</p>
-                        <input type="text" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button"/>
-                    </div>
-                </form>
+    <section id="exam">
+        <div id="noneToday">
+            <div class="row large">
+                <div class="medium-12 columns">
+                    <p id="answer"></p>
+                    <h2>Toets tijdvakken</h2>
+                    <p id="Question">Klik op start om te beginnen</p>
+                    <form>
+                        <div class="cc-selector">
+                            <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
+                            <label class="timeperiod prehistorie" for="1"></label>
+                            <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
+                            <label class="timeperiod oudheid" for="2"></label>
+                            <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
+                            <label class="timeperiod vmiddeleeuwen" for="3"></label>
+                            <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
+                            <label class="timeperiod lmiddeleeuwen" for="4"></label>
+                            <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
+                            <label class="timeperiod nieuwetijd" for="5"></label>
+                            <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
+                            <label class="timeperiod goudeneeuw" for="6"></label>
+                            <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
+                            <label class="timeperiod verlichting" for="7"></label>
+                            <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
+                            <label class="timeperiod industrie" for="8"></label>
+                            <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
+                            <label class="timeperiod oorlog" for="9"></label>
+                            <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
+                            <label class="timeperiod tv" for="10"></label>
+                        </div>
+                        <div class="medium-offset-10 medium-2 columns">
+                            <input type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-
+    </section>
 <script language="javascript">
     var QuestionModelArray = [];
     var AnswerModelArray = [];
@@ -121,14 +120,14 @@
             FinishedExam(score);
         } else {
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
-                document.getElementById("answer").innerHTML = true;
+                document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt de vraag goed beantwoord!</div>";
                 score = score + 1;
             } else {
                 questionArray.push(tempCurrentQuestion);
                 if (maxScore > 0) {
                     maxScore = maxScore - 1;
                 }
-                document.getElementById("answer").innerHTML = false;
+                document.getElementById("answer").innerHTML = "<div class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</div>";
             }
             NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
         }
