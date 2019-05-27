@@ -11,7 +11,9 @@
 <h2>Create</h2>
 <form asp-action="Create">
     <div class="questionDiv">
-
+        <input type="text" name="examName" />
+        <input type="text" name="examDescription" />
+        <input type="number" name="examCategory" />
         <div id="questionBox">
 
         </div>
@@ -95,6 +97,7 @@
         }
         var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
         string += "<div id='question" + count + "'>";
+        string += "<input type='number' name='questionId' value= '" + count + "' disabled hidden/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
         string += "<p><input type='text' id='category" + count + "' name='questionCategory' placeholder='category'/></p>";

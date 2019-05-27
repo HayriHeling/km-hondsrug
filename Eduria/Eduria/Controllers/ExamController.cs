@@ -18,13 +18,15 @@ namespace Eduria.Controllers
         private QuestionService _questionService;
         private AnswerService _answerService;
         private ExamQuestionService _examQuestionService;
+        private CategoryService _categoryService;
 
-        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService, ExamQuestionService examQuestionService)
+        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService, ExamQuestionService examQuestionService, CategoryService categoryService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
             this._questionService = questionService;
             this._answerService = answerService;
+            this._categoryService = categoryService;
         }
 
         // GET: Exam
@@ -49,7 +51,7 @@ namespace Eduria.Controllers
             return new ExamModel()
             {
                 AnswerModels = CreateAnswerModels(tempAnswers.ToList()),
-                Category = "",
+                Category = 0,
                 Description = "",
                 ExamId = id,
                 Name = "None",
@@ -68,7 +70,7 @@ namespace Eduria.Controllers
             return new ExamModel()
             {
                 AnswerModels = answerModels,
-                Category = "",
+                Category = 0,
                 Description = "",
                 ExamId = 0,
                 Name = "None",
@@ -83,7 +85,7 @@ namespace Eduria.Controllers
             {
                 outputList.Add(new QuestionModel()
                 {
-                    Category = question.CategoryId.ToString(),
+                    Category = question.CategoryId,
                     MediaLink = question.MediaLink,
                     MediaType = 0,
                     QuestionId = question.Id,
@@ -114,6 +116,7 @@ namespace Eduria.Controllers
         //GET: Exam/Create
         public ActionResult Create(int success = 0)
         {
+            ViewBag.categories = _categoryService.GetAll();
             ViewBag.success = success;
             return View();
         }
@@ -121,41 +124,56 @@ namespace Eduria.Controllers
         // POST: Exam/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string[] questionText, string[] questionCategory, int[] questionMediaType, string[] questionMediaLink, string[] answerText, int[] answerCorrect, int[] answerQuestionId)
+        public ActionResult Create(string examName, string examDescription, int examCategory, int[] questionId, string[] questionText, int[] questionCategory, int[] questionMediaType, string[] questionMediaLink, string[] answerText, int[] answerCorrect, int[] answerQuestionId)
         {
             try
             {
-                ExamModel em = new ExamModel();
-                em.QuestionModels = new List<QuestionModel>();
-                em.AnswerModels = new List<AnswerModel>();
-                for(int i = 0; i < questionText.Length; i++)
+                Exam ex = new Exam()
                 {
-                    QuestionModel qm = new QuestionModel()
+                    CategoryId = examCategory,
+                    Name = examName,
+                    Description = examDescription
+                };
+                _examService.Add(ex);
+                int examId = _examService.GetByName(ex.Name).Id;
+
+                for (int i = 0; i < questionText.Length; i++)
+                {
+                    Question question = new Question()
                     {
-                        Category = questionCategory[i],
+                        CategoryId = questionCategory[i],
                         Text = questionText[i],
-                        MediaType = (MediaType)questionMediaType[i],
+                        MediaType = questionMediaType[i],
                         MediaLink = questionMediaLink[i]
                     };
-                    em.QuestionModels.Add(qm);
-                }
-                for(int i = 0; i < answerText.Length; i++)
-                {
-                    AnswerModel am = new AnswerModel()
-                    {
-                        QuestionId = answerQuestionId[i],
-                        Text = answerText[i],
-                        CorrectAnswer = answerCorrect[i] != 0
-                    };
-                    em.AnswerModels.Add(am);
-                }
+                    _questionService.Add(question);
+                    int _questionId = _questionService.GetByText(question.Text).Id;
 
+                    ExamQuestion eq = new ExamQuestion()
+                    {
+                        ExamId = examId,
+                        QuestionId = _questionId
+                    };
+                    _examQuestionService.Add(eq);
+
+                    for (int j = 0; j < answerText.Length; j++)
+                    {
+                        if(answerQuestionId[j] == questionId[i])
+                        {
+                            Answer answer = new Answer()
+                            {
+                                QuestionId = _questionId,
+                                Text = answerText[j],
+                                Correct = answerCorrect[j]
+                            };
+                            _answerService.Add(answer);
+                        }
+                    }
+                }
                 return RedirectToAction("Create", new { success = 1 });
             }
-            catch (NullReferenceException ex)
+            catch
             {
-                Debug.WriteLine(ex.Message + " --------------------------");
-                Debug.WriteLine(ex);
                 return View();
             }
         }

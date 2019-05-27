@@ -23,6 +23,11 @@ namespace Eduria.Services
             return Context.Questions.Find(id);
         }
 
+        public Question GetByText(string text)
+        {
+            return Context.Questions.FirstOrDefault(x => x.Text == text);
+        }
+
         public IEnumerable<Question> GetQuestionsByExamQuestionList(IEnumerable<ExamQuestion> examQuestions)
         {
             List<Question> questions = new List<Question>();
