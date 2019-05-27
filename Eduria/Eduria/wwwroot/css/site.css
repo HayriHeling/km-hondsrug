@@ -14,8 +14,8 @@ h1 {
 }
 
 h2 {
-    font-size: 24px;
-    color: #6b6b6b;
+    font-size: 20px;
+    color: #afacac;
     text-transform: uppercase;
     font-family: 'Open Sans', sans-serif;
 }
@@ -348,14 +348,15 @@ p {
 
 /* Exam */
 #exam {
-   padding: 50px 0;
+   padding: 30px 0;
 }
 
 .error {
-   
-    line-height: 30px;
-    color : #fff;
+    line-height: 14px;
+    color: #fff;
+    font-size: 12px;
     padding: 10px;
+
 }
 
 .wrong {
@@ -364,4 +365,8 @@ p {
 
 .correct {
     background-color: #74b027;
+}
+
+#exam p {
+    color: #afacac;
 }
