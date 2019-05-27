@@ -29,7 +29,7 @@ namespace Eduria.Services
             List<Answer> tempAnswers = new List<Answer>();
             foreach (Question question in questions)
             {
-                foreach(Answer answer in answers.Where(x => x.QuestionId == question.Id))
+                foreach(Answer answer in answers.Where(x => x.QuestionId == question.QuestionId))
                 {
                     tempAnswers.Add(answer);
                 }

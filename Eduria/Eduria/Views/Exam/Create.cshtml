@@ -11,9 +11,9 @@
 <h2>Create</h2>
 <form asp-action="Create">
     <div class="questionDiv">
-        <input type="text" name="examName" />
-        <input type="text" name="examDescription" />
-        <input type="number" name="examCategory" />
+        <input type="text" name="examName" placeholder="Toets naam" />
+        <input type="text" name="examDescription" placeholder="Omschrijving"/>
+        <input type="number" name="examCategory" placeholder="Categorie"/>
         <div id="questionBox">
 
         </div>
@@ -21,6 +21,7 @@
 
     </div>
     <div class="form-group">
+        <input type="button" onclick="SaveQuestions()" value="Save Questions">
         <input type="submit" value="Aanmaken" class="button" />
     </div>
 </form>
@@ -31,6 +32,9 @@
     var questionCount;
     window.onload = function () {
         questionBox = $("#questionBox");
+    }
+
+    function SaveQuestions() {
     }
 
     function AddQuestion() {
@@ -97,11 +101,11 @@
         }
         var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
         string += "<div id='question" + count + "'>";
-        string += "<input type='number' name='questionId' value= '" + count + "' disabled hidden/>";
+        string += "<input type='number' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
         string += "<p><input type='text' id='category" + count + "' name='questionCategory' placeholder='category'/></p>";
-        string += "<p><select id='mediatype" + count + "' name='questionMediaType'>";
+        string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0'>";
         string += "<option value = '0'>None</option>";
         string += "<option value = '1'>Audio</option>";
         string += "<option value = '2'>Image</option>";
@@ -118,12 +122,16 @@
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
         var string = "<div id='answer" + questionId + "-" + id + "'>";
-        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText'placeholder='answer " + id + "'/>";
-        string += "<input type='checkbox' id='correct" + id + "' name='answerCorrect'>";
-        string += "<input type='text' name='answerQuestionId' value='" + questionId + "'>";
+        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='answer " + id + "'/>";
+        string += "<p><select id='answerCorrect" + id + "' name='answerCorrect' selected='0'>";
+        string += "<option value = '0'>Correct</option>";
+        string += "<option value = '1'>Niet correct</option>";
+        string += "</select></p>";
+        string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
         string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
         string += "</div>";
         answersbox.append(string);
+        $(".answerQuestionId").hide();
     }
 
     function Show(index) {
@@ -136,6 +144,7 @@
                 $(div).hide();
             }
         }
+        $(".questionId").hide();        
     }
 
     function SaveQuestion(index) {

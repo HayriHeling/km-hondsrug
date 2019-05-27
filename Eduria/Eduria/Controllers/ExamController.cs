@@ -88,7 +88,7 @@ namespace Eduria.Controllers
                     Category = question.CategoryId,
                     MediaLink = question.MediaLink,
                     MediaType = 0,
-                    QuestionId = question.Id,
+                    QuestionId = question.QuestionId,
                     Text = question.Text
                 });
             }
@@ -103,7 +103,7 @@ namespace Eduria.Controllers
             {
                 tempAnswerModels.Add(new AnswerModel()
                 {
-                    AnswerId = answer.Id,
+                    AnswerId = answer.AnswerId,
                     CorrectAnswer = answer.Correct.Equals(0),
                     QuestionId = answer.QuestionId,
                     Text = answer.Text
@@ -135,19 +135,20 @@ namespace Eduria.Controllers
                     Description = examDescription
                 };
                 _examService.Add(ex);
-                int examId = _examService.GetByName(ex.Name).Id;
+                int examId = _examService.GetByName(ex.Name).ExamId;
 
                 for (int i = 0; i < questionText.Length; i++)
                 {
-                    Question question = new Question()
-                    {
-                        CategoryId = questionCategory[i],
-                        Text = questionText[i],
-                        MediaType = questionMediaType[i],
-                        MediaLink = questionMediaLink[i]
-                    };
+                    Question question = new Question();
+                    question.Text = questionText[i];
+                    if (i < questionCategory.Length)
+                        question.CategoryId = questionCategory[i];
+                    if(i < questionMediaType.Length)
+                        question.MediaType = questionMediaType[i];
+                    if(i < questionMediaLink.Length)
+                        question.MediaLink = questionMediaLink[i];
                     _questionService.Add(question);
-                    int _questionId = _questionService.GetByText(question.Text).Id;
+                    int _questionId = _questionService.GetByText(question.Text).QuestionId;
 
                     ExamQuestion eq = new ExamQuestion()
                     {
@@ -155,7 +156,6 @@ namespace Eduria.Controllers
                         QuestionId = _questionId
                     };
                     _examQuestionService.Add(eq);
-
                     for (int j = 0; j < answerText.Length; j++)
                     {
                         if(answerQuestionId[j] == questionId[i])
@@ -163,9 +163,11 @@ namespace Eduria.Controllers
                             Answer answer = new Answer()
                             {
                                 QuestionId = _questionId,
-                                Text = answerText[j],
-                                Correct = answerCorrect[j]
+                                Text = answerText[j]
                             };
+
+                            if (j < answerCorrect.Length)
+                                answer.Correct = answerCorrect[j];                                
                             _answerService.Add(answer);
                         }
                     }
