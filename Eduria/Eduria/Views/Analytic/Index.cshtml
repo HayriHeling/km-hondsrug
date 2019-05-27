@@ -1,7 +1,18 @@
-﻿
+﻿@model  IEnumerable<Eduria.Models.AnalyticDefaultModel> 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<a asp-controller="Analytic" asp-action="Method">Werkwijze</a>
+<a asp-controller="Analytic" asp-action="Subject">Onderwerpen</a>
+<a asp-controller="Analytic" asp-action="Goal">Doelen</a>
 
+@foreach(var item in Model)
+{
+    <p>AnalyticDataId: @item.AnalyticDataId</p>
+    <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
+    <p>Name: @item.AnalyticDefaultName</p>
+    <p>Category: @item.Category</p>
+    <p>Score: @item.Score</p>
+    <hr />
+}
