@@ -14,18 +14,5 @@ namespace Eduria.Models
 
         public List<QuestionModel> QuestionModels;
         public List<AnswerModel> AnswerModels;
-
-        public List<AnswerModel> GetAnswersById(int questionId)
-        {
-            List<AnswerModel> answerList = new List<AnswerModel>();
-            foreach(AnswerModel answer in AnswerModels)
-            {
-                if(answer.QuestionId == questionId)
-                {
-                    answerList.Add(answer);
-                }
-            }
-            return answerList;
-        }
     }
 }

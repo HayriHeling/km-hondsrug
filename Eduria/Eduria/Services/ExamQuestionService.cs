@@ -22,6 +22,11 @@ namespace Eduria.Services
             return Context.ExamQuestions.Find(id);
         }
 
+        /// <summary>
+        /// Gets all Questions belonging to the examId.
+        /// </summary>
+        /// <param name="examId">The exam-id the questions belong to</param>
+        /// <returns>List of ExamQuestion-models</returns>
         public IEnumerable<ExamQuestion> GetAllQuestionIdsAsList(int examId)
         {
             return Context.ExamQuestions.Where(x => x.ExamId == examId);

@@ -23,6 +23,11 @@ namespace Eduria.Services
             return Context.Questions.Find(id);
         }
 
+        /// <summary>
+        /// Method to get all the questions by the examQuestions-list.
+        /// </summary>
+        /// <param name="examQuestions">List of examQuestions</param>
+        /// <returns>List of Question-models</returns>
         public IEnumerable<Question> GetQuestionsByExamQuestionList(IEnumerable<ExamQuestion> examQuestions)
         {
             List<Question> questions = new List<Question>();

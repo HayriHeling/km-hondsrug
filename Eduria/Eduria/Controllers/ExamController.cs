@@ -27,19 +27,22 @@ namespace Eduria.Controllers
             //this._answerService = answerService;
         }
 
-        // GET: Exam
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        // GET: Exam/Details/5
+        /// <summary>
+        /// Method that creates a view for an exammodel.
+        /// </summary>
+        /// <param name="id">Id of the exammodel</param>
+        /// <returns>View of the exammodel</returns>
         public IActionResult Show(int id=1)
         {
             //return View(GetExamDataById(id));
             return View(GetExamModelByExamId(id));
         }
 
+        /// <summary>
+        /// Function that returns an ExamModel by the id of the exam.
+        /// </summary>
+        /// <param name="id">Examid</param>
+        /// <returns>An complete ExamModel</returns>
         public ExamModel GetExamModelByExamId(int id)
         {
             IEnumerable<ExamQuestion> tempExamQuestions = _examQuestionService.GetAllQuestionIdsAsList(id);
@@ -57,6 +60,11 @@ namespace Eduria.Controllers
             };
         }
 
+        /// <summary>
+        /// Gets the questionmodels and answermodels which belong to the examId.
+        /// </summary>
+        /// <param name="id">The examId</param>
+        /// <returns>a complete Exammodel</returns>
         public ExamModel GetExamDataById(int id)
         {
             List<Question> allQuestions = _questionService.GetAll().ToList();
@@ -76,6 +84,11 @@ namespace Eduria.Controllers
             };
         }
 
+        /// <summary>
+        /// Creates a list of QuestionModel-models from a list of Question-models
+        /// </summary>
+        /// <param name="questions">List of Question-models</param>
+        /// <returns>A list of QuestionModel-models</returns>
         public List<QuestionModel> CreateQuestionModelsList(List<Question> questions)
         {
             List<QuestionModel> outputList = new List<QuestionModel>();
@@ -95,6 +108,11 @@ namespace Eduria.Controllers
             return outputList;
         }
 
+        /// <summary>
+        /// Creates a list of Answermodel-models from a list of Answer-models
+        /// </summary>
+        /// <param name="answers">List of answer-models</param>
+        /// <returns>List of Answermodel-models</returns>
         public List<AnswerModel> CreateAnswerModels(List<Answer> answers)
         {
             List<AnswerModel> tempAnswerModels = new List<AnswerModel>();
@@ -110,78 +128,6 @@ namespace Eduria.Controllers
             }
 
             return tempAnswerModels;
-        }
-
-        //GET: Exam/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //POST: Exam/Create
-       [HttpPost]
-       [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                //return RedirectToAction(nameof(Index));
-                return null;
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //GET: Exam/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        //POST: Exam/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                //return RedirectToAction(nameof(Index));
-                return null;
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //GET: Exam/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //POST: Exam/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                //return RedirectToAction(nameof(Index));
-                return null;
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
