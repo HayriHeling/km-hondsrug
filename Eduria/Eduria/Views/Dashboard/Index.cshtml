@@ -4,11 +4,15 @@
 }
 
 <section id="dashboardContent">
-    <div class="row large">        <div class="medium-3 columns ">
+    <div class="row large">
+        <div class="medium-3 columns ">
             <div class="columns dashboardItem">
-                <input type="button" class="button" value="dit is een button" />
-                <input type="button" class="button ghost" value="dit is een ghost button" /><br />
-                <a href="#">Dit is een link</a>
+                <input type="button" class="button" value="Start toets" />
+            </div>
+        </div>
+        <div class="medium-3 columns ">
+            <div class="columns dashboardItem">
+                <input type="button" class="button ghost" value="Bekijk resultaten" />
             </div>
         </div>
         <div class="medium-3 columns ">
@@ -16,13 +20,6 @@
                 <a asp-controller="CreateUser" asp-action="Create">
                     Gebruiker aanmaken
                 </a>
-                <br />
-                <a asp-controller="Password" asp-action="Password">
-                    Wachtwoord vergeten?
-                </a>
-            <div class="medium-offset-10 medium-2 columns">
-                <input type="text" value="next" class="button"/>
-
             </div>
         </div>
     </div>
