@@ -51,12 +51,13 @@
     var score = 0;
     var maxScore = 0;
     var pointsPerQuestion = 5;
+    var outputJson = [];
 
     var selected = 0;
 
     function createTempQuestion(id, text, answerId) {
         maxScore = maxScore + pointsPerQuestion;
-        return { QuestionId: id, Text: text, AnswerId: answerId };
+        return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
 
     function createTempAnswer(id, questionId, text, correctAnswer) {
@@ -93,13 +94,13 @@
 
     function CheckAnswerT(question, clickedId) {
         clickedId = parseInt(clickedId);
-        
-        console.log(question.AnswerId + ", and selected is: " + clickedId + ", and " + (question.AnswerId + clickedId));
         var output = false;
         if (parseInt(question.AnswerId) === clickedId) {
-            console.log("Went in");
             output = true;
+        } else {
+            tempCurrentQuestion.TimesWrong++;
         }
+        CreateJson(question, output);
         return output;
     }
 
@@ -153,11 +154,16 @@
     function FinishedExam(numCorrect) {
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         console.log("klaar");
+        console.log(outputJson);
     }
 
     function SetupExam() {
         QuestionModelArray.reverse();
+    }
 
+    function CreateJson(question, correct) {
+        var jsonObject = { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn":Date.now()}
+        outputJson.push(jsonObject);
     }
 
 </script>
