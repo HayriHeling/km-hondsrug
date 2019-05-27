@@ -88,7 +88,7 @@ namespace Eduria.Controllers
                     MediaType = 0,
                     QuestionId = question.QuestionId,
                     Text = question.Text,
-                    AnswerId = _questionHasAnswerTService.GetByQuestionId(question.QuestionId).AnserTId
+                    AnswerId = _questionHasAnswerTService.GetByQuestionId(question.QuestionId).AnswerTId
             });
             }
 
