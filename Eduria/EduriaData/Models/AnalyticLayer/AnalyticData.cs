@@ -14,8 +14,5 @@ namespace EduriaData.Models.AnalyticLayer
         public int Year { get; set; }
         [Required]
         public string ExamCode { get; set; }
-        public string Reflection { get; set; }
-        public string UniqueMethodName { get; set; }
-        public int UniqueMethodScore { get; set; }
     }
 }

@@ -2,13 +2,14 @@
 
 namespace EduriaData.Models.AnalyticLayer
 {
-    public class DataHasSubject
+    public class DataHasInput
     {
         [Key]
-        public int DataHasSubjectId { get; set; }
+        public int DataHasInputId { get; set; }
         [Required]
         public int AnalyticDataId { get; set; }
         [Required]
-        public int AnalyticSubjectId { get; set; }
+        public int AnalyticInputDefaultId { get; set; }
+        public int AnalyticInputDefaultText { get; set; }
     }
 }
