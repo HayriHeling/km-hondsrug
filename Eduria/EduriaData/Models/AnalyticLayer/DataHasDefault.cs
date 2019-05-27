@@ -2,13 +2,14 @@
 
 namespace EduriaData.Models.AnalyticLayer
 {
-    public class DataHasGoal
+    public class DataHasDefault
     {
         [Key]
-        public int DataHasGoalId { get; set; }
+        public int DataHasDefaultId { get; set; }
         [Required]
         public int AnalyticDataId { get; set; }
         [Required]
-        public int AnalyticGoalId { get; set; }
+        public int AnalyticDefaultId { get; set; }
+        public int Score { get; set; }
     }
 }
