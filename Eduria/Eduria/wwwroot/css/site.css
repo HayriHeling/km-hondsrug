@@ -14,8 +14,8 @@ h1 {
 }
 
 h2 {
-    font-size: 24px;
-    color: #6b6b6b;
+    font-size: 20px;
+    color: #afacac;
     text-transform: uppercase;
     font-family: 'Open Sans', sans-serif;
 }
@@ -315,8 +315,8 @@ a {
     -webkit-transition: all 100ms ease-in;
     -moz-transition: all 100ms ease-in;
     transition: all 100ms ease-in;
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
     -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
     -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
     filter: grayscale(1) opacity(.7);
@@ -344,4 +344,29 @@ a {
 
 p {
     margin-bottom: .3em;
+}
+
+/* Exam */
+#exam {
+   padding: 30px 0;
+}
+
+.error {
+    line-height: 14px;
+    color: #fff;
+    font-size: 12px;
+    padding: 10px;
+
+}
+
+.wrong {
+    background-color: #f44242;
+}
+
+.correct {
+    background-color: #74b027;
+}
+
+#exam p {
+    color: #afacac;
 }
