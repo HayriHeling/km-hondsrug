@@ -6,9 +6,9 @@ namespace EduriaData.Models.AnalyticLayer
     {
         [Key]
         public int AnalyticMethodId { get; set; }
+        public int AnalyticDataId { get; set; }
         [Required, MaxLength(200)]
         public string AnalyticMethodName { get; set; }
-        [Required]
         public int AnalyticMethodScore { get; set; }
     }
 }
