@@ -23,6 +23,11 @@ namespace Eduria.Services
             return Context.QuestionHasAnswerTs.Find(id);
         }
 
+        /// <summary>
+        /// Gets a question belonging to the questionid
+        /// </summary>
+        /// <param name="questionId">Id of the question to find</param>
+        /// <returns>A QuestionHasAnswerT object belonging to the questionid</returns>
         public QuestionHasAnswerT GetByQuestionId(int questionId)
         {
             return Context.QuestionHasAnswerTs.First(x => x.QuestionId == questionId);
