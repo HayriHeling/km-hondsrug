@@ -146,7 +146,8 @@ namespace Eduria.Controllers
                 if (token != null)
                 {
                     //Create URL with above token  
-                    var lnkHref = "<a href='" + Url.Action("Reset", "Password", new { code = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    var lnkHref = "<a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    Service.SetUserToken(Email, token);
 
                     //HTML Template for Send email  
                     string subject = "Verzoek om wachtwoord te wijzigen";

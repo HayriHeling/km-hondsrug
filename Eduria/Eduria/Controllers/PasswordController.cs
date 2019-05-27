@@ -29,9 +29,26 @@ namespace Eduria.Controllers
         }
         
 
-        public IActionResult Reset()
+        public IActionResult Reset(string Token, string Password)
         {
-            return View();
+            try
+            {
+                User user = new User();
+                user = Service.GetUserByToken(Token);
+
+                if (Password != null)
+                {
+                    Logic hash = new Logic(Password);
+                    byte[] HashBytes = hash.ToArray();
+                    user.Password = Convert.ToBase64String(HashBytes);
+                    Service.Update(user);
+                }
+                return RedirectToAction("Edit", new { UserId = user.UserId });
+            }
+            catch
+            {
+                return Content("Token is niet geldig!");
+            }
         }
 
         public ActionResult ForgotPassword()
@@ -90,23 +107,38 @@ namespace Eduria.Controllers
         //    return View("Password");
         //}
 
-        public ActionResult Edit(string Token, string Password)
+        public ActionResult Edit(int? userId)
         {
-            try
-            {
-                User user = new User();
-                user = Service.GetUserByToken(Token);
+            //try
+            //{
+            //    string Token = Request.QueryString["Token"];
+            User user = new User();
+            user = Service.GetById(userId.Value);
 
-                Logic hash = new Logic(Password);
-                byte[] HashBytes = hash.ToArray();
-                user.Password = Convert.ToBase64String(HashBytes);
-                Service.Update(user);
-                return RedirectToAction("Reset", new { success = 1 });
-            }
-            catch
+            //Logic hash = new Logic(Password);
+            //byte[] HashBytes = hash.ToArray();
+            //user.Password = Convert.ToBase64String(HashBytes);
+            //Service.Update(user);
+            //    return RedirectToAction("Reset", new { success = 1 });
+            //}
+            //catch
+            //{
+            //    return Content("Token is niet geldig!");
+            //}
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(include: "Password")] User user)
+        {
+            if (ModelState.IsValid)
             {
-                return Content("Token is niet geldig!");
+                Service.SetPassword(user);
+                return RedirectToAction("Edit");
             }
+
+            return View();
         }
 
 

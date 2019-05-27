@@ -1,6 +1,7 @@
 ﻿using EduriaData.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Eduria.Services
 {
@@ -58,6 +59,19 @@ namespace Eduria.Services
         public User GetUserByToken(string token)
         {
             return Context.Users.FirstOrDefault(x => x.Token == token);
+        }
+
+        public void SetUserToken(string userMail, string token)
+        {
+            User user = Context.Users.First(x => x.Email == userMail);
+            user.Token = token;
+            Context.SaveChanges();
+        }
+
+        public void SetPassword(User user)
+        {
+            Context.Entry(user).State = EntityState.Modified;
+            Context.SaveChanges();
         }
     }
 }

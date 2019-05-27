@@ -73,7 +73,8 @@ namespace Eduria.Controllers
                     StudNum = user.UserNum,
                     UserType = (int)user.UserType,
                     ClassId = user.ClassId,
-                    Password = user.Password
+                    Password = user.Password,
+                    Token = "token1"
                 };
                 Logic hash = new Logic(dataUser.Password);
                 byte[] HashBytes = hash.ToArray();
