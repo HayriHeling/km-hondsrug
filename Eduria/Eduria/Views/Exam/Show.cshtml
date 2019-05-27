@@ -49,11 +49,14 @@
     var tempCurrentQuestion;
     var count = 0;
     var score = 0;
+    var maxScore = 0;
+    var pointsPerQuestion = 5;
 
     var selected = 0;
 
-    function createTempQuestion(id, text) {
-        return { QuestionId: id, Text: text };
+    function createTempQuestion(id, text, answerId) {
+        maxScore = maxScore + pointsPerQuestion;
+        return { QuestionId: id, Text: text, AnswerId: answerId };
     }
 
     function createTempAnswer(id, questionId, text, correctAnswer) {
@@ -66,13 +69,13 @@
 
     @foreach (var d in Model.QuestionModels)
     { 
-        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text"));
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.AnswerId));
     }
 
-    @foreach (var e in Model.AnswerModels)
+    @*@foreach (var e in Model.AnswerModels)
     {
         @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
-    }
+    }*@
 
     function ChangeButtons(names) {
         // TODO
@@ -85,6 +88,18 @@
             score++;
         }
         console.log(clickedId + " is " + output);
+        return output;
+    }
+
+    function CheckAnswerT(question, clickedId) {
+        clickedId = parseInt(clickedId);
+        
+        console.log(question.AnswerId + ", and selected is: " + clickedId + ", and " + (question.AnswerId + clickedId));
+        var output = false;
+        if (parseInt(question.AnswerId) === clickedId) {
+            console.log("Went in");
+            output = true;
+        }
         return output;
     }
 
@@ -105,10 +120,14 @@
         } else if (0 === questionArray.length) {
             FinishedExam(score);
         } else {
-            if (CheckAnswer(currentAnswersArray, selected)) {
+            if (CheckAnswerT(tempCurrentQuestion, selected)) {
                 document.getElementById("answer").innerHTML = true;
+                score = score + 1;
             } else {
                 questionArray.push(tempCurrentQuestion);
+                if (maxScore > 0) {
+                    maxScore = maxScore - 1;
+                }
                 document.getElementById("answer").innerHTML = false;
             }
             NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
@@ -128,11 +147,11 @@
         console.log(question);
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
-        currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
+        //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
     }
 
     function FinishedExam(numCorrect) {
-        document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed!";
+        document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         console.log("klaar");
     }
 

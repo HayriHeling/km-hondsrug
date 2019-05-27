@@ -45,6 +45,7 @@ namespace Eduria
             services.AddScoped<ExamService>();
             services.AddScoped<ExamQuestionService>();
             services.AddScoped<QuestionService>();
+            services.AddScoped<QuestionHasAnswerTService>();
             services.AddScoped<AnswerService>();
         }
 
