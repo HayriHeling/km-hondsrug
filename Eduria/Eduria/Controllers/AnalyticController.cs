@@ -40,5 +40,10 @@ namespace Eduria.Controllers
         {
             return View(Service.GetCombinedAnalyticDefaultAndData(1, "Doel"));
         }
+
+        public IActionResult Goal()
+        {
+            return View(Service.GetCombinedAnalyticDefaultAndData(1, "Doel"));
+        }
     }
 }
