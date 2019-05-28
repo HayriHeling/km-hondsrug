@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Eduria.JsonClasses;
+using Newtonsoft.Json.Linq;
 
 namespace Eduria.Controllers
 {
@@ -36,6 +42,21 @@ namespace Eduria.Controllers
         {
             //return View(GetExamDataById(id));
             return View(GetExamModelByExamId(id));
+        }
+
+        public IActionResult SendResults(string jsoninput)
+        {
+            List<UserEqLogJson> userEqLogJsons = new List<UserEqLogJson>();
+            var objects = JArray.Parse(jsoninput);
+            foreach (JObject root in objects)
+            {
+                foreach (KeyValuePair<String, JToken> app in root)
+                {
+                    Debug.WriteLine(app.Value);
+                }
+            }
+            Debug.WriteLine("Done");
+            return View(null);
         }
 
         /// <summary>

@@ -150,6 +150,7 @@
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         console.log("klaar");
         console.log(outputJson);
+        SendJson();
     }
 
     function SetupExam() {
@@ -159,6 +160,20 @@
     function CreateJson(question, correct) {
         var jsonObject = { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn":Date.now()}
         outputJson.push(jsonObject);
+    }
+
+    function SendJson() {
+        console.log(outputJson);
+        $.ajax({
+            type: "POST",
+            url: "/Exam/SendResults",
+            data: { jsoninput : JSON.stringify(outputJson) },
+            success: function(data){
+                alert(data.Result);
+            },
+            dataType: "json",
+            traditional: true
+        });
     }
 
 </script>
