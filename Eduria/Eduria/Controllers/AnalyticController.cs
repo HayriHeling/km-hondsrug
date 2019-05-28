@@ -25,5 +25,10 @@ namespace Eduria.Controllers
         {
             return RedirectToAction("Index");
         }
+
+        public IActionResult Goal()
+        {
+            return View();
+        }
     }
 }
