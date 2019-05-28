@@ -19,10 +19,9 @@ namespace Eduria
         public DbSet<QuestionHasAnswerT> QuestionHasAnswerTs { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<AnalyticData> AnalyticDatas { get; set; }
-        public DbSet<AnalyticGoal> AnalyticGoals { get; set; }
-        public DbSet<AnalyticMethod> AnalyticMethods { get; set; }
-        public DbSet<DataHasGoal> DataHasGoals { get; set; }
-        public DbSet<DataHasMethod> DataHasMethods { get; set; }
-        public DbSet<DataHasSubject> DataHasSubjects { get; set; }
+        public DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
+        public DbSet<AnalyticInputDefault> AnalyticInputDefaults { get; set; }
+        public DbSet<DataHasDefault> DataHasDefaults { get; set; }
+        public DbSet<DataHasInput> DataHasInputs { get; set; }
     }
 }
