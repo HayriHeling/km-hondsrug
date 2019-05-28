@@ -54,5 +54,23 @@ namespace Eduria.Services
 
             return query.ToList();
         }
+
+        public IEnumerable<AnalyticDefaultModel> GetAllGoalDefaultsByAnalyticDataId(int id)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        join c in Context.Categories on ad.CategoryId equals c.CategoryId
+                        where dhd.AnalyticDataId == id && c.CategoryName == "Doel"
+                        select new AnalyticDefaultModel
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                            Category = c.CategoryName,
+                            Score = dhd.Score
+                        };
+
+            return query.ToList();
+        }
     }
 }
