@@ -9,6 +9,11 @@ using EduriaData.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols;
+using System.Web;
+using System.IO;
+using System.Text;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
 
 namespace Eduria.Controllers
 {
@@ -114,11 +119,115 @@ namespace Eduria.Controllers
         }
 
         //GET: Exam/Create
-        public ActionResult Create(int success = 0)
+        public ActionResult Create()
         {
             ViewBag.categories = _categoryService.GetAll();
-            ViewBag.success = success;
             return View();
+        }
+
+        [DataContract]
+        class exam
+        {
+            [DataMember]
+            public string name;
+            [DataMember]
+            public string description;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public question[] questions;
+        }
+        [DataContract]
+        class question
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int answerCount;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public int mediaType;
+            [DataMember]
+            public string mediaLink;
+            [DataMember]
+            public answer[] answers;
+        }
+        [DataContract]
+        class answer
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int questionId;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int correct;
+        }
+
+        public ActionResult CreateExam(string examJson)
+        {
+            string json = examJson;
+            exam exam;
+            try
+            {
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+                {
+                    // Deserialization from JSON  
+                    DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(exam));
+                    exam = (exam)deserializer.ReadObject(ms);
+                    Debug.WriteLine("---------------> " + exam.questions.Length);
+                }
+
+                Exam ex = new Exam()
+                {
+                    CategoryId = exam.category,
+                    Name = exam.name,
+                    Description = exam.description
+                };
+                _examService.Add(ex);
+                int examId = _examService.GetByName(ex.Name).ExamId;
+
+                foreach(question q in exam.questions)
+                {
+                    Question question = new Question()
+                    {
+                        Text = q.text,
+                        CategoryId = q.category,
+                        MediaType = q.mediaType,
+                        MediaLink = q.mediaLink
+                    };
+                    _questionService.Add(question);
+                    int _questionId = _questionService.GetByText(question.Text).QuestionId;
+
+                    ExamQuestion eq = new ExamQuestion()
+                    {
+                        ExamId = examId,
+                        QuestionId = _questionId
+                    };
+
+                    _examQuestionService.Add(eq);
+
+                    foreach (answer a in q.answers)
+                    {
+                        Answer answer = new Answer()
+                        {
+                            QuestionId = _questionId,
+                            Text = a.text,
+                            Correct = a.correct
+                        };
+                        _answerService.Add(answer);
+                    }
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Create");
+            }
+            return RedirectToAction("Create");
         }
 
         // POST: Exam/Create

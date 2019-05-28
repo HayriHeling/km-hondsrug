@@ -9,11 +9,17 @@
 }
 
 <h2>Create</h2>
-<form asp-action="Create">
     <div class="questionDiv">
-        <input type="text" name="examName" placeholder="Toets naam" />
-        <input type="text" name="examDescription" placeholder="Omschrijving"/>
-        <input type="number" name="examCategory" placeholder="Categorie"/>
+        <input type="text" id="examName" name="examName" placeholder="Toets naam" />
+        <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving"/>
+        <select id="examCategory" name="examCategory">
+            @{ 
+                foreach(var desc in ViewBag.categories)
+                {
+                    <option value="@desc.CategoryId">@desc.CategoryName</option>
+                }
+            }
+        </select>
         <div id="questionBox">
 
         </div>
@@ -22,9 +28,8 @@
     </div>
     <div class="form-group">
         <input type="button" onclick="SaveQuestions()" value="Save Questions">
-        <input type="submit" value="Aanmaken" class="button" />
+        <input type="button" onclick="SaveExam()" value="Aanmaken" class="button" />
     </div>
-</form>
 
 <script>
     var questions = [];
@@ -34,7 +39,26 @@
         questionBox = $("#questionBox");
     }
 
+    function SaveExam() { 
+        SaveQuestions();
+        var name = $("#examName").val();
+        var description = $("#examDescription").val();
+        var category = $("#examCategory").val();
+        var exam = new Exam(name, category, description, questions);
+        $.ajax({
+            type: "POST",
+            url: "/Exam/createExam",
+            data: { examJson: JSON.stringify(exam) },
+            success: function (data) {
+                window.location.href = '/Exam/Show';
+            }
+        });
+    }
+
     function SaveQuestions() {
+        for (var i = 0; i < questions.length; i++) {
+            SaveQuestion(i);
+        }
     }
 
     function AddQuestion() {
@@ -104,19 +128,21 @@
         string += "<input type='number' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
+        string += "<p><select id='category" + count + "'></select>";
         string += "<p><input type='text' id='category" + count + "' name='questionCategory' placeholder='category'/></p>";
-        string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0'>";
+        string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
         string += "<option value = '0'>None</option>";
         string += "<option value = '1'>Audio</option>";
         string += "<option value = '2'>Image</option>";
         string += "<option value = '3'>Video</option>";
         string += "</select></p>";
-        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
+        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink' hidden/></p>";
         string += "<div id='answers" + count + "'></div>";
         string += "<p><input type='button' onclick='AddAnswer(" + count + ")' value='Add Answer'/></p>";
         string += "</div>"
         questionBox.append(string);
         Show(count);
+
     }
     function DrawAnswer(id, questionId) {
         var div = "#answers" + questionId + "";
@@ -124,8 +150,8 @@
         var string = "<div id='answer" + questionId + "-" + id + "'>";
         string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='answer " + id + "'/>";
         string += "<p><select id='answerCorrect" + id + "' name='answerCorrect' selected='0'>";
-        string += "<option value = '0'>Correct</option>";
-        string += "<option value = '1'>Niet correct</option>";
+        string += "<option value = '0'>Niet correct</option>";
+        string += "<option value = '1'>Correct</option>";
         string += "</select></p>";
         string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
         string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
@@ -140,11 +166,24 @@
             var div = "#question" + questions[i].id + "";
             if (questions[i].id == index) {
                 $(div).show();
+                OnChangeMediaType(index);
             } else {
                 $(div).hide();
             }
         }
         $(".questionId").hide();        
+    }
+
+    function OnChangeMediaType(count) {
+        var type = "#mediatype" + count + "";
+        var link = "#medialink" + count + "";
+
+        if ($(type).val() != 0) {
+            $(link).show();
+        }
+        else {
+            $(link).hide();
+        }
     }
 
     function SaveQuestion(index) {
@@ -178,11 +217,14 @@
     }
     function SaveAnswer(questionId, answerId) {
         var input = "#answertext" + questionId + "-" + answerId + "";
+        var correct = "#answerCorrect" + answerId + "";
         var inputAnswerText = $(input).val();
+        var inputAnswerCorrect = $(correct).val();
         var index = GetQuestionIndex(questionId);
         if (inputAnswerText != "") {
             questions[index].answers[answerId].text = inputAnswerText;
         }
+        questions[index].answers[answerId].correct = inputAnswerCorrect;
     }
 
     function GetQuestionIndex(id) {
@@ -197,8 +239,8 @@
         this.id = id;
         this.answerCount = 0;
         this.text = "Question";
-        this.category = "none";
-        this.mediaType = "none";
+        this.category = 0;
+        this.mediaType = 0;
         this.mediaLink = "";
         this.answers = [];
 
@@ -221,6 +263,14 @@
         this.id = id;
         this.questionId = questionId;
         this.text = "";
+        this.correct = 0;
+        }
+
+    function Exam(name, category, description, questions) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.questions = questions;
     }
 
 </script>
