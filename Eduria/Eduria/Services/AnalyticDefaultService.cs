@@ -13,6 +13,11 @@ namespace Eduria.Services
             Context = context;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="AnalyticDefaultId"></param>
+        /// <param name="AnalyticDataId"></param>
         public void AddDataHasDefault(int AnalyticDefaultId, int AnalyticDataId)
         {
             DataHasDefault dataHasDefault = new DataHasDefault
