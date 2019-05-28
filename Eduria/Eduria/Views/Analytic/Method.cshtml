@@ -1,14 +1,38 @@
-﻿@model IEnumerable<Eduria.Models.AnalyticMethodModel>
+﻿@model IEnumerable<Eduria.Models.AnalyticDefaultModel>
 
 @{
     ViewData["Title"] = "Werkwijze";
 }
 
-@using (Html.BeginForm("AddMethod", "Analytic", FormMethod.Post))
-{
     @foreach (var item in Model)
     {
-        <p>@Html.CheckBox(@item.Id.ToString(), false)@item.Name</p>
+        <p><input type=checkbox id="@item.AnalyticDefaultId" onclick="getMethods(@item.AnalyticDefaultId)"/>@item.AnalyticDefaultName</p>
     }
-}
+
+    <button type="submit" onclick="submitMethodArray()">Toevoegen</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var methodArray = [];
+
+    function getMethods(id) {
+        if (!methodArray.includes(id)) {
+            methodArray.push(id);
+        }
+        else {
+            methodArray.pop(id);
+        }
+
+        console.log(methodArray);
+        }
+
+    function submitMethodArray() {
+            $.ajax({
+            type: "POST",
+            traditional: true,
+            url: "/Analytic/AddMethod",
+            data: { methodParam: methodArray }
+        });
+    }     
+</script>
 

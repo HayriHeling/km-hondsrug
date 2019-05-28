@@ -13,13 +13,30 @@ namespace Eduria.Services
             Context = context;
         }
 
+        public void AddDataHasDefault(int AnalyticDefaultId, int AnalyticDataId)
+        {
+            DataHasDefault dataHasDefault = new DataHasDefault
+            {
+                AnalyticDataId = AnalyticDataId,
+                AnalyticDefaultId = AnalyticDefaultId
+            };
+
+            Context.Add(dataHasDefault);
+            Context.SaveChanges();
+        }
+
         /// <summary>
         /// Retrieve all the static analytic names.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AnalyticDefault> GetAllAnalyticDefault()
+        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefault()
         {
-            return Context.AnalyticDefaults;
+            return Context.AnalyticDefaults.Select(result => new AnalyticDefaultModel
+            {
+                AnalyticDefaultId = result.AnalyticDefaultId,
+                AnalyticDefaultName = result.AnalyticDefaultName,
+                Category = result.CategoryId.ToString()
+            });
         }
 
         public override IEnumerable<AnalyticData> GetAll()
@@ -38,7 +55,7 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Get all the data by analytic data id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -61,17 +78,12 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Get all analytic methods that exists in the database.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AnalyticMethodModel> GetAllAnalyticMethods()
+        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticMethods()
         {
-            return Context.AnalyticDefaults.Select(result => new AnalyticMethodModel
-            {
-                Id = result.AnalyticDefaultId,
-                Name = result.AnalyticDefaultName,
-                Category = result.CategoryId
-            }).Where(x => x.Category == 1);
+            return GetAllAnalyticDefault().Where(x => x.Category == "1");
         }
     }
 }

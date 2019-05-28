@@ -22,12 +22,19 @@ namespace Eduria.Controllers
 
         public IActionResult Method()
         {
-            IEnumerable<AnalyticMethodModel> analyticMethodModels = Service.GetAllAnalyticMethods();
-            return View(analyticMethodModels);
+            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = Service.GetAllAnalyticMethods();
+            return View(analyticDefaultModels);
         }
 
-        public IActionResult AddMethod()
+        public IActionResult AddMethod(int[] methodParam)
         {
+            if (methodParam.Length != 0)
+            {
+                foreach (var id in methodParam)
+                {
+                    Service.AddDataHasDefault(id, 1);
+                }
+            }
             return RedirectToAction("Index");
         }
     }
