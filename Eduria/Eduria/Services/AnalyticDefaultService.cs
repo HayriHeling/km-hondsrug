@@ -59,8 +59,9 @@ namespace Eduria.Services
         {
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
             IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryName(category);
-
-            Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
+            
+            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
+            
             return tuple;
         }
 
