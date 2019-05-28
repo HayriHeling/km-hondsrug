@@ -16,7 +16,7 @@ namespace Eduria.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(1);
+            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(1);
 
             return View(analyticDefaultModels);
         }
@@ -28,7 +28,10 @@ namespace Eduria.Controllers
 
         public IActionResult Goal()
         {
-            return View();
+
+            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(1, "Doel");
+
+            return View(analyticDefaultModels);
         }
     }
 }

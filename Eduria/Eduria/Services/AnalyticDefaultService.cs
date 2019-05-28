@@ -37,13 +37,13 @@ namespace Eduria.Services
             return Context.DataHasDefaults;
         }
 
-        public IEnumerable<AnalyticDefaultModel> GetAllDataByAnalyticDataId(int id)
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
                     join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
                     join c in Context.Categories on ad.CategoryId equals c.CategoryId
                     where dhd.AnalyticDataId == id
-                    select new AnalyticDefaultModel
+                    select new AnalyticHasDefaultModel
                     {
                         AnalyticDataId = dhd.AnalyticDataId,
                         AnalyticDefaultId = dhd.AnalyticDefaultId,
@@ -55,19 +55,29 @@ namespace Eduria.Services
             return query.ToList();
         }
 
-        public IEnumerable<AnalyticDefaultModel> GetAllGoalDefaultsByAnalyticDataId(int id)
+        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, string category)
         {
-            var query = from dhd in Context.DataHasDefaults
-                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+            IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
+            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryName(category);
+
+            Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
+            return tuple;
+        }
+
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDefaultsByAnalyticDataIdAndCategoryName(int id, string category)
+        {
+            return GetAllDataByAnalyticDataId(id).Where(x => x.Category == category);
+        }
+
+        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryName(string category)
+        {
+            var query = from ad in Context.AnalyticDefaults
                         join c in Context.Categories on ad.CategoryId equals c.CategoryId
-                        where dhd.AnalyticDataId == id && c.CategoryName == "Doel"
+                        where c.CategoryName == category
                         select new AnalyticDefaultModel
                         {
-                            AnalyticDataId = dhd.AnalyticDataId,
-                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultId = ad.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,
-                            Category = c.CategoryName,
-                            Score = dhd.Score
                         };
 
             return query.ToList();
