@@ -77,10 +77,6 @@
         @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
     }*@
 
-    function ChangeButtons(names) {
-        // TODO
-    }
-
     function CheckAnswer(tempAnswerArray, clickedId) {
         var output = false;
         if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {

@@ -16,9 +16,19 @@ namespace Eduria.Controllers
             _userEQLogService = userEqLogService;
         }
 
-        public void AddUserEQLog(UserEQLog userEqLog)
+        public void AddUserEqLog(UserEQLog userEqLog)
         {
             _userEQLogService.Add(userEqLog);
+        }
+
+        public void AddListOfUserEqLogs(List<UserEQLog> userEqLogs)
+        {
+            foreach (UserEQLog userEqLog in userEqLogs)
+            {
+                AddUserEqLog(userEqLog);
+            }
+
+            ;
         }
     }
 }
