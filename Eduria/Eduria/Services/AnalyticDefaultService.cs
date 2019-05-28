@@ -34,14 +34,9 @@ namespace Eduria.Services
         /// Retrieve all the static analytic names.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefault()
+        public IEnumerable<AnalyticDefault> GetAllAnalyticDefault()
         {
-            return Context.AnalyticDefaults.Select(result => new AnalyticDefaultModel
-            {
-                AnalyticDefaultId = result.AnalyticDefaultId,
-                AnalyticDefaultName = result.AnalyticDefaultName,
-                Category = result.CategoryId.ToString()
-            });
+            return Context.AnalyticDefaults;
         }
 
         public override IEnumerable<AnalyticData> GetAll()
@@ -59,18 +54,13 @@ namespace Eduria.Services
             return Context.DataHasDefaults;
         }
 
-        /// <summary>
-        /// Get all the data by analytic data id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public IEnumerable<AnalyticDefaultModel> GetAllDataByAnalyticDataId(int id)
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
                     join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
                     join c in Context.Categories on ad.CategoryId equals c.CategoryId
                     where dhd.AnalyticDataId == id
-                    select new AnalyticDefaultModel
+                    select new AnalyticHasDefaultModel
                     {
                         AnalyticDataId = dhd.AnalyticDataId,
                         AnalyticDefaultId = dhd.AnalyticDefaultId,
@@ -82,13 +72,33 @@ namespace Eduria.Services
             return query.ToList();
         }
 
-        /// <summary>
-        /// Get all analytic methods that exists in the database.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticMethods()
+        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, string category)
         {
-            return GetAllAnalyticDefault().Where(x => x.Category == "1");
+            IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
+            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryName(category);
+            
+            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
+            
+            return tuple;
+        }
+
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDefaultsByAnalyticDataIdAndCategoryName(int id, string category)
+        {
+            return GetAllDataByAnalyticDataId(id).Where(x => x.Category == category);
+        }
+
+        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryName(string category)
+        {
+            var query = from ad in Context.AnalyticDefaults
+                        join c in Context.Categories on ad.CategoryId equals c.CategoryId
+                        where c.CategoryName == category
+                        select new AnalyticDefaultModel
+                        {
+                            AnalyticDefaultId = ad.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                        };
+
+            return query.ToList();
         }
     }
 }

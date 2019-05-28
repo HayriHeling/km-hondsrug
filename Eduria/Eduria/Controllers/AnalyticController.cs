@@ -36,6 +36,9 @@ namespace Eduria.Controllers
                 }
             }
             return RedirectToAction("Index");
+        public IActionResult Goal()
+        {
+            return View(Service.GetCombinedAnalyticDefaultAndData(1, "Doel"));
         }
     }
 }
