@@ -47,7 +47,6 @@ namespace Eduria.Controllers
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
-                              //Category = c.CategoryName,
                               StartedAt = er.StartedAt,
                               FinishedAt = er.FinishedAt,
                               Score = er.Score

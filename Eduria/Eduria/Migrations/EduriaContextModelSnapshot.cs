@@ -45,10 +45,10 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AnalyticCategory");
+
                     b.Property<string>("AnalyticDefaultName")
                         .IsRequired();
-
-                    b.Property<int>("CategoryId");
 
                     b.HasKey("AnalyticDefaultId");
 
@@ -78,7 +78,8 @@ namespace Eduria.Migrations
 
                     b.Property<int>("DataHasDefaultId");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
                     b.HasKey("DefaultDataInputId");
 

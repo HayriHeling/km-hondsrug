@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    [Migration("20190529081207_Sprint 3 migration")]
+    [Migration("20190529082937_Sprint 3 migration")]
     partial class Sprint3migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,10 +47,10 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AnalyticCategory");
+
                     b.Property<string>("AnalyticDefaultName")
                         .IsRequired();
-
-                    b.Property<int>("CategoryId");
 
                     b.HasKey("AnalyticDefaultId");
 
@@ -80,7 +80,8 @@ namespace Eduria.Migrations
 
                     b.Property<int>("DataHasDefaultId");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
                     b.HasKey("DefaultDataInputId");
 

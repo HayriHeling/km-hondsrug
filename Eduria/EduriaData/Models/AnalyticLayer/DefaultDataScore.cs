@@ -8,6 +8,7 @@ namespace EduriaData.Models.AnalyticLayer
         public int DefaultDateScoreId { get; set; }
         [Required]
         public int DataHasDefaultId { get; set; }
+        [Required]
         public int Score { get; set; }
     }
 }
