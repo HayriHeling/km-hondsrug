@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eduria.Migrations
 {
-    public partial class Sprint2edited : Migration
+    public partial class Sprint3migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,20 +39,6 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnalyticInputDefaults",
-                columns: table => new
-                {
-                    AnalyticInputDefaultId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(nullable: false),
-                    AnalyticInputDefaultName = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnalyticInputDefaults", x => x.AnalyticInputDefaultId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Answers",
                 columns: table => new
                 {
@@ -68,41 +54,13 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnswerTs",
-                columns: table => new
-                {
-                    AnswerTId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Text = table.Column<string>(nullable: false),
-                    Source = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AnswerTs", x => x.AnswerTId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryName = table.Column<string>(maxLength: 45, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DataHasDefaults",
                 columns: table => new
                 {
                     DataHasDefaultId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnalyticDataId = table.Column<int>(nullable: false),
-                    AnalyticDefaultId = table.Column<int>(nullable: false),
-                    Score = table.Column<int>(nullable: false)
+                    AnalyticDefaultId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,18 +68,31 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DataHasInputs",
+                name: "DefaultDataInputs",
                 columns: table => new
                 {
-                    DataHasInputId = table.Column<int>(nullable: false)
+                    DefaultDataInputId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AnalyticDataId = table.Column<int>(nullable: false),
-                    AnalyticInputDefaultId = table.Column<int>(nullable: false),
-                    AnalyticInputDefaultText = table.Column<int>(nullable: false)
+                    DataHasDefaultId = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DataHasInputs", x => x.DataHasInputId);
+                    table.PrimaryKey("PK_DefaultDataInputs", x => x.DefaultDataInputId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DefaultDataScores",
+                columns: table => new
+                {
+                    DefaultDateScoreId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DataHasDefaultId = table.Column<int>(nullable: false),
+                    Score = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DefaultDataScores", x => x.DefaultDateScoreId);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +132,7 @@ namespace Eduria.Migrations
                 {
                     ExamId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(nullable: false),
+                    TimeTableId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 45, nullable: false),
                     Description = table.Column<string>(maxLength: 256, nullable: false)
                 },
@@ -171,33 +142,34 @@ namespace Eduria.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuestionHasAnswerTs",
-                columns: table => new
-                {
-                    QuestionHasAnswerTId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    QuestionId = table.Column<int>(nullable: false),
-                    AnswerTId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionHasAnswerTs", x => x.QuestionHasAnswerTId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
                     QuestionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(nullable: false),
+                    TimeTableId = table.Column<int>(nullable: false),
                     Text = table.Column<string>(maxLength: 200, nullable: false),
-                    MediaLink = table.Column<string>(maxLength: 500, nullable: false),
-                    MediaType = table.Column<int>(nullable: false)
+                    MediaLink = table.Column<string>(maxLength: 500, nullable: true),
+                    MediaType = table.Column<int>(nullable: false),
+                    QuestionType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.QuestionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeTables",
+                columns: table => new
+                {
+                    TimeTableId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(nullable: false),
+                    Source = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeTables", x => x.TimeTableId);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,7 +199,7 @@ namespace Eduria.Migrations
                     Firstname = table.Column<string>(maxLength: 45, nullable: false),
                     Lastname = table.Column<string>(maxLength: 45, nullable: false),
                     Email = table.Column<string>(maxLength: 100, nullable: false),
-                    StudNum = table.Column<int>(nullable: false),
+                    UserNum = table.Column<int>(nullable: false),
                     UserType = table.Column<int>(nullable: false),
                     ClassId = table.Column<int>(nullable: false),
                     Password = table.Column<string>(maxLength: 20, nullable: false),
@@ -248,22 +220,16 @@ namespace Eduria.Migrations
                 name: "AnalyticDefaults");
 
             migrationBuilder.DropTable(
-                name: "AnalyticInputDefaults");
-
-            migrationBuilder.DropTable(
                 name: "Answers");
-
-            migrationBuilder.DropTable(
-                name: "AnswerTs");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "DataHasDefaults");
 
             migrationBuilder.DropTable(
-                name: "DataHasInputs");
+                name: "DefaultDataInputs");
+
+            migrationBuilder.DropTable(
+                name: "DefaultDataScores");
 
             migrationBuilder.DropTable(
                 name: "ExamQuestions");
@@ -275,10 +241,10 @@ namespace Eduria.Migrations
                 name: "Exams");
 
             migrationBuilder.DropTable(
-                name: "QuestionHasAnswerTs");
+                name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "TimeTables");
 
             migrationBuilder.DropTable(
                 name: "UserEQLogs");

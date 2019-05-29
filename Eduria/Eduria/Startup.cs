@@ -41,7 +41,6 @@ namespace Eduria
             //Add over services.
             services.AddScoped<ExamResultService>();
             services.AddScoped<UserService>();
-            services.AddScoped<CategoryService>();
             services.AddScoped<ExamService>();
             services.AddScoped<AnalyticDefaultService>();
         }

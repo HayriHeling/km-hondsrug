@@ -16,14 +16,13 @@ namespace Eduria.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(1);
+            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(1);
             return View(analyticDefaultModels);
         }
 
         public IActionResult Method()
         {
-            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = Service.GetAllAnalyticMethods();
-            return View(analyticDefaultModels);
+            return View(Service.GetCombinedAnalyticDefaultAndData(1, "Werkwijze"));
         }
 
         public IActionResult AddMethod(int[] methodParam)
@@ -36,11 +35,7 @@ namespace Eduria.Controllers
                 }
             }
             return RedirectToAction("Index");
-        public IActionResult Goal()
-        {
-            return View(Service.GetCombinedAnalyticDefaultAndData(1, "Doel"));
         }
-
         public IActionResult Goal()
         {
             return View(Service.GetCombinedAnalyticDefaultAndData(1, "Doel"));

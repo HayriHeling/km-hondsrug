@@ -58,15 +58,15 @@ namespace Eduria.Services
         {
             var query = from dhd in Context.DataHasDefaults
                     join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
-                    join c in Context.Categories on ad.CategoryId equals c.CategoryId
+                    //join c in Context.Categories on ad.CategoryId equals c.CategoryId
                     where dhd.AnalyticDataId == id
                     select new AnalyticHasDefaultModel
                     {
                         AnalyticDataId = dhd.AnalyticDataId,
                         AnalyticDefaultId = dhd.AnalyticDefaultId,
                         AnalyticDefaultName = ad.AnalyticDefaultName,
-                        Category = c.CategoryName,
-                        Score = dhd.Score
+                        //Category = c.CategoryName,
+                        //Score = dhd.Score
                     };
 
             return query.ToList();
@@ -90,8 +90,8 @@ namespace Eduria.Services
         public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryName(string category)
         {
             var query = from ad in Context.AnalyticDefaults
-                        join c in Context.Categories on ad.CategoryId equals c.CategoryId
-                        where c.CategoryName == category
+                        //join c in Context.Categories on ad.CategoryId equals c.CategoryId
+                        //where c.CategoryName == category
                         select new AnalyticDefaultModel
                         {
                             AnalyticDefaultId = ad.AnalyticDefaultId,
