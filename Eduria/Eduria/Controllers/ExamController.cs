@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
+using Eduria.JsonClasses;
 using Eduria.Models;
 using Eduria.Services;
-using EduriaData.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Eduria.JsonClasses;
+using EduriaData.Models.ExamLayer;
 using Newtonsoft.Json.Linq;
 
 namespace Eduria.Controllers
@@ -23,13 +18,23 @@ namespace Eduria.Controllers
         private AnswerService _answerService;
         private QuestionHasAnswerTService _questionHasAnswerTService;
         private ExamQuestionService _examQuestionService;
+        private UserEQLogService _userEqLogService;
+        private ExamResultService _examResultService;
 
-        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService, QuestionHasAnswerTService questionHasAnswerTService, ExamQuestionService examQuestionService)
+        private int _examId;
+        private DateTime _dateTime;
+
+        public ExamController(ExamService examService, QuestionService questionService, 
+            AnswerService answerService, QuestionHasAnswerTService questionHasAnswerTService, 
+            ExamQuestionService examQuestionService, UserEQLogService userEqLogService,
+            ExamResultService examResultService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
             this._questionService = questionService;
             this._questionHasAnswerTService = questionHasAnswerTService;
+            this._userEqLogService = userEqLogService;
+            this._examResultService = examResultService;
             //this._answerService = answerService;
         }
 
@@ -41,22 +46,60 @@ namespace Eduria.Controllers
         public IActionResult Show(int id=1)
         {
             //return View(GetExamDataById(id));
+            _examId = id;
+            _dateTime = DateTime.Now;
+
             return View(GetExamModelByExamId(id));
         }
 
         public IActionResult SendResults(string jsoninput)
         {
             List<UserEqLogJson> userEqLogJsons = new List<UserEqLogJson>();
-            var objects = JArray.Parse(jsoninput);
-            foreach (JObject root in objects)
+            JArray objects = JArray.Parse(jsoninput);
+            foreach (var jToken in objects)
             {
-                foreach (KeyValuePair<String, JToken> app in root)
+                Debug.WriteLine(jToken.First.First["QuestionId"]);
+                userEqLogJsons.Add(new UserEqLogJson()
                 {
-                    Debug.WriteLine(app.Value);
-                }
+                    AnsweredOn = jToken.First.First["AnsweredOn"].ToObject<DateTime>(),
+                    CorrectAnswered = jToken.First.First["CorrectAnswered"].ToObject<int>(),
+                    QuestionId = jToken.First.First["QuestionId"].ToObject<int>(),
+                    TimesWrong = jToken.First.First["TimesWrong"].ToObject<int>()
+                });
             }
             Debug.WriteLine("Done");
+            ImportExamResultToDatabase();
+            ImportQuestionsToDatabase(userEqLogJsons);
             return View(null);
+        }
+
+        public void ImportQuestionsToDatabase(List<UserEqLogJson> userEqLogJsons)
+        {
+            foreach (UserEqLogJson userEqLogJson in userEqLogJsons)
+            {
+                UserEQLog userEqLog = new UserEQLog()
+                {
+                    AnsweredOn = userEqLogJson.AnsweredOn,
+                    CorrectAnswered = userEqLogJson.CorrectAnswered,
+                    ExamHasQuestionId = _examQuestionService.GetExamQuestionByQuestionIdExamId(userEqLogJson.QuestionId, 1).ExamHasQuestionId,
+                    ExamResultId = _examResultService.GetExamResultByUserAndExamId(userId:1, examId:1).ExamResultId,
+                    TimesWrong = userEqLogJson.TimesWrong,
+                    UserId = 1
+                };
+                _userEqLogService.Add(userEqLog);
+            }
+        }
+
+        public void ImportExamResultToDatabase()
+        {
+            _examResultService.Add(new ExamResult()
+            {
+                ExamId = 1,
+                StartedAt = DateTime.Now,
+                FinishedAt = DateTime.Now,
+                UserId = 1,
+                Score = 25
+            });
         }
 
         /// <summary>

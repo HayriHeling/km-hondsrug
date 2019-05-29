@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EduriaData.Models;
+﻿using System.Collections.Generic;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
 {

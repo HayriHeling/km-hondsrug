@@ -113,12 +113,12 @@
         console.log(questionArray);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
-        } else if (0 === questionArray.length) {
-            FinishedExam(score);
         } else {
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
-                document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt de vraag goed beantwoord!</div>";
+                document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</div>";
                 score = score + 1;
+                if (0 === questionArray.length) {
+                    FinishedExam(score);}
             } else {
                 questionArray.push(tempCurrentQuestion);
                 if (maxScore > 0) {
@@ -158,7 +158,8 @@
     }
 
     function CreateJson(question, correct) {
-        var jsonObject = { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn":Date.now()}
+        var dateObject = new Date();
+        var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": new Date()}}
         outputJson.push(jsonObject);
     }
 

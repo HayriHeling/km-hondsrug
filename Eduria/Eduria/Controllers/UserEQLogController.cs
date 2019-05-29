@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eduria.Services;
 using EduriaData.Models;
+using EduriaData.Models.ExamLayer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduriaData.Models
+namespace EduriaData.Models.ExamLayer
 {
     public class Category
     {
