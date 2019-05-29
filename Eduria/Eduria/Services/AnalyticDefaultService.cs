@@ -30,6 +30,18 @@ namespace Eduria.Services
             Context.SaveChanges();
         }
 
+        public void AddDefaultDataInput(int dataHasDefaultId, string text)
+        {
+            DefaultDataInput defaultDataInput = new DefaultDataInput
+            {
+                DataHasDefaultId = dataHasDefaultId,
+                Text = text
+            };
+
+            Context.DefaultDataInputs.Add(defaultDataInput);
+            Context.SaveChanges();
+        }
+
         /// <summary>
         /// Retrieve all the static analytic names.
         /// </summary>
@@ -167,6 +179,29 @@ namespace Eduria.Services
                 foreach (var id in methodParam)
                 {
                     AddDataHasDefault(id, analyticId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add all defined methods to the Analytic.
+        /// </summary>
+        /// <param name="methodParam">The array of integers that stands for the AnalyticDefault Id.</param>
+        /// <param name="analyticId">The Analytic Id from a specific user.</param>
+        /// <param name="ownMethod">The own method that the user specified.</param>
+        public void AddToAnalytic(int[] methodParam, int analyticId, int defaultAnalyticId, string ownMethod)
+        {
+            if (methodParam.Length != 0)
+            {
+                foreach (var id in methodParam)
+                {
+                    AddDataHasDefault(id, analyticId);
+
+                    if (id == defaultAnalyticId && ownMethod != null || ownMethod != "")
+                    {
+                        AddDataHasDefault(id, analyticId);
+                        AddDefaultDataInput(id, ownMethod);
+                    }
                 }
             }
         }

@@ -45,7 +45,18 @@ namespace Eduria.Controllers
         public IActionResult AddMethod(int[] methodParam)
         {
             Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId);
+            return RedirectToAction("Index");
+        }
 
+        /// <summary>
+        /// Action that is triggerd when a users adds method(s) with an own specified method.
+        /// </summary>
+        /// <param name="methodParam"></param>
+        /// <param name="textParam"></param>
+        /// <returns></returns>
+        public IActionResult AddMethodWithOwnMethod(int[] methodParam, int analyticDefaultIdParam, string textParam)
+        {
+            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, analyticDefaultIdParam, textParam);
             return RedirectToAction("Index");
         }
 
