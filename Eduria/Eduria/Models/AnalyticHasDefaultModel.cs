@@ -11,6 +11,6 @@ namespace Eduria.Models
         public int AnalyticDataId { get; set; }
         public string AnalyticDefaultName { get; set; }
         public int CategoryId { get; set; }
-        public int Score { get; set; }
+        public int? Score { get; set; }
     }
 }
