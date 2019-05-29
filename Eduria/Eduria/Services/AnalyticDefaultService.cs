@@ -22,8 +22,8 @@ namespace Eduria.Services
         {
             DataHasDefault dataHasDefault = new DataHasDefault
             {
-                AnalyticDataId = analyticDefaultId,
-                AnalyticDefaultId = analyticDataId
+                AnalyticDataId = analyticDataId,
+                AnalyticDefaultId = analyticDefaultId
             };
 
             Context.DataHasDefaults.Add(dataHasDefault);
@@ -75,16 +75,17 @@ namespace Eduria.Services
         public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
-                    join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
-                    join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId
-                    where dhd.AnalyticDataId == id
-                    select new AnalyticHasDefaultModel
-                    {
-                        AnalyticDataId = dhd.AnalyticDataId,
-                        AnalyticDefaultId = dhd.AnalyticDefaultId,
-                        AnalyticDefaultName = ad.AnalyticDefaultName,
-                        CategoryId = ad.AnalyticCategory,
-                        Score = dds.Score
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
+                        from dds in a.DefaultIfEmpty()
+                        where dhd.AnalyticDataId == id
+                        select new AnalyticHasDefaultModel
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                            CategoryId = ad.AnalyticCategory,
+                            Score = dds.Score
                     };
 
             return query.ToList();
