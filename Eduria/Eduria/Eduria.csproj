@@ -32,6 +32,7 @@
     <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\audio\" />
   </ItemGroup>
 
   <ItemGroup>

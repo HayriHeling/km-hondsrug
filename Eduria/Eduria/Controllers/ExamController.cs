@@ -25,6 +25,49 @@ namespace Eduria.Controllers
         private ExamQuestionService _examQuestionService;
         private CategoryService _categoryService;
 
+        [DataContract]
+        class exam
+        {
+            [DataMember]
+            public string name;
+            [DataMember]
+            public string description;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public question[] questions;
+        }
+        [DataContract]
+        class question
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int answerCount;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public int mediaType;
+            [DataMember]
+            public string mediaLink;
+            [DataMember]
+            public answer[] answers;
+        }
+        [DataContract]
+        class answer
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int questionId;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int correct;
+        }
+
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService, ExamQuestionService examQuestionService, CategoryService categoryService)
         {
             this._examQuestionService = examQuestionService;
@@ -125,49 +168,6 @@ namespace Eduria.Controllers
             return View();
         }
 
-        [DataContract]
-        class exam
-        {
-            [DataMember]
-            public string name;
-            [DataMember]
-            public string description;
-            [DataMember]
-            public int category;
-            [DataMember]
-            public question[] questions;
-        }
-        [DataContract]
-        class question
-        {
-            [DataMember]
-            public int id;
-            [DataMember]
-            public int answerCount;
-            [DataMember]
-            public string text;
-            [DataMember]
-            public int category;
-            [DataMember]
-            public int mediaType;
-            [DataMember]
-            public string mediaLink;
-            [DataMember]
-            public answer[] answers;
-        }
-        [DataContract]
-        class answer
-        {
-            [DataMember]
-            public int id;
-            [DataMember]
-            public int questionId;
-            [DataMember]
-            public string text;
-            [DataMember]
-            public int correct;
-        }
-
         public ActionResult CreateExam(string examJson)
         {
             string json = examJson;
@@ -228,65 +228,6 @@ namespace Eduria.Controllers
                 return RedirectToAction("Create");
             }
             return RedirectToAction("Create");
-        }
-
-        // POST: Exam/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(string examName, string examDescription, int examCategory, int[] questionId, string[] questionText, int[] questionCategory, int[] questionMediaType, string[] questionMediaLink, string[] answerText, int[] answerCorrect, int[] answerQuestionId)
-        {
-            try
-            {
-                Exam ex = new Exam()
-                {
-                    CategoryId = examCategory,
-                    Name = examName,
-                    Description = examDescription
-                };
-                _examService.Add(ex);
-                int examId = _examService.GetByName(ex.Name).ExamId;
-
-                for (int i = 0; i < questionText.Length; i++)
-                {
-                    Question question = new Question();
-                    question.Text = questionText[i];
-                    if (i < questionCategory.Length)
-                        question.CategoryId = questionCategory[i];
-                    if(i < questionMediaType.Length)
-                        question.MediaType = questionMediaType[i];
-                    if(i < questionMediaLink.Length)
-                        question.MediaLink = questionMediaLink[i];
-                    _questionService.Add(question);
-                    int _questionId = _questionService.GetByText(question.Text).QuestionId;
-
-                    ExamQuestion eq = new ExamQuestion()
-                    {
-                        ExamId = examId,
-                        QuestionId = _questionId
-                    };
-                    _examQuestionService.Add(eq);
-                    for (int j = 0; j < answerText.Length; j++)
-                    {
-                        if(answerQuestionId[j] == questionId[i])
-                        {
-                            Answer answer = new Answer()
-                            {
-                                QuestionId = _questionId,
-                                Text = answerText[j]
-                            };
-
-                            if (j < answerCorrect.Length)
-                                answer.Correct = answerCorrect[j];                                
-                            _answerService.Add(answer);
-                        }
-                    }
-                }
-                return RedirectToAction("Create", new { success = 1 });
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         //GET: Exam/Edit/5

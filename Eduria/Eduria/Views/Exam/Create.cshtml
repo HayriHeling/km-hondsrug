@@ -9,27 +9,27 @@
 }
 
 <h2>Create</h2>
-    <div class="questionDiv">
-        <input type="text" id="examName" name="examName" placeholder="Toets naam" />
-        <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving"/>
-        <select id="examCategory" name="examCategory">
-            @{ 
-                foreach(var desc in ViewBag.categories)
-                {
-                    <option value="@desc.CategoryId">@desc.CategoryName</option>
-                }
+<div class="questionDiv">
+    <input type="text" id="examName" name="examName" placeholder="Toets naam" />
+    <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
+    <select id="examCategory" name="examCategory">
+        @{
+            foreach (var desc in ViewBag.categories)
+            {
+                <option value="@desc.CategoryId">@desc.CategoryName</option>
             }
-        </select>
-        <div id="questionBox">
-
-        </div>
-        <input type="button" onclick="AddQuestion()" value="Add Question">
+        }
+    </select>
+    <div id="questionBox">
 
     </div>
-    <div class="form-group">
-        <input type="button" onclick="SaveQuestions()" value="Save Questions">
-        <input type="button" onclick="SaveExam()" value="Aanmaken" class="button" />
-    </div>
+    <div id="record"></div>
+    <input type="button" onclick="AddQuestion()" value="Add Question">
+
+</div>
+<div class="form-group">
+    <input type="button" onclick="SaveExam()" value="Aanmaken" class="button" />
+</div>
 
 <script>
     var questions = [];
@@ -135,8 +135,11 @@
         string += "<option value = '1'>Audio</option>";
         string += "<option value = '2'>Image</option>";
         string += "<option value = '3'>Video</option>";
-        string += "</select></p>";
-        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink' hidden/></p>";
+        string += "</select></p>";       
+        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
+        string += "<p><input type='button' id='audiostart" + count + "' onclick='startRecording()' value='start recording audio'>";
+        string += "<input type='button' id='audiostop" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
+        string += "<div id='audio" + count + "'></div>";
         string += "<div id='answers" + count + "'></div>";
         string += "<p><input type='button' onclick='AddAnswer(" + count + ")' value='Add Answer'/></p>";
         string += "</div>"
@@ -177,12 +180,23 @@
     function OnChangeMediaType(count) {
         var type = "#mediatype" + count + "";
         var link = "#medialink" + count + "";
+        var startbtn = "#audiostart" + count + "";
+        var stopbtn = "#audiostop" + count + "";
 
-        if ($(type).val() != 0) {
-            $(link).show();
-        }
-        else {
-            $(link).hide();
+        $(link).hide();
+        $(startbtn).hide();
+        $(stopbtn).hide();
+        switch ($(type).val()) {
+            case "1":
+                $(startbtn).show();
+                $(stopbtn).show();
+                break;
+            case "2":
+                
+                break;              
+            case "3":
+                $(link).show();
+                break;
         }
     }
 
@@ -264,7 +278,7 @@
         this.questionId = questionId;
         this.text = "";
         this.correct = 0;
-        }
+    }
 
     function Exam(name, category, description, questions) {
         this.name = name;
@@ -273,4 +287,68 @@
         this.questions = questions;
     }
 
+    //function to start recording  
+    function startRecording() {
+        if (recorder.state == 'inactive') {
+            chunks = [];
+            recorder.start(500);
+        }
+    }
+    //function to stop recording
+    function stopRecording(q) {
+        if (recorder.state == 'recording') {
+            recorder.stop();
+            const blob = new Blob(chunks, { type: 'audio/webm' });
+            // convert blob to URL so it can be assigned to a audio src attribute
+            createAudioElement(URL.createObjectURL(blob), q);
+        }
+    }
+
+    // appends an audio element to playback and download recording
+    function createAudioElement(blobUrl, currentQuestion) {
+        var div = "#audio" + currentQuestion + "";
+        var startbtn = "#audiostart" + currentQuestion + "";
+        var stopbtn = "#audiostop" + currentQuestion + "";
+        $(div).empty();
+        const downloadEl = document.createElement('a');
+        downloadEl.style = 'display: block';
+        downloadEl.innerHTML = 'download';
+        downloadEl.download = 'audio.webm';
+        downloadEl.href = blobUrl;
+        const audioEl = document.createElement('audio');
+        audioEl.controls = true;
+        const sourceEl = document.createElement('source');
+        sourceEl.src = blobUrl;
+        sourceEl.type = 'audio/webm';
+        const remove = "<button onclick='removeAudioElement(" + currentQuestion + ")'>Verwijder</button>"
+        audioEl.appendChild(sourceEl);
+        $(div).append(audioEl);
+        $(div).append(remove);
+        $(startbtn).hide();
+        $(stopbtn).hide();
+    }
+
+    function removeAudioElement(q) {
+        var div = "#audio" + q + "";
+        var startbtn = "#audiostart" + q + "";
+        var stopbtn = "#audiostop" + q + "";
+
+        $(div).empty();
+        $(startbtn).show();
+        $(stopbtn).show();
+    }
+
+    var recorder;
+    // store streaming data chunks in array
+    var chunks = [];
+    // request permission to access audio stream
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        // create media recorder instance to initialize recording
+        recorder = new MediaRecorder(stream);
+        // function to be called when data is received
+        recorder.ondataavailable = e => {
+          // add stream data to chunks
+          chunks.push(e.data);
+        };
+    }).catch(console.error);
 </script>
