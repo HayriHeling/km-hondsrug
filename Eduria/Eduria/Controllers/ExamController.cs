@@ -52,7 +52,25 @@ namespace Eduria.Controllers
             return View(GetExamModelByExamId(id));
         }
 
+        /// <summary>
+        /// Method used for sending the data from the exam to this controller
+        /// </summary>
+        /// <param name="jsoninput">Json data</param>
+        /// <returns></returns>
         public IActionResult SendResults(string jsoninput)
+        {
+            Debug.WriteLine("Done");
+            ImportExamResultToDatabase(examId:1, userId:1, score:25);
+            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput));
+            return View(null);
+        }
+
+        /// <summary>
+        /// Method that returns a list of UserEQLogJson objects from a string of json
+        /// </summary>
+        /// <param name="jsoninput">The json string</param>
+        /// <returns>A list of UserEQLogJson objects</returns>
+        public List<UserEqLogJson> CreatEqLogJsonsFromJson(string jsoninput)
         {
             List<UserEqLogJson> userEqLogJsons = new List<UserEqLogJson>();
             JArray objects = JArray.Parse(jsoninput);
@@ -67,12 +85,14 @@ namespace Eduria.Controllers
                     TimesWrong = jToken.First.First["TimesWrong"].ToObject<int>()
                 });
             }
-            Debug.WriteLine("Done");
-            ImportExamResultToDatabase();
-            ImportQuestionsToDatabase(userEqLogJsons);
-            return View(null);
+
+            return userEqLogJsons;
         }
 
+        /// <summary>
+        /// Function that imports UserEQLog objects in the database.
+        /// </summary>
+        /// <param name="userEqLogJsons">A list of UserEqLogJson objects</param>
         public void ImportQuestionsToDatabase(List<UserEqLogJson> userEqLogJsons)
         {
             foreach (UserEqLogJson userEqLogJson in userEqLogJsons)
@@ -90,15 +110,18 @@ namespace Eduria.Controllers
             }
         }
 
-        public void ImportExamResultToDatabase()
+        /// <summary>
+        /// Function that imports the result of the exam in the database.
+        /// </summary>
+        public void ImportExamResultToDatabase(int examId, int userId, int score)
         {
             _examResultService.Add(new ExamResult()
             {
-                ExamId = 1,
+                ExamId = examId,
                 StartedAt = DateTime.Now,
                 FinishedAt = DateTime.Now,
-                UserId = 1,
-                Score = 25
+                UserId = userId,
+                Score = score
             });
         }
 
