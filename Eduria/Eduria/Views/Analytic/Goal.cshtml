@@ -4,14 +4,15 @@
 }
 
 <h2>Goals</h2>
-@foreach (var item in Model.Item1)
-{
-    <p>@item.AnalyticDataId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
-
-@foreach (var item in Model.Item2)
-{
-    <p>@item.AnalyticDefaultId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
+<table>
+    @using (Html.BeginForm())
+    {
+        @foreach (var item in Model.Item2)
+        {
+            <tr>
+                <td>@Html.CheckBox("checkbox_"+item.AnalyticDefaultId.ToString(), false, new { value = item.AnalyticDefaultId, @checked = "false" })</td>
+                <td>@item.AnalyticDefaultName</td>
+            </tr>
+        }
+    }
+</table>
