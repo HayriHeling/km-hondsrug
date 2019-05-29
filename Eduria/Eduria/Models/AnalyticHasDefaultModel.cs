@@ -10,7 +10,7 @@ namespace Eduria.Models
         public int AnalyticDefaultId { get; set; }
         public int AnalyticDataId { get; set; }
         public string AnalyticDefaultName { get; set; }
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
         public int Score { get; set; }
     }
 }

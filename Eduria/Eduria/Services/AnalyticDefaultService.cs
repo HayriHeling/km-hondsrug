@@ -16,17 +16,17 @@ namespace Eduria.Services
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="AnalyticDefaultId"></param>
-        /// <param name="AnalyticDataId"></param>
-        public void AddDataHasDefault(int AnalyticDefaultId, int AnalyticDataId)
+        /// <param name="analyticDefaultId"></param>
+        /// <param name="analyticDataId"></param>
+        public void AddDataHasDefault(int analyticDefaultId, int analyticDataId)
         {
             DataHasDefault dataHasDefault = new DataHasDefault
             {
-                AnalyticDataId = AnalyticDataId,
-                AnalyticDefaultId = AnalyticDefaultId
+                AnalyticDataId = analyticDefaultId,
+                AnalyticDefaultId = analyticDataId
             };
 
-            Context.Add(dataHasDefault);
+            Context.DataHasDefaults.Add(dataHasDefault);
             Context.SaveChanges();
         }
 
@@ -39,59 +39,93 @@ namespace Eduria.Services
             return Context.AnalyticDefaults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerable<AnalyticData> GetAll()
         {
             return Context.AnalyticDatas;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public override AnalyticData GetById(int id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<DataHasDefault> GetAllDataHasDefaults()
         {
             return Context.DataHasDefaults;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
                     join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
-                    //join c in Context.Categories on ad.CategoryId equals c.CategoryId
+                    join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId
                     where dhd.AnalyticDataId == id
                     select new AnalyticHasDefaultModel
                     {
                         AnalyticDataId = dhd.AnalyticDataId,
                         AnalyticDefaultId = dhd.AnalyticDefaultId,
                         AnalyticDefaultName = ad.AnalyticDefaultName,
-                        //Category = c.CategoryName,
-                        //Score = dhd.Score
+                        CategoryId = ad.AnalyticCategory,
+                        Score = dds.Score
                     };
 
             return query.ToList();
         }
 
-        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, string category)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, int category)
         {
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
-            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryName(category);
+            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category);
             
             var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
             
             return tuple;
         }
 
-        public IEnumerable<AnalyticHasDefaultModel> GetAllDefaultsByAnalyticDataIdAndCategoryName(int id, string category)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDefaultsByAnalyticDataIdAndCategoryName(int id, int category)
         {
-            return GetAllDataByAnalyticDataId(id).Where(x => x.Category == category);
+            return GetAllDataByAnalyticDataId(id).Where(x => x.CategoryId == category);
         }
 
-        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryName(string category)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryId(int category)
         {
             var query = from ad in Context.AnalyticDefaults
-                        //join c in Context.Categories on ad.CategoryId equals c.CategoryId
-                        //where c.CategoryName == category
+                        where ad.AnalyticCategory == category
                         select new AnalyticDefaultModel
                         {
                             AnalyticDefaultId = ad.AnalyticDefaultId,
@@ -99,6 +133,88 @@ namespace Eduria.Services
                         };
 
             return query.ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="period"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int period, int year)
+        {
+            var query = from ad in Context.AnalyticDatas
+                        where ad.UserId == userId && ad.Period == period && ad.Year == year
+                        select new AnalyticData
+                        {
+                            AnalyticDataId = ad.AnalyticDataId
+                        } ;
+
+            return query.First();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="methodParam"></param>
+        /// <param name="analyticId"></param>
+        public void AddToAnalytic(int[] methodParam, int analyticId)
+        {
+            if (methodParam.Length != 0)
+            {
+                foreach (var id in methodParam)
+                {
+                    AddDataHasDefault(id, analyticId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="analyticDefaultId"></param>
+        /// <param name="analyticDataId"></param>
+        /// <param name="score"></param>
+        public void AddScoreToAnalyticDefault(int analyticDefaultId, int analyticDataId, int score)
+        {
+            if (analyticDefaultId != 0 && analyticDataId != 0)
+            {
+                DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
+
+                if (dataHasDefault == null){
+                    AddDataHasDefault(analyticDefaultId, analyticDataId);
+                }
+
+                DefaultDataScore defaultDataScore = new DefaultDataScore
+                {
+                    DataHasDefaultId = dataHasDefault.DataHasDefaultId,
+                    Score = score
+                };
+
+                Context.DefaultDataScores.Add(defaultDataScore);
+                Context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="analyticDefaultId"></param>
+        /// <param name="analyticDataId"></param>
+        /// <returns></returns>
+        public DataHasDefault GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(int analyticDefaultId, int analyticDataId)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        where dhd.AnalyticDefaultId == analyticDefaultId && dhd.AnalyticDataId == analyticDataId
+                        select new DataHasDefault
+                        {
+                            DataHasDefaultId = dhd.DataHasDefaultId,
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId
+                        };
+
+            return query.First();
         }
     }
 }
