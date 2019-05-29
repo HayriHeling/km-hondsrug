@@ -51,6 +51,9 @@
     var maxScore = 0;
     var pointsPerQuestion = 5;
     var outputJson = [];
+    var ExamId = @Model.ExamId;
+    var StartTime;
+    var EndTime;
 
     var selected = 0;
 
@@ -113,6 +116,7 @@
         console.log(questionArray);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
+            StartTime = new Date();
         } else {
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
                 document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</div>";
@@ -150,6 +154,8 @@
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         console.log("klaar");
         console.log(outputJson);
+        EndTime = new Date();
+        console.log("StartTime = " + StartTime + ", endTime = " + EndTime);
         SendJson();
     }
 
@@ -158,9 +164,10 @@
     }
 
     function CreateJson(question, correct) {
-        var dateObject = new Date();
+        
         var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": new Date()}}
         outputJson.push(jsonObject);
+        console.log(new Date());
     }
 
     function SendJson() {
@@ -168,7 +175,7 @@
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson) },
+            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime },
             success: function(data){
                 alert(data.Result);
             },

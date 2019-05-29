@@ -46,13 +46,12 @@ namespace Eduria.Controllers
             var result = (from er in examResults
                           join u in users on er.UserId equals u.UserId
                           join e in exams on er.ExamId equals e.ExamId
-                          join c in categories on er.ExamId equals c.CategoryId
 
                           select new UserTestModel
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
-                              Category = c.CategoryName,
+                              ExamName = e.Name,
                               StartedAt = er.StartedAt,
                               FinishedAt = er.FinishedAt,
                               Score = er.Score
