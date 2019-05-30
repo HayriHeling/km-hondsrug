@@ -50,6 +50,8 @@ namespace Eduria.Migrations
                     b.Property<string>("AnalyticDefaultName")
                         .IsRequired();
 
+                    b.Property<int>("AnalyticDefaultOption");
+
                     b.HasKey("AnalyticDefaultId");
 
                     b.ToTable("AnalyticDefaults");

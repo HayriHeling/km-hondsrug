@@ -54,9 +54,9 @@ namespace Eduria.Controllers
         /// <param name="methodParam"></param>
         /// <param name="textParam"></param>
         /// <returns></returns>
-        public IActionResult AddMethodWithOwnMethod(int[] methodParam, int analyticDefaultIdParam, string textParam)
+        public IActionResult AddMethodWithOwnMethod(int[] methodParam, string textParam)
         {
-            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, analyticDefaultIdParam, textParam);
+            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, textParam);
             return RedirectToAction("Index");
         }
 

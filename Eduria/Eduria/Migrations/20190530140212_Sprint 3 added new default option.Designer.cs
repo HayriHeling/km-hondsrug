@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    [Migration("20190529082937_Sprint 3 migration")]
-    partial class Sprint3migration
+    [Migration("20190530140212_Sprint 3 added new default option")]
+    partial class Sprint3addednewdefaultoption
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,6 +51,8 @@ namespace Eduria.Migrations
 
                     b.Property<string>("AnalyticDefaultName")
                         .IsRequired();
+
+                    b.Property<int>("AnalyticDefaultOption");
 
                     b.HasKey("AnalyticDefaultId");
 

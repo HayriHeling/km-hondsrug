@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Eduria.Migrations
 {
-    public partial class Sprint3migration : Migration
+    public partial class Sprint3addednewdefaultoption : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,8 @@ namespace Eduria.Migrations
                     AnalyticDefaultId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AnalyticCategory = table.Column<int>(nullable: false),
-                    AnalyticDefaultName = table.Column<string>(nullable: false)
+                    AnalyticDefaultName = table.Column<string>(nullable: false),
+                    AnalyticDefaultOption = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
