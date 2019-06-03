@@ -230,6 +230,26 @@ namespace Eduria.Controllers
             return RedirectToAction("Create");
         }
 
+        public ActionResult UploadData(IFormFile data)
+        {
+            try
+            {
+                Debug.WriteLine("----------------> method is called");
+                var filePath = Path.GetTempFileName();
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    data.CopyTo(stream);
+                }
+                return RedirectToAction("Create", "Exam");
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("---------------->" + e);
+                return RedirectToAction("Create", "Exam");
+            }
+
+        }
+
         //GET: Exam/Edit/5
         public ActionResult Edit(int id)
         {

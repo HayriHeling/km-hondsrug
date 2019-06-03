@@ -49,8 +49,8 @@
             type: "POST",
             url: "/Exam/createExam",
             data: { examJson: JSON.stringify(exam) },
-            success: function (data) {
-                window.location.href = '/Exam/Show';
+            success: function () {
+                //window.location.href = '/Exam/Show';
             }
         });
     }
@@ -58,6 +58,25 @@
     function SaveQuestions() {
         for (var i = 0; i < questions.length; i++) {
             SaveQuestion(i);
+            var div = "#UploadForm" + questions[i].id + "";
+            var formData = new FormData($(div));
+
+            $.ajax({
+                type: 'POST',
+                url: "/Exam/uploadData",
+                data: { data: formData },
+                cache:false,
+                contentType: false,
+                processData: false,
+                success:function(data){
+                    console.log("success");
+                    console.log(data);
+                },
+                error: function(data){
+                    console.log("error");
+                    console.log(data);
+                }
+            });
         }
     }
 
@@ -135,11 +154,22 @@
         string += "<option value = '1'>Audio</option>";
         string += "<option value = '2'>Image</option>";
         string += "<option value = '3'>Video</option>";
-        string += "</select></p>";       
+        string += "</select></p>"; 
+
+        string += "<form id='UploadForm" + count + "' enctype='multipart/form-data' method='post'>";
         string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
-        string += "<p><input type='button' id='audiostart" + count + "' onclick='startRecording()' value='start recording audio'>";
-        string += "<input type='button' id='audiostop" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
+    
+        string += "<div id='audiodiv" + count + "'>";
+        string += "<p><input type='button' class='audiobuttons" + count + "' onclick='startRecording()' value='start recording audio'>";
+        string += "<input type='button' class='audiobuttons" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
+        string += "<input type='file' id='audiofile" + count + "' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
         string += "<div id='audio" + count + "'></div>";
+        string += "</div>";
+
+        string += "<div id='imagediv" + count + "'>";
+        string += "<input type='file' id='imagefile" + count + "'accept='image/*' oninput='SetImageLink(" + count + ")'>";
+        string += "</div>";
+        string += "</form>";
         string += "<div id='answers" + count + "'></div>";
         string += "<p><input type='button' onclick='AddAnswer(" + count + ")' value='Add Answer'/></p>";
         string += "</div>"
@@ -147,6 +177,19 @@
         Show(count);
 
     }
+    function SetAudiolink(index) {
+        var input = "#audiofile" + index + "";
+        var target = "#medialink" + index + "";
+        var val = $(input).val().split('\\');
+        $(target).val(val[val.length-1]);
+    }
+    function SetImageLink(index) {
+        var input = "#imagefile" + index + "";
+        var target = "#medialink" + index + "";
+        var val = $(input).val().split('\\');
+        $(target).val(val[val.length-1]);
+    }
+
     function DrawAnswer(id, questionId) {
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
@@ -180,21 +223,24 @@
     function OnChangeMediaType(count) {
         var type = "#mediatype" + count + "";
         var link = "#medialink" + count + "";
-        var startbtn = "#audiostart" + count + "";
-        var stopbtn = "#audiostop" + count + "";
-
+        var audiodiv = "#audiodiv" + count + "";
+        var imagediv = "#imagediv" + count + "";
+        var audioinput = "#audiofile" + count + "";
+        var imageinput = "#imagefile" + count + "";
+        $(audioinput).val("");
+        $(imageinput).val("");
         $(link).hide();
-        $(startbtn).hide();
-        $(stopbtn).hide();
+        $(imagediv).hide();
+        $(audiodiv).hide();
         switch ($(type).val()) {
             case "1":
-                $(startbtn).show();
-                $(stopbtn).show();
+                $(audiodiv).show();
                 break;
             case "2":
-                
+                $(imagediv).show();
                 break;              
             case "3":
+                $(link).val("");
                 $(link).show();
                 break;
         }
@@ -307,8 +353,7 @@
     // appends an audio element to playback and download recording
     function createAudioElement(blobUrl, currentQuestion) {
         var div = "#audio" + currentQuestion + "";
-        var startbtn = "#audiostart" + currentQuestion + "";
-        var stopbtn = "#audiostop" + currentQuestion + "";
+        var audiobuttons = ".audiobuttons" + currentQuestion + "";
         $(div).empty();
         const downloadEl = document.createElement('a');
         downloadEl.style = 'display: block';
@@ -324,18 +369,15 @@
         audioEl.appendChild(sourceEl);
         $(div).append(audioEl);
         $(div).append(remove);
-        $(startbtn).hide();
-        $(stopbtn).hide();
+        $(div).append(downloadEl);
+        $(audiobuttons).hide();
     }
 
     function removeAudioElement(q) {
         var div = "#audio" + q + "";
-        var startbtn = "#audiostart" + q + "";
-        var stopbtn = "#audiostop" + q + "";
-
+        var audiobuttons = ".audiobuttons" + q + "";
         $(div).empty();
-        $(startbtn).show();
-        $(stopbtn).show();
+        $(audiobuttons).show();
     }
 
     var recorder;
