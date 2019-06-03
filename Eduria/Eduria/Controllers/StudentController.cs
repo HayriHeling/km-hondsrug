@@ -4,6 +4,7 @@ using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Controllers
 {
@@ -47,6 +48,7 @@ namespace Eduria.Controllers
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
+                              ExamName = e.Name,
                               StartedAt = er.StartedAt,
                               FinishedAt = er.FinishedAt,
                               Score = er.Score

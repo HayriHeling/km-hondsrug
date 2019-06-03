@@ -2,15 +2,13 @@
 
 namespace EduriaData.Models.ExamLayer
 {
-    public class Answer
+    public class QuestionHasAnswerT
     {
         [Key]
-        public int AnswerId { get; set; }
+        public int QuestionHasAnswerTId { get; set; }
         [Required]
         public int QuestionId { get; set; }
-        [Required, MaxLength(200)]
-        public string Text { get; set; }
         [Required]
-        public int Correct { get; set; }
+        public int AnswerTId { get; set; }
     }
 }

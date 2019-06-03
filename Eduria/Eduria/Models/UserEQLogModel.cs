@@ -1,19 +1,16 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace EduriaData.Models.ExamLayer
+namespace Eduria.Models
 {
-    public class UserEQLog
+    public class UserEQLogModel
     {
-        [Key]
         public int UserEQLogId { get; set; }
-        [Required]
         public int ExamHasQuestionId { get; set; }
-        [Required]
         public int ExamResultId { get; set; }
-        [Required]
         public int UserId { get; set; }
-        [Required]
         public int TimesWrong { get; set; }
         public DateTime AnsweredOn { get; set; }
         public int CorrectAnswered { get; set; }
