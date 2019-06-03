@@ -13,7 +13,7 @@ namespace EduriaData.Models
         [Required, MaxLength(100)]
         public string Email { get; set; }
         [Required]
-        public int UserNum { get; set; }
+        public int StudNum { get; set; }
         [Required]
         public int UserType { get; set; }
         [Required]

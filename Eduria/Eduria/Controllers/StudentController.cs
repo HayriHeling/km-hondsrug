@@ -12,12 +12,14 @@ namespace Eduria.Controllers
     {
         private ExamResultService ExamResultService { get; set; }
         private UserService UserService { get; set; }
+        private CategoryService CategoryService { get; set; }
         private ExamService ExamService { get; set; }
 
-        public StudentController(ExamResultService examResultService, UserService userService, ExamService examService)
+        public StudentController(ExamResultService examResultService, UserService userService, CategoryService categoryService, ExamService examService)
         {
             ExamResultService = examResultService;
             UserService = userService;
+            CategoryService = categoryService;
             ExamService = examService;
         }
 
@@ -39,6 +41,7 @@ namespace Eduria.Controllers
             IEnumerable<ExamResult> examResults = ExamResultService.GetAll();
             IEnumerable<User> users = UserService.GetAll();
             IEnumerable<Exam> exams = ExamService.GetAll();
+            IEnumerable<Category> categories = CategoryService.GetAll();
 
             var result = (from er in examResults
                           join u in users on er.UserId equals u.UserId
