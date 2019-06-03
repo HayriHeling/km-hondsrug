@@ -10,5 +10,6 @@ namespace EduriaData.Models.AnalyticLayer
         public int AnalyticDataId { get; set; }
         [Required]
         public int AnalyticDefaultId { get; set; }
+        public int Score { get; set; }
     }
 }

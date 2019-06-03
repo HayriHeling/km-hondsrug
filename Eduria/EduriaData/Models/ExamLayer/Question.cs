@@ -7,14 +7,12 @@ namespace EduriaData.Models.ExamLayer
         [Key]
         public int QuestionId { get; set; }
         [Required]
-        public int TimeTableId { get; set; }
+        public int CategoryId { get; set; }
         [Required, MaxLength(200)]
         public string Text { get; set; }
-        [MaxLength(500)]
+        [Required, MaxLength(500)]
         public string MediaLink { get; set; }
         [Required]
         public int MediaType { get; set; }
-        [Required]
-        public int QuestionType { get; set; }
     }
 }

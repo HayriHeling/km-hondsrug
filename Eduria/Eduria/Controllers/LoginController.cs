@@ -52,7 +52,7 @@ namespace Eduria.Controllers
         {
             ClaimsIdentity identity = null;
 
-            User LoggedInUser = Service.GetUserByStudNum(user.UserNum);
+            User LoggedInUser = Service.GetUserByStudNum(user.StudNum);
 
             if (LoggedInUser == null)
             {
@@ -89,7 +89,7 @@ namespace Eduria.Controllers
             Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             // Save user information in session.
-            HttpContext.Session.SetInt32("Username", LoggedInUser.UserNum);
+            HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
             HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
             HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
             HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
