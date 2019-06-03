@@ -113,7 +113,6 @@
     }
 
     function ExamLogic(questionArray, answerArray, id) {
-        console.log(questionArray);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();
@@ -132,6 +131,7 @@
             }
             NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
         }
+        DeSelectRadioButton(selected);
         count++;
     }
 
@@ -144,7 +144,6 @@
     }
 
     function SetupQuestion(question, answerArray, id) {
-        console.log(question);
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
         //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
@@ -152,8 +151,6 @@
 
     function FinishedExam(numCorrect) {
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
-        console.log("klaar");
-        console.log(outputJson);
         EndTime = new Date();
         console.log("StartTime = " + StartTime + ", endTime = " + EndTime);
         SendJson();
@@ -161,6 +158,10 @@
 
     function SetupExam() {
         QuestionModelArray.reverse();
+    }
+
+    function DeSelectRadioButton(buttonId) {
+        document.getElementById(buttonId).checked = false;
     }
 
     function CreateJson(question, correct) {
@@ -175,7 +176,7 @@
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime },
+            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime.toJSON(), endtime: EndTime.toJSON() },
             success: function(data){
                 alert(data.Result);
             },

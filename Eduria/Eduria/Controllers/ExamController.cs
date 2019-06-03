@@ -52,6 +52,11 @@ namespace Eduria.Controllers
             return View(GetExamModelByExamId(id));
         }
 
+        public IActionResult OverView()
+        {
+            return View(_examService.GetAll());
+        }
+
         /// <summary>
         /// Method used for sending the data from the exam to this controller
         /// </summary>
@@ -60,10 +65,10 @@ namespace Eduria.Controllers
         /// <param name="userId"></param>
         /// <param name="score"></param>
         /// <returns></returns>
-        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, string starttime, string endtime)
+        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
         {
             Debug.WriteLine("Done");
-            ImportExamResultToDatabase(examId, userId, score, new DateTime(), new DateTime());
+            ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
             ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, userId);
             return View(null);
         }
