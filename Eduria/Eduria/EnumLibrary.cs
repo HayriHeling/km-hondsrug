@@ -32,4 +32,14 @@ namespace Eduria
         OntbrekendWoord,
         Begrip
     } 
+
+    /// <summary>
+    /// Enum for the different default options
+    /// </summary>
+    public enum DefaultOption
+    {
+        Input,
+        Score,
+        InputScore
+    }
 }
