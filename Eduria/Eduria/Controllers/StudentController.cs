@@ -4,7 +4,6 @@ using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Controllers
 {
@@ -46,12 +45,13 @@ namespace Eduria.Controllers
             var result = (from er in examResults
                           join u in users on er.UserId equals u.UserId
                           join e in exams on er.ExamId equals e.ExamId
+                          join c in categories on er.ExamId equals c.CategoryId
 
                           select new UserTestModel
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
-                              ExamName = e.Name,
+                              Category = c.CategoryName,
                               StartedAt = er.StartedAt,
                               FinishedAt = er.FinishedAt,
                               Score = er.Score
