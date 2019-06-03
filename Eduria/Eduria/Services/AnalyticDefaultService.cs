@@ -18,7 +18,7 @@ namespace Eduria.Services
         /// </summary>
         /// <param name="analyticDefaultId"></param>
         /// <param name="analyticDataId"></param>
-        public void AddDataHasDefault(int analyticDefaultId, int analyticDataId)
+        public DataHasDefault AddDataHasDefault(int analyticDefaultId, int analyticDataId)
         {
             DataHasDefault dataHasDefault = new DataHasDefault
             {
@@ -28,6 +28,8 @@ namespace Eduria.Services
 
             Context.DataHasDefaults.Add(dataHasDefault);
             Context.SaveChanges();
+
+            return dataHasDefault;
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace Eduria.Services
                             AnalyticDefaultName = ad.AnalyticDefaultName,
                             CategoryId = ad.AnalyticCategory,
                             Score = dds.Score
-                    };
+                        };
 
             return query.ToList();
         }
@@ -97,13 +99,14 @@ namespace Eduria.Services
         /// <param name="id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, int category)
+        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>, DefaultDataInputModel> GetCombinedAnalyticDefaultAndData(int id, int category)
         {
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
             IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category);
-            
-            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
-            
+            DefaultDataInputModel defaultDataInputModels = GetDefaultDataInputModel();
+
+            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels, defaultDataInputModels);
+
             return tuple;
         }
 
@@ -150,25 +153,9 @@ namespace Eduria.Services
                         select new AnalyticData
                         {
                             AnalyticDataId = ad.AnalyticDataId
-                        } ;
+                        };
 
             return query.First();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="methodParam"></param>
-        /// <param name="analyticId"></param>
-        public void AddToAnalytic(int[] methodParam, int analyticId)
-        {
-            if (methodParam.Length != 0)
-            {
-                foreach (var id in methodParam)
-                {
-                    AddDataHasDefault(id, analyticId);
-                }
-            }
         }
 
         /// <summary>
@@ -184,7 +171,7 @@ namespace Eduria.Services
                 foreach (var id in methodParam)
                 {
                     //When a own method is filled in, use this Add method.
-                    if (ownMethod != null || ownMethod != "")
+                    if (GetDefaultOptionByAnalyticDefaultId(id) == (int)DefaultOption.InputScore)
                     {
                         AddInputToAnalyticDefault(id, analyticId, ownMethod);
                     }
@@ -210,7 +197,7 @@ namespace Eduria.Services
 
                 if (dataHasDefault == null)
                 {
-                    AddDataHasDefault(analyticDefaultId, analyticDataId);
+                    dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
                 DefaultDataInput defaultDataInput = new DefaultDataInput
@@ -237,8 +224,8 @@ namespace Eduria.Services
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
-                if (dataHasDefault == null){
-                    AddDataHasDefault(analyticDefaultId, analyticDataId);
+                if (dataHasDefault == null) {
+                    dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
                 DefaultDataScore defaultDataScore = new DefaultDataScore
@@ -271,6 +258,42 @@ namespace Eduria.Services
 
 
             return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetDefaultOptionByAnalyticDefaultId(int id)
+        {
+            var defaultOption = Context.AnalyticDefaults.Where(x => x.AnalyticDefaultId == id).First();
+
+            if (defaultOption != null)
+            {
+                return defaultOption.AnalyticDefaultOption;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataHasDefaultId"></param>
+        /// <returns></returns>
+        public DefaultDataInputModel GetDefaultDataInputModel()
+        {
+            var query = from ddi in Context.DefaultDataInputs
+                        select new DefaultDataInputModel
+                        {
+                            Id = ddi.DefaultDataInputId,
+                            Text = ddi.Text
+                        };
+
+            return query.First();
         }
     }
 }
