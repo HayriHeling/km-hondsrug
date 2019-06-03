@@ -57,15 +57,18 @@
 
     var selected = 0;
 
+    // Function that creates an question object from the inputs
     function createTempQuestion(id, text, answerId) {
         maxScore = maxScore + pointsPerQuestion;
         return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
 
+    // Function that creates an answer object from the inputs
     function createTempAnswer(id, questionId, text, correctAnswer) {
         return { AnswerId: id, QuestionId: questionId, Text: text, CorrectAnswer: correctAnswer };
     }
 
+    // Function used to get the selected button with
     function eventListener(element) {
         selected = element.id;
     }
@@ -80,6 +83,8 @@
         @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
     }*@
 
+    // This function is deprecated at the moment. It checks if the currently selected id is the same as the 
+    // correct answer in the tempanswerarray.
     function CheckAnswer(tempAnswerArray, clickedId) {
         var output = false;
         if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
@@ -90,6 +95,7 @@
         return output;
     }
 
+    // Function that checks if the clickedid is the same as the answerid in the question object.
     function CheckAnswerT(question, clickedId) {
         clickedId = parseInt(clickedId);
         var output = false;
@@ -102,6 +108,7 @@
         return output;
     }
 
+    // Function is deprecated. This functions gets all answers from an answerarray that belong to the questionid
     function GetAnswersByQuestionId(answerArray, questionId) {
         var outputArray = [];
         answerArray.forEach(function (element) {
@@ -112,6 +119,7 @@
         return outputArray;
     }
 
+    // All logic for the exams is put in here. 
     function ExamLogic(questionArray, answerArray, id) {
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
@@ -135,42 +143,48 @@
         count++;
     }
 
+    // Function that starts the exam
     function StartExam(question, answerArray) {
         SetupQuestion(question, answerArray, 0);
     }
 
+    // Function that loads the next question.
     function NextQuestion(question, answerArray, id) {
         SetupQuestion(question, answerArray, id);
     }
 
+    // Function that sets the new question up for answering.
     function SetupQuestion(question, answerArray, id) {
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
         //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
     }
 
+    // Function that contains all logic for when the exam is finished.
     function FinishedExam(numCorrect) {
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         EndTime = new Date();
-        console.log("StartTime = " + StartTime + ", endTime = " + EndTime);
         SendJson();
     }
 
+    // Function is deprecated.
     function SetupExam() {
         QuestionModelArray.reverse();
     }
 
+    // Function that deselects the radiobutton when an answer is submitted.
     function DeSelectRadioButton(buttonId) {
         document.getElementById(buttonId).checked = false;
     }
 
+    // Function that creates a json array for the json array.
     function CreateJson(question, correct) {
-        
         var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": new Date()}}
         outputJson.push(jsonObject);
         console.log(new Date());
     }
 
+    // Function that sends the Json Array to the controller.
     function SendJson() {
         console.log(outputJson);
         $.ajax({

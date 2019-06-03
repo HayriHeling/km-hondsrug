@@ -52,6 +52,10 @@ namespace Eduria.Controllers
             return View(GetExamModelByExamId(id));
         }
 
+        /// <summary>
+        /// Method that creates an overview for all exams.
+        /// </summary>
+        /// <returns>View for all exams</returns>
         public IActionResult OverView()
         {
             return View(_examService.GetAll());
