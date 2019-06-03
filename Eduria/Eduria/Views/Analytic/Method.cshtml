@@ -9,8 +9,7 @@
     @foreach (var item in Model.Item1)
     {
         <p>@item.AnalyticDefaultId</p>
-        <p>@item.AnalyticDefaultName</p>
-        <p>@item.Input</p>
+        <p>@item.AnalyticDefaultName : @item.Input</p>
         <p>@item.Score</p>
     }
 }
@@ -27,11 +26,6 @@ else
 }
 
 <div id="inputMethod"></div>
-<style>
-    input {
-        background: blue;
-    }
-</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>

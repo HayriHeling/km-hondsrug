@@ -46,7 +46,7 @@ namespace Eduria.Controllers
         public IActionResult AddMethod(int[] methodParam, string textParam)
         {
             Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, textParam);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Analytic");
         }
 
         /// <summary>
