@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
-using System.Threading.Tasks;
-using EduriaData.Models;
+using System.Runtime.CompilerServices;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
 {
@@ -30,6 +30,11 @@ namespace Eduria.Services
         public IEnumerable<ExamQuestion> GetAllQuestionIdsAsList(int examId)
         {
             return Context.ExamQuestions.Where(x => x.ExamId == examId);
+        }
+
+        public ExamQuestion GetExamQuestionByQuestionIdExamId(int questionId, int examId)
+        {
+            return Context.ExamQuestions.First(x => x.QuestionId == questionId && x.ExamId == examId);
         }
     }
 }
