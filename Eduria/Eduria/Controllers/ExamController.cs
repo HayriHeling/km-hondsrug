@@ -54,6 +54,8 @@ namespace Eduria.Controllers
             public string mediaLink;
             [DataMember]
             public answer[] answers;
+            [DataMember]
+            public bool existing;
         }
         [DataContract]
         class answer
@@ -162,8 +164,10 @@ namespace Eduria.Controllers
         }
 
         //GET: Exam/Create
-        public ActionResult Create()
+        public ActionResult Create(int success = 0)
         {
+            ViewBag.Success = success;
+            ViewBag.questions = _questionService.GetAll();
             ViewBag.categories = _categoryService.GetAll();
             return View();
         }
@@ -172,6 +176,7 @@ namespace Eduria.Controllers
         {
             string json = examJson;
             exam exam;
+            Debug.WriteLine("---------------> " + examJson);
             try
             {
                 using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
@@ -193,15 +198,23 @@ namespace Eduria.Controllers
 
                 foreach(question q in exam.questions)
                 {
-                    Question question = new Question()
+                    int _questionId;
+                    if (!q.existing)
                     {
-                        Text = q.text,
-                        CategoryId = q.category,
-                        MediaType = q.mediaType,
-                        MediaLink = q.mediaLink
-                    };
-                    _questionService.Add(question);
-                    int _questionId = _questionService.GetByText(question.Text).QuestionId;
+                        Question question = new Question()
+                        {
+                            Text = q.text,
+                            CategoryId = q.category,
+                            MediaType = q.mediaType,
+                            MediaLink = q.mediaLink
+                        };
+                        _questionService.Add(question);
+                        _questionId = _questionService.GetByText(question.Text).QuestionId;
+                    }      
+                    else
+                    {
+                        _questionId = _questionService.GetByText(q.text).QuestionId;
+                    }
 
                     ExamQuestion eq = new ExamQuestion()
                     {
@@ -223,11 +236,12 @@ namespace Eduria.Controllers
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-                return RedirectToAction("Create");
+                Debug.WriteLine("---------------> " + e);
+                return RedirectToAction("Create", "Exam");
             }
-            return RedirectToAction("Create");
+            return RedirectToAction("Create", "Exam");
         }
 
         public ActionResult UploadData(IFormFile data)
@@ -248,6 +262,47 @@ namespace Eduria.Controllers
                 return RedirectToAction("Create", "Exam");
             }
 
+        }
+
+        [HttpPost("UploadFiles")]
+        public async Task<IActionResult> Upload(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+            var filePath = "lol";
+
+            foreach(var formFile in files)
+            {
+                if(formFile.Length > 0)
+                {
+                    Question q = _questionService.GetByMedia(formFile.FileName);
+                    string[] arr = formFile.FileName.Split(".");
+                    string ext = arr[arr.Length - 1];
+                    string newName = "questionImage" + q.QuestionId + "." + ext;
+                    filePath = "Content/" + newName;
+                    q.MediaLink = newName;
+                    _questionService.Update(q);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            return RedirectToAction("Create", "Exam", new { success = 1 });
+
+
+
+            //for (int i = 0; i <Request.Files.Count; i++)
+            //{
+            //    HttpPostedFileBase file = Request.Files[i]; //Uploaded file
+            //                                                //Use the following properties to get file's name, size and MIMEType
+            //    int fileSize = file.ContentLength;
+            //    string fileName = file.FileName;
+            //    string mimeType = file.ContentType;
+            //    System.IO.Stream fileContent = file.InputStream;
+            //    //To save file, use SaveAs method
+            //    file.SaveAs(Server.MapPath("~/") + fileName); //File will be saved in application root
+            //}
+            //return Ok(new { count = files.Count, size, filePath });
         }
 
         //GET: Exam/Edit/5

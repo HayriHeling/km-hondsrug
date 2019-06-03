@@ -28,6 +28,11 @@ namespace Eduria.Services
             return Context.Questions.FirstOrDefault(x => x.Text == text);
         }
 
+        public Question GetByMedia(string text)
+        {
+            return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
+        }
+
         public IEnumerable<Question> GetQuestionsByExamQuestionList(IEnumerable<ExamQuestion> examQuestions)
         {
             List<Question> questions = new List<Question>();
