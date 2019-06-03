@@ -4,15 +4,39 @@
 }
 
 <h2>Goals</h2>
+@{int itemid = 1;}
 <table>
-    @using (Html.BeginForm())
+    @foreach (var item in Model.Item1)
+    {
+    <tr>
+        <td>@itemid</td>
+        <td>@item.AnalyticDefaultName</td>
+        <td>@item.Input</td>
+        <td>@item.Score</td>
+        @{itemid++;}
+    </tr>
+    }
+</table>
+<p>
+    Je gaat je zelf doelen stellen voor de komende periode. Klik hieronder minstens twee doelen aan die
+    de volgende periode gaat oefenen
+</p>
+<table>
+    @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
     {
         @foreach (var item in Model.Item2)
         {
             <tr>
-                <td>@Html.CheckBox("checkbox_"+item.AnalyticDefaultId.ToString(), false, new { value = item.AnalyticDefaultId, @checked = "false" })</td>
+                <td>@Html.CheckBox("checkbox_" + item.AnalyticDefaultId.ToString(), false, new { value = item.AnalyticDefaultId, @checked = "false" })</td>
                 <td>@item.AnalyticDefaultName</td>
+                <td>@if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                {
+
+                }</td>
             </tr>
         }
+        <tr>
+            <td><input type="submit" value="Toevoegen" /></td>
+        </tr>
     }
 </table>

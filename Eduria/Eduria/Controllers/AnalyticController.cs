@@ -57,5 +57,11 @@ namespace Eduria.Controllers
         {
             return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Leerdoel));
         }
+
+        [HttpPost]
+        public IActionResult Goala()
+        {
+            return View();
+        }
     }
 }

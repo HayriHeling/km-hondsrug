@@ -9,5 +9,6 @@ namespace Eduria.Models
     {
         public int AnalyticDefaultId { get; set; }
         public string AnalyticDefaultName { get; set; }
+        public int AnalyticDefaultOption { get; set; }
     }
 }
