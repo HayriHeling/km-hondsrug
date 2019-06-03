@@ -25,7 +25,7 @@ namespace Eduria.Controllers
         private DateTime _dateTime;
 
         public ExamController(ExamService examService, QuestionService questionService, 
-            AnswerService answerService, QuestionHasAnswerTService questionHasAnswerTService, 
+            QuestionHasAnswerTService questionHasAnswerTService, 
             ExamQuestionService examQuestionService, UserEQLogService userEqLogService,
             ExamResultService examResultService)
         {
@@ -165,7 +165,7 @@ namespace Eduria.Controllers
         public ExamModel GetExamDataById(int id)
         {
             List<Question> allQuestions = _questionService.GetAll().ToList();
-            List<Answer> allAnswers = _answerService.GetAll().ToList();
+            //List<Answer> allAnswers = _answerService.GetAll().ToList();
             Exam exam = _examService.GetById(id);
 
             //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
