@@ -18,22 +18,16 @@ namespace Eduria.Controllers
             _userEQLogService = userEqLogService;
         }
 
-        public void AddListOfUserEqLogs(List<UserEQLog> userEqLogs) 
-        {
-              _userEQLogService.Add(userEqLog);
-        }
-        {
-            _userEQLogService.Add(userEqLog);
-        }
-
+        /// <summary>
+        /// Method to add a list of userEqLogs to the database.
+        /// </summary>
+        /// <param name="userEqLogs">The list of userEqLogs to be added to the database.</param>
         public void AddListOfUserEqLogs(List<UserEQLog> userEqLogs)
         {
             foreach (UserEQLog userEqLog in userEqLogs)
             {
-                AddUserEqLog(userEqLog);
+                _userEQLogService.Add(userEqLog);
             }
-
-            ;
         }
     }
 }

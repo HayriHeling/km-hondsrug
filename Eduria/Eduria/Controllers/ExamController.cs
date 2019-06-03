@@ -35,7 +35,6 @@ namespace Eduria.Controllers
             this._questionHasAnswerTService = questionHasAnswerTService;
             this._userEqLogService = userEqLogService;
             this._examResultService = examResultService;
-            //this._answerService = answerService;
         }
 
         /// <summary>
@@ -45,7 +44,6 @@ namespace Eduria.Controllers
         /// <returns>View of the exammodel</returns>
         public IActionResult Show(int id=1)
         {
-            //return View(GetExamDataById(id));
             _examId = id;
             _dateTime = DateTime.Now;
 
@@ -71,7 +69,6 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
         {
-            Debug.WriteLine("Done");
             ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
             ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, userId);
             return View(null);
@@ -158,31 +155,6 @@ namespace Eduria.Controllers
                 ExamId = id,
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
-            };
-        }
-
-        /// <summary>
-        /// Gets the questionmodels and answermodels which belong to the examId.
-        /// </summary>
-        /// <param name="id">The examId</param>
-        /// <returns>a complete Exammodel</returns>
-        public ExamModel GetExamDataById(int id)
-        {
-            List<Question> allQuestions = _questionService.GetAll().ToList();
-            //List<Answer> allAnswers = _answerService.GetAll().ToList();
-            Exam exam = _examService.GetById(id);
-
-            //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
-            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);
-
-            return new ExamModel()
-            {
-                AnswerModels = null,
-                Category = exam.CategoryId.ToString(),
-                Description = exam.Description,
-                ExamId = id,
-                Name = exam.Name,
-                QuestionModels = questionModels
             };
         }
 
