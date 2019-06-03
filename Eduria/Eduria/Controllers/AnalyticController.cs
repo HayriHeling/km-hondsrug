@@ -19,7 +19,7 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
+        /// This is the Index result action.
         /// </summary>
         /// <returns></returns>
         public IActionResult Index()
