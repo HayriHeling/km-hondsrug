@@ -1,4 +1,4 @@
-﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>, DefaultDataInputModel>
+﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
 
 @{
     ViewData["Title"] = "Werkwijze";
@@ -10,6 +10,7 @@
     {
         <p>@item.AnalyticDefaultId</p>
         <p>@item.AnalyticDefaultName</p>
+        <p>@item.Input</p>
         <p>@item.Score</p>
     }
 }
@@ -18,9 +19,6 @@ else
     @foreach (var item in Model.Item2)
     {
         <p><input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />@item.AnalyticDefaultName</p>
-       
-        @Model.Item3.Text;
-     
     }
 
     <hr />
@@ -79,7 +77,7 @@ else
             url: "/Analytic/AddMethod",
             data: { methodParam: methodArray, textParam: textBoxValue }
         });
-     
+
     }
 </script>
 
