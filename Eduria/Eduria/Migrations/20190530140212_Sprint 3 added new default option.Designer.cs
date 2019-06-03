@@ -4,14 +4,16 @@ using Eduria;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    partial class EduriaContextModelSnapshot : ModelSnapshot
+    [Migration("20190530140212_Sprint 3 added new default option")]
+    partial class Sprint3addednewdefaultoption
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,9 +250,6 @@ namespace Eduria.Migrations
                         .HasMaxLength(200);
 
                     b.Property<int>("UserNum");
-
-                    b.Property<string>("Token")
-                        .HasMaxLength(200);
 
                     b.Property<int>("UserType");
 

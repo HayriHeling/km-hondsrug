@@ -7,7 +7,7 @@ namespace EduriaData.Models.ExamLayer
         [Key]
         public int ExamId { get; set; }
         [Required]
-        public int CategoryId { get; set; }
+        public int TimeTableId { get; set; }
         [Required, MaxLength(45)]
         public string Name { get; set; }
         [Required, MaxLength(256)]
