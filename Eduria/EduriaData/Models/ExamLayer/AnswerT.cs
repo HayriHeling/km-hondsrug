@@ -2,10 +2,10 @@
 
 namespace EduriaData.Models.ExamLayer
 {
-    public class TimeTable
+    public class AnswerT
     {
         [Key]
-        public int TimeTableId { get; set; }
+        public int AnswerTId { get; set; }
         [Required]
         public string Text { get; set; }
         [Required]

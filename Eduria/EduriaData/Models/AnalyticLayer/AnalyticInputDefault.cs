@@ -2,13 +2,13 @@
 
 namespace EduriaData.Models.AnalyticLayer
 {
-    public class AnalyticDefault
+    public class AnalyticInputDefault
     {
         [Key]
-        public int AnalyticDefaultId { get; set; }
+        public int AnalyticInputDefaultId { get; set; }
         [Required]
         public int CategoryId { get; set; }
         [Required]
-        public string AnalyticDefaultName { get; set; }
+        public int AnalyticInputDefaultName { get; set; }
     }
 }
