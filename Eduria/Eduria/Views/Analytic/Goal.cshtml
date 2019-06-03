@@ -31,7 +31,7 @@
                 <td>@item.AnalyticDefaultName</td>
                 <td>@if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
                 {
-
+                    Html.TextBox("textbox_" + item.AnalyticDefaultId.ToString());
                 }</td>
             </tr>
         }
