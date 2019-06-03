@@ -29,7 +29,7 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
+        /// This is the Method action.
         /// </summary>
         /// <returns></returns>
         public IActionResult Method()
