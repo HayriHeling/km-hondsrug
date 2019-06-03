@@ -10,7 +10,7 @@ namespace Eduria.Models
         public int Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public string ExamName { get; set; }
+        public string Category { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public int Score { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduriaData.Models.ExamLayer
+namespace EduriaData.Models
 {
     public class Answer
     {
