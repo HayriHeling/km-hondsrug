@@ -70,7 +70,7 @@ namespace Eduria.Controllers
                     Firstname = user.FirstName,
                     Lastname = user.LastName,
                     Email = user.Email,
-                    StudNum = user.UserNum,
+                    UserNum = user.UserNum,
                     UserType = (int)user.UserType,
                     ClassId = user.ClassId,
                     Password = user.Password
