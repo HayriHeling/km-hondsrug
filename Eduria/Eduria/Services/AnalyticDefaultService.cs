@@ -80,6 +80,8 @@ namespace Eduria.Services
                         join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
                         join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
                         from dds in a.DefaultIfEmpty()
+                        join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
+                        from ddi in b.DefaultIfEmpty()
                         where dhd.AnalyticDataId == id
                         select new AnalyticHasDefaultModel
                         {
@@ -87,7 +89,8 @@ namespace Eduria.Services
                             AnalyticDefaultId = dhd.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,
                             CategoryId = ad.AnalyticCategory,
-                            Score = dds.Score
+                            Score = dds.Score,
+                            Input = ddi.Text
                         };
 
             return query.ToList();
@@ -99,13 +102,12 @@ namespace Eduria.Services
         /// <param name="id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>, DefaultDataInputModel> GetCombinedAnalyticDefaultAndData(int id, int category)
+        public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, int category)
         {
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
             IEnumerable<AnalyticDefaultModel> analyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category);
-            DefaultDataInputModel defaultDataInputModels = GetDefaultDataInputModel();
 
-            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels, defaultDataInputModels);
+            var tuple = Tuple.Create(analyticHasDefaultModels, analyticDefaultModels);
 
             return tuple;
         }
@@ -224,7 +226,8 @@ namespace Eduria.Services
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
-                if (dataHasDefault == null) {
+                if (dataHasDefault == null)
+                {
                     dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
@@ -277,23 +280,6 @@ namespace Eduria.Services
             {
                 return -1;
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataHasDefaultId"></param>
-        /// <returns></returns>
-        public DefaultDataInputModel GetDefaultDataInputModel()
-        {
-            var query = from ddi in Context.DefaultDataInputs
-                        select new DefaultDataInputModel
-                        {
-                            Id = ddi.DefaultDataInputId,
-                            Text = ddi.Text
-                        };
-
-            return query.First();
         }
     }
 }
