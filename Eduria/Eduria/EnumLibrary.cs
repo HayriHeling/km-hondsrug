@@ -11,11 +11,35 @@ namespace Eduria
         Docent,
         Student
     }
-    public enum MediaType
+
+    /// <summary>
+    /// Enum for the different categories.
+    /// </summary>
+    public enum AnalyticCategory
     {
-        None,
-        Audio,
-        Image,
-        Video
+        Reflectie,
+        Werkwijze,
+        Leerdoel
+    }
+
+    /// <summary>
+    /// Enum for the different question types.
+    /// </summary>
+    public enum QuestionType
+    {
+        Meerkeuze,
+        Tijdvak,
+        OntbrekendWoord,
+        Begrip
+    } 
+
+    /// <summary>
+    /// Enum for the different default options
+    /// </summary>
+    public enum DefaultOption
+    {
+        Input,
+        Score,
+        InputScore
     }
 }
