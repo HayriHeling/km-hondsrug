@@ -1,5 +1,6 @@
 ﻿using Eduria.Models;
 using EduriaData.Models.AnalyticLayer;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -293,10 +294,12 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// When a user goes to the Subject page for the first time, add the DefaultData.
         /// </summary>
         /// <param name="analyticId"></param>
-        public void AddSubjectToHasDefaults(int analyticId)
+        public bool AddSubjectToHasDefaults(int analyticId)
+
+
         {
             var query = from dhd in Context.DataHasDefaults
                         join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
@@ -325,6 +328,31 @@ namespace Eduria.Services
                 {
                     AddDataHasDefault(item.AnalyticDefaultId, analyticId);
                 }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get all the input from the form and add all DefaultDataScore
+        /// </summary>
+        /// <param name="form">The IFormCollection the is passed into the controller back to this service method.</param>
+        public void AddDefaultDataScore(IFormCollection form)
+        {
+            for (int i = 1; i <= form.ToList().Count - 1; i++)
+            {
+                DefaultDataScore defaultDataScore = new DefaultDataScore
+                {
+                    DataHasDefaultId = i,
+                    Score = int.Parse(form["radio_" + i]) // The score that is chosen by each radiobutton.
+                };
+
+                Context.DefaultDataScores.Add(defaultDataScore);
+                Context.SaveChanges();
             }
         }
     }

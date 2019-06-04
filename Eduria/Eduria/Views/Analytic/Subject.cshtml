@@ -15,16 +15,17 @@
 {
     @foreach (var item in Model.Item1)
     {
-        <p>@item.AnalyticDefaultName</p>
+        
+            <p>@item.AnalyticDefaultName</p>
 
-        @Html.RadioButtonFor(m => item.AnalyticDefaultId, (int)DefaultScore.Rood)
-        @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Oranje)
-        @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Geel)
-        @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.LichtGroen)
-        @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Groen)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Rood)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Oranje)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Geel)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.LichtGroen)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Groen)
     }
 
-    <input type="submit" value="Opslaan"/>
+    <input type="submit" value="Opslaan" />
 }
 
 
