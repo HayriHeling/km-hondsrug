@@ -65,6 +65,8 @@ namespace Eduria.Controllers
             public answer[] answers;
             [DataMember]
             public bool existing;
+            [DataMember]
+            public int questionType;
         }
         /// <summary>
         /// internal class for databinding the information from database to object.
@@ -347,12 +349,11 @@ namespace Eduria.Controllers
                 QuestionModel questionModel = new QuestionModel()
                 {
                     QuestionId = question.QuestionId,
+                    QuestionType = question.QuestionType,
                     TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
                     Text = question.Text,
                     MediaType = (MediaType)question.MediaType,
-                    MediaLink = question.MediaLink,
-                    QuestionType = question.QuestionType
-
+                    MediaLink = question.MediaLink
                 };
                 questionModels.Add(questionModel);
             }
@@ -396,6 +397,7 @@ namespace Eduria.Controllers
                         Question question = new Question()
                         {
                             Text = q.text,
+                            QuestionType = q.questionType,
                             TimeTableId = q.category,
                             MediaType = q.mediaType,
                             MediaLink = q.mediaLink

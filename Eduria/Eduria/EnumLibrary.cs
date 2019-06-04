@@ -37,8 +37,8 @@ namespace Eduria
     {
         Meerkeuze,
         Tijdvak,
-        OntbrekendWoord,
-        Begrip
+        Open
+
     } 
 
     /// <summary>

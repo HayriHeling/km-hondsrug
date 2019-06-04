@@ -25,7 +25,8 @@
         <div id="questionBox">
 
         </div>
-        <input type="button" onclick="AddQuestion()" value="Add Question">
+        <input type="button" onclick="AddQuestion(0)" value="Voeg Meerkeuze vraag toe.">
+        <input type="button" onclick="AddQuestion(2)" value="Voeg Open vraag toe.">
     </div>
     <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
         <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText()" />
@@ -46,11 +47,13 @@
                 var ttText = question.TimeTable.Text;
                 var link = question.MediaLink ?? "none";
                 var type = (MediaType)question.MediaType;
+                var questionType = (QuestionType)question.QuestionType;
                 var typeInt = question.MediaType;
                 <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
                     <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
                     <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
                     <p>Categorie: @ttText</p>
+                    <p>Type: @questionType</p>
                 </div>
             }
         }
@@ -136,20 +139,22 @@
         }
     }
     //Adds a new question to the array and draws it in the html.
-    function AddQuestion() {
+    function AddQuestion(type) {
         if (questions.length == 0) {
             questionCount = 0;
         }
-        questions.push(new Question(questionCount));
+        var newQuestion = new Question(questionCount);
+        newQuestion.questionType = type;
+        questions.push(newQuestion);
         for (var i = 0; i < questions.length; i++) {
             if (questions[i].id == questionCount) {
-                DrawQuestion(questionCount, questions.length);
+                DrawQuestion(questionCount, questions.length, type);               
             }
         }
         questionCount++;
     }
     //Adds a new answer to given questionId answers array and draws it in the html.
-    function AddAnswer(qId) {
+    function AddAnswer(qId, type) {
         var index;
         for (var i = 0; i < questions.length; i++) {
             if (questions[i].id == qId) {
@@ -160,7 +165,7 @@
         questions[index].CreateAnswer();
         for (var j = 0; j < questions[index].answers.length; j++) {
             if (questions[index].answers[j].id == (questions[index].answerCount - 1)) {
-                DrawAnswer(questions[index].answers[j].id, qId);
+                DrawAnswer(questions[index].answers[j].id, qId, type);
             }
         }
     }
@@ -221,7 +226,7 @@
         questionCount++;
     }
     //Draws new question input field.
-    function DrawQuestion(count, listIndex) {
+    function DrawQuestion(count, listIndex, type) {
         var questionText = "Question";
         for (var i = 0; i < questions.length; i++) {
             if (questions[i].id == count) {
@@ -230,7 +235,7 @@
         }
         var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
         string += "<div id='question" + count + "' style='border: 2px solid white;'>";
-        string += "<input type='number' class='questionId' name='questionId' value= '" + count + "'/>";
+        string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
         string += "<p><select id='category" + count + "' name='questionCategory' selected>";
@@ -256,13 +261,16 @@
         string += "<input type='file' id='imagefile" + count + "' name='files' accept='image/*' oninput='SetImageLink(" + count + ")'>";
         string += "</div>";
         string += "<div id='answers" + count + "'></div>";
-        string += "<p><input type='button' onclick='AddAnswer(" + count + ")' value='Add Answer'/></p>";
+        if (type == 0) {
+            string += "<p><input type='button' onclick='AddAnswer(" + count + ", 0)' value='Add Answer'/></p>";
+        }
         string += "</div>"
         questionBox.append(string);
         Show(count);
         var select = "#category" + count + "";
-         $(select).val($("select#examCategory").children('option:selected').val()).change();
-
+        $(select).val($("select#examCategory").children('option:selected').val()).change();
+        var qType = "#qtype" + count + "";
+         AddAnswer(count, type);
     }
     //Passes the file name from the audio file upload to the medialink input field. 
     function SetAudiolink(index) {
@@ -279,7 +287,7 @@
         $(target).val(val[val.length-1]);
     }
     //Draws new answer input field beneath the question from the given questionId.
-    function DrawAnswer(id, questionId) {
+    function DrawAnswer(id, questionId, type) {
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
         var string = "<div id='answer" + questionId + "-" + id + "'>";
@@ -289,10 +297,16 @@
         string += "<option value = '1'>Correct</option>";
         string += "</select></p>";
         string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
-        string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
+        if (type == 0) {
+            string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
+        }       
         string += "</div>";
         answersbox.append(string);
         $(".answerQuestionId").hide();
+        if (type == 2) {
+            var select = "#answerCorrect" + id + "";
+            $(select).hide();
+        }
     }
     //Hides all questions and then shows the question of the given index.
     function Show(index) {
@@ -410,6 +424,7 @@
         this.mediaLink = "";
         this.answers = [];
         this.existing = false;
+        this.questionType = 0;
         //Creates a new answer to the question.
         this.CreateAnswer = function () {
             if (this.answers.length == 0) {
