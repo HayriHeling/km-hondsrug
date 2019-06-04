@@ -16,9 +16,9 @@
         <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
         <select id="examCategory" name="examCategory">
             @{
-                foreach (var desc in ViewBag.categories)
+                foreach (var tt in ViewBag.categories)
                 {
-                    <option value="@desc.CategoryId">@desc.CategoryName</option>
+                    <option value="@tt.TimeTableId">@tt.Text</option>
                 }
             }
         </select>
@@ -30,10 +30,11 @@
     <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
         <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText(this)" />
         <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+            <option value="99"></option>
             @{
-                foreach (var desc in ViewBag.categories)
+                foreach (var tt in ViewBag.categories)
                 {
-                    <option value="@desc.CategoryId">@desc.CategoryName</option>
+                    <option value="@tt.TimeTableId">@tt.Text</option>
                 }
             }
         </select>
@@ -41,14 +42,15 @@
             foreach (var question in ViewBag.questions)
             {
                 var text = question.Text;
-                var cat = question.CategoryId;
+                var ttId = question.TimeTable.TimeTableId;
+                var ttText = question.TimeTable.Text;
                 var link = question.MediaLink ?? "none";
                 var type = (MediaType)question.MediaType;
                 var typeInt = question.MediaType;
-                <div class="category@(question.CategoryId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
-                    <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@cat', '@link', '@type', '@typeInt')" style="float: right;" />
-                    <p>@question.Text</p>
-                    <p>Categorie: @question.CategoryId</p>
+                <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
+                    <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
+                    <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
+                    <p>Categorie: @ttText</p>
                 </div>
             }
         }
@@ -67,16 +69,22 @@
     }
 
     function FilterOnText(div) {
-        var value = div.val();
-        for (var i = 0; i < questions.length; i++) {
-            if (questions[i].text.includes(value)) {
-
+        var value = $("#searchInput").val();
+        var filter = $(".questiontext");
+        var values = [];
+        filter.each(function () {
+            if ($(this).text().toLowerCase().indexOf(value) >= 0) {
+                $(this).parent().show();
             }
-        }
+            else {
+                $(this).parent().hide();
+            }
+        })
     }
 
-    function FilterOnCategory(div) {
-        var filterOn = ".category" + div.selectedIndex + "";
+    function FilterOnCategory(div) {       
+        var id = $('#examCategory option').eq(div.selectedIndex-1).val();
+        var filterOn = ".category" + id + "";
         var filter = $(".category");
         if (div.selectedIndex == 0) {
             filter.show();
@@ -215,11 +223,13 @@
             }
         }
         var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
-        string += "<div id='question" + count + "'>";
+        string += "<div id='question" + count + "' style='border: 2px solid white;'>";
         string += "<input type='number' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
-        string += "<p><input type='text' id='category" + count + "' name='questionCategory' placeholder='category'/></p>";
+        string += "<p><select id='category" + count + "' name='questionCategory' selected>";
+        string += $("#examCategory").html();
+        string += "</select></p>";
         string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
         string += "<option value = '0'>None</option>";
         string += "<option value = '1'>Audio</option>";
@@ -244,6 +254,8 @@
         string += "</div>"
         questionBox.append(string);
         Show(count);
+        var select = "#category" + count + "";
+         $(select).val($("select#examCategory").children('option:selected').val()).change();
 
     }
     function SetAudiolink(index) {
