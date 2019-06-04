@@ -249,9 +249,6 @@ namespace Eduria.Migrations
 
                     b.Property<int>("UserNum");
 
-                    b.Property<string>("Token")
-                        .HasMaxLength(200);
-
                     b.Property<int>("UserType");
 
                     b.HasKey("UserId");
