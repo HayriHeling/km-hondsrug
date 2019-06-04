@@ -45,29 +45,16 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AnalyticCategory");
+
                     b.Property<string>("AnalyticDefaultName")
                         .IsRequired();
 
-                    b.Property<int>("CategoryId");
+                    b.Property<int>("AnalyticDefaultOption");
 
                     b.HasKey("AnalyticDefaultId");
 
                     b.ToTable("AnalyticDefaults");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.AnalyticInputDefault", b =>
-                {
-                    b.Property<int>("AnalyticInputDefaultId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AnalyticInputDefaultName");
-
-                    b.Property<int>("CategoryId");
-
-                    b.HasKey("AnalyticInputDefaultId");
-
-                    b.ToTable("AnalyticInputDefaults");
                 });
 
             modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DataHasDefault", b =>
@@ -80,28 +67,40 @@ namespace Eduria.Migrations
 
                     b.Property<int>("AnalyticDefaultId");
 
-                    b.Property<int>("Score");
-
                     b.HasKey("DataHasDefaultId");
 
                     b.ToTable("DataHasDefaults");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DataHasInput", b =>
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DefaultDataInput", b =>
                 {
-                    b.Property<int>("DataHasInputId")
+                    b.Property<int>("DefaultDataInputId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AnalyticDataId");
+                    b.Property<int>("DataHasDefaultId");
 
-                    b.Property<int>("AnalyticInputDefaultId");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
-                    b.Property<int>("AnalyticInputDefaultText");
+                    b.HasKey("DefaultDataInputId");
 
-                    b.HasKey("DataHasInputId");
+                    b.ToTable("DefaultDataInputs");
+                });
 
-                    b.ToTable("DataHasInputs");
+            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.DefaultDataScore", b =>
+                {
+                    b.Property<int>("DefaultDateScoreId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DataHasDefaultId");
+
+                    b.Property<int>("Score");
+
+                    b.HasKey("DefaultDateScoreId");
+
+                    b.ToTable("DefaultDataScores");
                 });
 
             modelBuilder.Entity("EduriaData.Models.Answer", b =>
@@ -123,28 +122,11 @@ namespace Eduria.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.Category", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasMaxLength(45);
-
-                    b.HasKey("CategoryId");
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("EduriaData.Models.Exam", b =>
                 {
                     b.Property<int>("ExamId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CategoryId");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -154,14 +136,16 @@ namespace Eduria.Migrations
                         .IsRequired()
                         .HasMaxLength(45);
 
+                    b.Property<int>("TimeTableId");
+
                     b.HasKey("ExamId");
 
                     b.ToTable("Exams");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.AnswerT", b =>
+            modelBuilder.Entity("EduriaData.Models.ExamLayer.TimeTable", b =>
                 {
-                    b.Property<int>("AnswerTId")
+                    b.Property<int>("TimeTableId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -171,24 +155,9 @@ namespace Eduria.Migrations
                     b.Property<string>("Text")
                         .IsRequired();
 
-                    b.HasKey("AnswerTId");
+                    b.HasKey("TimeTableId");
 
-                    b.ToTable("AnswerTs");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.QuestionHasAnswerT", b =>
-                {
-                    b.Property<int>("QuestionHasAnswerTId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AnswerTId");
-
-                    b.Property<int>("QuestionId");
-
-                    b.HasKey("QuestionHasAnswerTId");
-
-                    b.ToTable("QuestionHasAnswerTs");
+                    b.ToTable("TimeTables");
                 });
 
             modelBuilder.Entity("EduriaData.Models.ExamQuestion", b =>
@@ -233,17 +202,18 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CategoryId");
-
                     b.Property<string>("MediaLink")
-                        .IsRequired()
                         .HasMaxLength(500);
 
                     b.Property<int>("MediaType");
 
+                    b.Property<int>("QuestionType");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(200);
+
+                    b.Property<int>("TimeTableId");
 
                     b.HasKey("QuestionId");
 
@@ -274,10 +244,10 @@ namespace Eduria.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<int>("StudNum");
-
                     b.Property<string>("Token")
                         .HasMaxLength(200);
+
+                    b.Property<int>("UserNum");
 
                     b.Property<int>("UserType");
 

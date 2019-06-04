@@ -23,6 +23,12 @@ namespace Eduria.Services
             return Context.Answers.Find(id);
         }
 
+        /// <summary>
+        /// This method is not used at this moment, but may very well be used later on.
+        /// The method uses a list of questions to search for the answers that belong to the questions.
+        /// </summary>
+        /// <param name="questions">List of Question-models</param>
+        /// <returns>List of Answer-models</returns>
         public IEnumerable<Answer> GetAnswersByQuestionsList(IEnumerable<Question> questions)
         {
             IEnumerable<Answer> answers = GetAll();
@@ -34,7 +40,6 @@ namespace Eduria.Services
                     tempAnswers.Add(answer);
                 }
             }
-
             return tempAnswers;
         }
     }
