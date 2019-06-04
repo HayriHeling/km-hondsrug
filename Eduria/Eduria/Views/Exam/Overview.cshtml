@@ -1,0 +1,36 @@
+﻿@model IEnumerable<EduriaData.Models.ExamLayer.Exam>;
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<section id="overView">
+    <div class="row medium">
+
+        <div class="medium-12 columns">
+            <h2>Toetsen</h2>
+        </div>
+        <div class="medium-4 columns">
+            <strong>Naam</strong>
+        </div>
+        <div class="medium-4 columns">
+            <strong>Omschrijving</strong>
+        </div>
+        <div class="medium-4 columns">
+            <strong>Link</strong>
+        </div>
+
+        @foreach (var item in Model)
+        {
+
+            <div class="medium-4 columns">
+                <p>@item.Name</p>
+            </div>
+            <div class="medium-4 columns">
+                <p>@item.Description</p>
+            </div>
+            <div class="medium-4 columns">
+                <p><a asp-controller="Exam" asp-action="Show" asp-route-id="@item.ExamId">Start toets</a></p>
+            </div>
+        }
+    </div>
+</section>
