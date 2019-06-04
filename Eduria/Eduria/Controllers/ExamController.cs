@@ -16,8 +16,7 @@ namespace Eduria.Controllers
     {
         private ExamService _examService;
         private QuestionService _questionService;
-        private AnswerService _answerService;
-        private QuestionHasAnswerTService _questionHasAnswerTService;
+        private TimeTableService _timeTableService;
         private ExamQuestionService _examQuestionService;
         private UserEQLogService _userEqLogService;
         private ExamResultService _examResultService;
@@ -26,17 +25,15 @@ namespace Eduria.Controllers
         private DateTime _dateTime;
 
         public ExamController(ExamService examService, QuestionService questionService,
-            AnswerService answerService, QuestionHasAnswerTService questionHasAnswerTService,
-            ExamQuestionService examQuestionService, UserEQLogService userEqLogService,
-            ExamResultService examResultService)
+            TimeTableService timeTableService, ExamQuestionService examQuestionService, 
+            UserEQLogService userEqLogService, ExamResultService examResultService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
             this._questionService = questionService;
-            this._questionHasAnswerTService = questionHasAnswerTService;
+            this._timeTableService = timeTableService;
             this._userEqLogService = userEqLogService;
             this._examResultService = examResultService;
-            //this._answerService = answerService;
         }
 
         /// <summary>
@@ -144,7 +141,6 @@ namespace Eduria.Controllers
         {
             IEnumerable<ExamQuestion> tempExamQuestions = _examQuestionService.GetAllQuestionIdsAsList(id);
             IEnumerable<Question> tempQuestions = _questionService.GetQuestionsByExamQuestionList(tempExamQuestions);
-            //IEnumerable<Answer> tempAnswers = _answerService.GetAnswersByQuestionsList(tempQuestions);
             Exam exam = _examService.GetById(id);
 
             return new ExamModel()
@@ -166,7 +162,6 @@ namespace Eduria.Controllers
         public ExamModel GetExamDataById(int id)
         {
             List<Question> allQuestions = _questionService.GetAll().ToList();
-            List<Answer> allAnswers = _answerService.GetAll().ToList();
             Exam exam = _examService.GetById(id);
 
             //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
@@ -200,7 +195,7 @@ namespace Eduria.Controllers
                     MediaType = 0,
                     QuestionId = question.QuestionId,
                     Text = question.Text,
-                    AnswerId = _questionHasAnswerTService.GetByQuestionId(question.QuestionId).AnswerTId
+                    AnswerId = question.TimeTableId
                 });
             }
 

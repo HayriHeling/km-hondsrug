@@ -43,6 +43,11 @@ namespace Eduria
             services.AddScoped<UserService>();
             services.AddScoped<ExamService>();
             services.AddScoped<AnalyticDefaultService>();
+            services.AddScoped<QuestionService>();
+            services.AddScoped<AnswerService>();
+            services.AddScoped<TimeTableService>();
+            services.AddScoped<UserEQLogService>();
+            services.AddScoped<ExamQuestionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
