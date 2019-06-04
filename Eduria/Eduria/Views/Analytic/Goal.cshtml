@@ -26,12 +26,13 @@
     {
         @foreach (var item in Model.Item2)
         {
+                
             <tr>
-                <td>@Html.CheckBox("checkbox_" + item.AnalyticDefaultId.ToString(), false, new { value = item.AnalyticDefaultId, @checked = "false" })</td>
+                <td>@Html.CheckBoxFor(m => item.IsChecked, new { @checked = item.IsChecked.ToString() }) </td>
                 <td>@item.AnalyticDefaultName</td>
                 <td>@if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
                 {
-                    Html.TextBox("textbox_" + item.AnalyticDefaultId.ToString());
+                    @Html.TextBoxFor(m => item.Text)
                 }</td>
             </tr>
         }

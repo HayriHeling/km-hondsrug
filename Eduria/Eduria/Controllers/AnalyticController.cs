@@ -59,9 +59,14 @@ namespace Eduria.Controllers
         }
 
         [HttpPost]
-        public IActionResult Goala()
+        public IActionResult Goal(Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> modelsTuple)
         {
-            return View();
+            IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = modelsTuple.Item1;
+            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = modelsTuple.Item2;
+
+
+
+            return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Leerdoel));
         }
     }
 }

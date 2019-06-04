@@ -136,7 +136,10 @@ namespace Eduria.Services
                         {
                             AnalyticDefaultId = ad.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,
-                            AnalyticDefaultOption = ad.AnalyticDefaultOption
+                            AnalyticDefaultOption = ad.AnalyticDefaultOption,
+                            CategoryId = ad.AnalyticCategory,
+                            IsChecked = false,
+                            Text = ""
                         };
 
             return query.ToList();
