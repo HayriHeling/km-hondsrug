@@ -1,5 +1,6 @@
 ﻿using Eduria.Models;
 using Eduria.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,12 @@ namespace Eduria.Controllers
         {
             Service.AddSubjectToHasDefaults(AnalyticDataId);
             return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Reflectie));
+        }
+
+        public IActionResult AddScore(AnalyticHasDefaultModel adhm)
+        {
+            var adms = adhm;
+            return null;
         }
     }
 }

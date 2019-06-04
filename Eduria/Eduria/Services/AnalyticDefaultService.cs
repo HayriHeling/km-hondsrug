@@ -321,7 +321,7 @@ namespace Eduria.Services
                                };
 
                 // Loop through each item and add it to DataHasDefault table.
-                foreach (var item in addQuery)
+                foreach (var item in addQuery.ToList())
                 {
                     AddDataHasDefault(item.AnalyticDefaultId, analyticId);
                 }
