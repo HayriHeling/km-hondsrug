@@ -28,6 +28,15 @@
         <input type="button" onclick="AddQuestion()" value="Add Question">
     </div>
     <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
+        <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText(this)" />
+        <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+            @{
+                foreach (var desc in ViewBag.categories)
+                {
+                    <option value="@desc.CategoryId">@desc.CategoryName</option>
+                }
+            }
+        </select>
         @{
             foreach (var question in ViewBag.questions)
             {
@@ -36,7 +45,7 @@
                 var link = question.MediaLink ?? "none";
                 var type = (MediaType)question.MediaType;
                 var typeInt = question.MediaType;
-                <div style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
+                <div class="category@(question.CategoryId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
                     <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@cat', '@link', '@type', '@typeInt')" style="float: right;" />
                     <p>@question.Text</p>
                     <p>Categorie: @question.CategoryId</p>
@@ -55,6 +64,28 @@
     var questionCount;
     window.onload = function () {
         questionBox = $("#questionBox");
+    }
+
+    function FilterOnText(div) {
+        var value = div.val();
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].text.includes(value)) {
+
+            }
+        }
+    }
+
+    function FilterOnCategory(div) {
+        var filterOn = ".category" + div.selectedIndex + "";
+        var filter = $(".category");
+        if (div.selectedIndex == 0) {
+            filter.show();
+        }
+        else {
+            filter.hide();
+            $(filterOn).show();
+        }
+
     }
 
     function SaveExam() { 
