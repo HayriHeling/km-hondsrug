@@ -49,4 +49,16 @@ namespace Eduria
         Score,
         InputScore
     }
+
+    /// <summary>
+    /// Enum for the differect default scores.
+    /// </summary>
+    public enum DefaultScore
+    {
+        Rood,
+        Oranje,
+        Geel,
+        LichtGroen,
+        Groen
+    }
 }

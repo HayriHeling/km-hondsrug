@@ -55,7 +55,13 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult Goal()
         {
-            return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Leerdoel));
+            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+        }
+
+        public IActionResult Subject()
+        {
+            Service.AddSubjectToHasDefaults(AnalyticDataId);
+            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Reflectie));
         }
     }
 }

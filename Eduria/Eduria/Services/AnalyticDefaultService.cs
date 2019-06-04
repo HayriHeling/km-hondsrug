@@ -291,5 +291,41 @@ namespace Eduria.Services
                 return -1;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="analyticId"></param>
+        public void AddSubjectToHasDefaults(int analyticId)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        where dhd.AnalyticDataId == analyticId && ad.AnalyticCategory == (int)AnalyticCategory.Reflectie
+                        select new DataHasDefault
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            DataHasDefaultId = dhd.DataHasDefaultId
+                        };
+
+            if (query.ToList().Count() == 0)
+            {
+                var addQuery = from ad in Context.AnalyticDefaults
+                               where ad.AnalyticCategory == (int)AnalyticCategory.Reflectie
+                               select new AnalyticDefault
+                               {
+                                   AnalyticCategory = ad.AnalyticCategory,
+                                   AnalyticDefaultId = ad.AnalyticDefaultId,
+                                   AnalyticDefaultName = ad.AnalyticDefaultName,
+                                   AnalyticDefaultOption = ad.AnalyticDefaultOption
+                               };
+
+                // Loop through each item and add it to DataHasDefault table.
+                foreach (var item in addQuery)
+                {
+                    AddDataHasDefault(item.AnalyticDefaultId, analyticId);
+                }
+            }
+        }
     }
 }
