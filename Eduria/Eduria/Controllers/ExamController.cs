@@ -27,7 +27,10 @@ namespace Eduria.Controllers
         private AnswerService _answerService;
         private TimeTableService _timeTableService;
         private ExamQuestionService _examQuestionService;
-
+        
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
         [DataContract]
         class exam
         {
@@ -40,6 +43,9 @@ namespace Eduria.Controllers
             [DataMember]
             public question[] questions;
         }
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
         [DataContract]
         class question
         {
@@ -60,6 +66,9 @@ namespace Eduria.Controllers
             [DataMember]
             public bool existing;
         }
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
         [DataContract]
         class answer
         {
@@ -72,12 +81,23 @@ namespace Eduria.Controllers
             [DataMember]
             public int correct;
         }
+
         private UserEQLogService _userEqLogService;
         private ExamResultService _examResultService;
 
         private int _examId;
         private DateTime _dateTime;
 
+        /// <summary>
+        /// Constructor that creates all needed services.
+        /// </summary>
+        /// <param name="examService"></param>
+        /// <param name="questionService"></param>
+        /// <param name="answerService"></param>
+        /// <param name="timeTableService"></param>
+        /// <param name="examQuestionService"></param>
+        /// <param name="userEqLogService"></param>
+        /// <param name="examResultService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
             UserEQLogService userEqLogService, ExamResultService examResultService)
@@ -295,6 +315,12 @@ namespace Eduria.Controllers
             return tempAnswerModels;
         }
 
+        /// <summary>
+        /// Gets tables from database and changes them to models to use in the view. Returns the view to create an exam.
+        /// if success is true, the view will display a message that an exam is successfully created.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <returns></returns>
         //GET: Exam/Create
         public ActionResult Create(int success = 0)
         {
@@ -333,7 +359,11 @@ namespace Eduria.Controllers
             ViewBag.questions = questionModels;
             return View();
         }
-
+        /// <summary>
+        /// Creates an exam and saves all attributes to the database.
+        /// </summary>
+        /// <param name="examJson"> The complete exam in json format.</param>
+        /// <returns></returns>
         public ActionResult CreateExam(string examJson)
         {
             string json = examJson;
@@ -404,28 +434,12 @@ namespace Eduria.Controllers
                 return RedirectToAction("Create", "Exam");
             }
             return RedirectToAction("Create", "Exam");
-        }
-
-        public ActionResult UploadData(IFormFile data)
-        {
-            try
-            {
-                Debug.WriteLine("----------------> method is called");
-                var filePath = Path.GetTempFileName();
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    data.CopyTo(stream);
-                }
-                return RedirectToAction("Create", "Exam");
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine("---------------->" + e);
-                return RedirectToAction("Create", "Exam");
-            }
-
-        }
-
+        }            
+        /// <summary>
+        /// Gets called if files are being uploaded when creating a new exam. Files are being saved in the content folder and the question gets a reference.
+        /// </summary>
+        /// <param name="files">The files that needs to be uploaded to the server.</param>
+        /// <returns></returns>
         [HttpPost("UploadFiles")]
         public async Task<IActionResult> Upload(List<IFormFile> files)
         {
@@ -450,21 +464,6 @@ namespace Eduria.Controllers
                 }
             }
             return RedirectToAction("Create", "Exam", new { success = 1 });
-
-
-
-            //for (int i = 0; i <Request.Files.Count; i++)
-            //{
-            //    HttpPostedFileBase file = Request.Files[i]; //Uploaded file
-            //                                                //Use the following properties to get file's name, size and MIMEType
-            //    int fileSize = file.ContentLength;
-            //    string fileName = file.FileName;
-            //    string mimeType = file.ContentType;
-            //    System.IO.Stream fileContent = file.InputStream;
-            //    //To save file, use SaveAs method
-            //    file.SaveAs(Server.MapPath("~/") + fileName); //File will be saved in application root
-            //}
-            //return Ok(new { count = files.Count, size, filePath });
         }
 
         //GET: Exam/Edit/5
