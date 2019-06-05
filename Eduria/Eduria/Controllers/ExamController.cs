@@ -129,7 +129,9 @@ namespace Eduria.Controllers
 
         public IActionResult OverView()
         {
-            return View(_examService.GetAll());
+            ViewBag.exams = _examService.GetAll();
+            ViewBag.ttService = _timeTableService;
+            return View();
         }
 
         /// <summary>
