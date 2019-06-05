@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Eduria.Controllers
 {
@@ -14,20 +15,21 @@ namespace Eduria.Controllers
     {
         private AnalyticDefaultService Service { get; set; }
         private int AnalyticDataId { get; set; }
+        private int UserId { get; set; }
 
         public AnalyticController(AnalyticDefaultService service)
         {
             Service = service;
-            AnalyticDataId = 1;
         }
 
         /// <summary>
         /// This is the Index result action.
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
-            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId);
+            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return View(analyticDefaultModels);
         }
 
@@ -85,6 +87,12 @@ namespace Eduria.Controllers
         {
             Service.AddDefaultDataScore(form);
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Search(IFormCollection form)
+        {
+            Service.GetAnalyticDataIdByYearAndPeriodAndUserId(form, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            return null;
         }
     }
 }
