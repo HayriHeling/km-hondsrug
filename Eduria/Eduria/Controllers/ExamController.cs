@@ -369,7 +369,6 @@ namespace Eduria.Controllers
         {
             string json = examJson;
             exam exam;
-            Debug.WriteLine("---------------> " + examJson);
             try
             {
                 using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
@@ -377,7 +376,6 @@ namespace Eduria.Controllers
                     // Deserialization from JSON  
                     DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(exam));
                     exam = (exam)deserializer.ReadObject(ms);
-                    Debug.WriteLine("---------------> " + exam.questions.Length);
                 }
 
                 Exam ex = new Exam()
@@ -432,8 +430,7 @@ namespace Eduria.Controllers
             }
             catch(Exception e)
             {
-                Debug.WriteLine("---------------> " + e);
-                return RedirectToAction("Create", "Exam");
+                throw e;
             }
             return RedirectToAction("Create", "Exam");
         }            
@@ -466,54 +463,6 @@ namespace Eduria.Controllers
                 }
             }
             return RedirectToAction("Create", "Exam", new { success = 1 });
-        }
-
-        //GET: Exam/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        //POST: Exam/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                //return RedirectToAction(nameof(Index));
-                return null;
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        //GET: Exam/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //POST: Exam/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                //return RedirectToAction(nameof(Index));
-                return null;
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
