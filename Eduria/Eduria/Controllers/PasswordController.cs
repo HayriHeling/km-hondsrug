@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
-using Microsoft.AspNetCore.Identity.UI.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
-using WebMatrix.WebData;
-using System.Web;
 using EduriaData;
 
 namespace Eduria.Controllers
@@ -22,19 +15,32 @@ namespace Eduria.Controllers
         {
             Service = service;
         }
-
-        public IActionResult Password()
-        {
-            return View();
-        }
         
-        //GET
+        /// <summary>
+        /// Checks if given token is valid and returns view. Returns an empty page with content when token is not valid.
+        /// This can only happen when a change password link is used multiple times after already being changed.
+        /// </summary>
+        /// <param name="Token">The given token to compare with the user.</param>
+        /// <returns></returns>
         public IActionResult Reset(string Token)
         {
-            ViewBag.Token = Token;
-            return View();
+            User user = Service.GetUserByToken(Token);
+            if(user != null)
+            {
+                ViewBag.Token = Token;
+                return View();
+            }
+            else
+            {
+                return Content("Token is niet geldig!");
+            }                
         }
-
+        /// <summary>
+        /// Rechecks if token is valid and changes the password for the user to given password.
+        /// </summary>
+        /// <param name="Token">The given token to compare with the user.</param>
+        /// <param name="Password">The new password to save in the database.</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Reset(string Token, string Password)
         {
@@ -58,26 +64,5 @@ namespace Eduria.Controllers
                 return Content("Token is niet geldig!");
             }
         }
-
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(include: "Password")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                Service.SetPassword(user);
-                return RedirectToAction("Edit");
-            }
-
-            return View();
-        }
     }
-
-
-
 }
