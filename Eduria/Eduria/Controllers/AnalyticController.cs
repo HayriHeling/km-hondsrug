@@ -64,8 +64,6 @@ namespace Eduria.Controllers
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = modelsTuple.Item1;
             IEnumerable<AnalyticDefaultModel> analyticDefaultModels = modelsTuple.Item2;
 
-
-
             return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Leerdoel));
         }
     }
