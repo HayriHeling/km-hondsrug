@@ -7,7 +7,7 @@
     <div id="noneToday">
         <div class="row large">
             <div class="medium-12 columns">
-                <p id="answer"></p>
+                <div id="answer" height="20"></div>
                 <h2>Toets tijdvakken</h2>
                 <p id="Question">Klik op start om te beginnen</p>
                 <form>
@@ -54,6 +54,7 @@
     var ExamId = @Model.ExamId;
     var StartTime;
     var EndTime;
+    var QuestionTime;
 
     var selected = 0;
 
@@ -91,7 +92,6 @@
             output = true;
             score++;
         }
-        console.log(clickedId + " is " + output);
         return output;
     }
 
@@ -125,22 +125,38 @@
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();
         } else {
+            $("#answer").fadeIn();
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
-                document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</div>";
+                $("#answer").append("<p class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</p>");
                 score = score + 1;
                 if (0 === questionArray.length) {
-                    FinishedExam(score);}
+                    FinishedExam(score);
+                } else {
+                    NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                }
             } else {
                 questionArray.push(tempCurrentQuestion);
                 if (maxScore > 0) {
                     maxScore = maxScore - 1;
                 }
-                document.getElementById("answer").innerHTML = "<div class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</div>";
+                NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                $("#answer").append("<p class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</p>");
             }
-            NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+            setTimeout(hideMessage, 1000);
+            DeSelectRadioButton(selected);
         }
-        DeSelectRadioButton(selected);
         count++;
+    }
+
+    // Function that hides the status message with a fade.
+    function hideMessage() {
+        $("#answer").fadeOut(1000);
+        setTimeout(emptyAnswer, 1000);
+    }
+
+    // Function that empties the data in the answer id.
+    function emptyAnswer() {
+        $("#answer").empty();
     }
 
     // Function that starts the exam
@@ -162,6 +178,7 @@
 
     // Function that contains all logic for when the exam is finished.
     function FinishedExam(numCorrect) {
+        DeSelectRadioButton(selected);
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         EndTime = new Date();
         SendJson();
@@ -179,18 +196,21 @@
 
     // Function that creates a json array for the json array.
     function CreateJson(question, correct) {
-        var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": new Date()}}
+        var date = new Date();
+        QuestionTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+        var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": QuestionTime.toJSON()}}
         outputJson.push(jsonObject);
-        console.log(new Date());
     }
 
     // Function that sends the Json Array to the controller.
     function SendJson() {
+        StartTime = StartTime.toJSON();
+        EndTime = EndTime.toJSON();
         console.log(outputJson);
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime.toJSON(), endtime: EndTime.toJSON() },
+            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime },
             success: function(data){
                 alert(data.Result);
             },
