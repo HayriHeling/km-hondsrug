@@ -28,7 +28,7 @@
             <div class="medium-5 columns menu">
                 <div class="topnav" id="myTopnav">
                     <a href="/" class="active"><i class="fas fa-home"></i></a>
-                    <a href="#">Tijdlijn</a>
+                    <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
                     <a href="#">Prikbord</a>
                     <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
                     <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
@@ -43,7 +43,7 @@
             <div class="medium-3 columns myAccount">
                 <p>
                     <i class="fas fa-envelope"></i>
-                    <img src="~/images/profile.png" class="profile" alt="profielfoto" /> Mijn account <i class="fas fa-cog"></i>
+                    <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Login">Inloggen </a>  <i class="fas fa-cog"></i>
                 </p>
             </div>
         </div>    

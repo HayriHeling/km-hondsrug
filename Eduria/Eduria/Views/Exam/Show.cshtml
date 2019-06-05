@@ -1,0 +1,202 @@
+﻿@model Eduria.Models.ExamModel
+@{
+    ViewData["Title"] = "Show";
+}
+
+<section id="exam">
+    <div id="noneToday">
+        <div class="row large">
+            <div class="medium-12 columns">
+                <p id="answer"></p>
+                <h2>Toets tijdvakken</h2>
+                <p id="Question">Klik op start om te beginnen</p>
+                <form>
+                    <div class="cc-selector">
+                        <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
+                        <label class="timeperiod prehistorie" for="1"></label>
+                        <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
+                        <label class="timeperiod oudheid" for="2"></label>
+                        <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
+                        <label class="timeperiod vmiddeleeuwen" for="3"></label>
+                        <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
+                        <label class="timeperiod lmiddeleeuwen" for="4"></label>
+                        <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
+                        <label class="timeperiod nieuwetijd" for="5"></label>
+                        <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
+                        <label class="timeperiod goudeneeuw" for="6"></label>
+                        <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
+                        <label class="timeperiod verlichting" for="7"></label>
+                        <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
+                        <label class="timeperiod industrie" for="8"></label>
+                        <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
+                        <label class="timeperiod oorlog" for="9"></label>
+                        <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
+                        <label class="timeperiod tv" for="10"></label>
+                    </div>
+                    <div class="medium-offset-10 medium-2 columns">
+                        <input type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script language="javascript">
+    var QuestionModelArray = [];
+    var AnswerModelArray = [];
+    var currentAnswersArray = [];
+    var tempCurrentQuestion;
+    var count = 0;
+    var score = 0;
+    var maxScore = 0;
+    var pointsPerQuestion = 5;
+    var outputJson = [];
+    var ExamId = @Model.ExamId;
+    var StartTime;
+    var EndTime;
+
+    var selected = 0;
+
+    // Function that creates an question object from the inputs
+    function createTempQuestion(id, text, answerId) {
+        maxScore = maxScore + pointsPerQuestion;
+        return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
+    }
+
+    // Function that creates an answer object from the inputs
+    function createTempAnswer(id, questionId, text, correctAnswer) {
+        return { AnswerId: id, QuestionId: questionId, Text: text, CorrectAnswer: correctAnswer };
+    }
+
+    // Function used to get the selected button with
+    function eventListener(element) {
+        selected = element.id;
+    }
+
+    @foreach (var d in Model.QuestionModels)
+    {
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.AnswerId));
+    }
+
+    @*@foreach (var e in Model.AnswerModels)
+    {
+        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
+    }*@
+
+    // This function is deprecated at the moment. It checks if the currently selected id is the same as the
+    // correct answer in the tempanswerarray.
+    function CheckAnswer(tempAnswerArray, clickedId) {
+        var output = false;
+        if (tempAnswerArray[clickedId - 1].CorrectAnswer === "True") {
+            output = true;
+            score++;
+        }
+        console.log(clickedId + " is " + output);
+        return output;
+    }
+
+    // Function that checks if the clickedid is the same as the answerid in the question object.
+    function CheckAnswerT(question, clickedId) {
+        clickedId = parseInt(clickedId);
+        var output = false;
+        if (parseInt(question.AnswerId) === clickedId) {
+            output = true;
+        } else {
+            tempCurrentQuestion.TimesWrong++;
+        }
+        CreateJson(question, output);
+        return output;
+    }
+
+    // Function is deprecated. This functions gets all answers from an answerarray that belong to the questionid
+    function GetAnswersByQuestionId(answerArray, questionId) {
+        var outputArray = [];
+        answerArray.forEach(function (element) {
+            if (element.QuestionId === questionId) {
+                outputArray.push(element);
+            }
+        });
+        return outputArray;
+    }
+
+    // All logic for the exams is put in here.
+    function ExamLogic(questionArray, answerArray, id) {
+        if (id === 0) {
+            StartExam(questionArray.splice(0, 1)[0], answerArray);
+            StartTime = new Date();
+        } else {
+            if (CheckAnswerT(tempCurrentQuestion, selected)) {
+                document.getElementById("answer").innerHTML = "<div class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</div>";
+                score = score + 1;
+                if (0 === questionArray.length) {
+                    FinishedExam(score);}
+            } else {
+                questionArray.push(tempCurrentQuestion);
+                if (maxScore > 0) {
+                    maxScore = maxScore - 1;
+                }
+                document.getElementById("answer").innerHTML = "<div class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</div>";
+            }
+            NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+        }
+        DeSelectRadioButton(selected);
+        count++;
+    }
+
+    // Function that starts the exam
+    function StartExam(question, answerArray) {
+        SetupQuestion(question, answerArray, 0);
+    }
+
+    // Function that loads the next question.
+    function NextQuestion(question, answerArray, id) {
+        SetupQuestion(question, answerArray, id);
+    }
+
+    // Function that sets the new question up for answering.
+    function SetupQuestion(question, answerArray, id) {
+        tempCurrentQuestion = question;
+        document.getElementById("Question").innerHTML = question.Text;
+        //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
+    }
+
+    // Function that contains all logic for when the exam is finished.
+    function FinishedExam(numCorrect) {
+        document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
+        EndTime = new Date();
+        SendJson();
+    }
+
+    // Function is deprecated.
+    function SetupExam() {
+        QuestionModelArray.reverse();
+    }
+
+    // Function that deselects the radiobutton when an answer is submitted.
+    function DeSelectRadioButton(buttonId) {
+        document.getElementById(buttonId).checked = false;
+    }
+
+    // Function that creates a json array for the json array.
+    function CreateJson(question, correct) {
+        var jsonObject = { Questions : { "QuestionId":question.QuestionId, "TimesWrong":question.TimesWrong, "CorrectAnswered":correct, "AnsweredOn": new Date()}}
+        outputJson.push(jsonObject);
+        console.log(new Date());
+    }
+
+    // Function that sends the Json Array to the controller.
+    function SendJson() {
+        console.log(outputJson);
+        $.ajax({
+            type: "POST",
+            url: "/Exam/SendResults",
+            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime.toJSON(), endtime: EndTime.toJSON() },
+            success: function(data){
+                alert(data.Result);
+            },
+            dataType: "json",
+            traditional: true
+        });
+    }
+
+</script>

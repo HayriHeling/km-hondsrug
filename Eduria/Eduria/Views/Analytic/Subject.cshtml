@@ -1,0 +1,31 @@
+﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
+@{
+    ViewData["Title"] = "Subject";
+}
+
+<h2>Toetsanalyse | Onderwerpen</h2>
+<p>
+    Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed
+    ging.
+    Deze analyse heb je nodig voor het vaststellen van de planning voor de komende periode.
+    Planning en analyse worden beoordeeld voor je tijdvakkendossier.
+</p>
+
+@using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post))
+{
+    @foreach (var item in Model.Item1)
+    {
+        
+            <p>@item.AnalyticDefaultName</p>
+
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Rood)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Oranje)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Geel)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.LichtGroen)
+            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Groen)
+    }
+
+    <input type="submit" value="Opslaan" />
+}
+
+

@@ -1,5 +1,6 @@
 ﻿using Eduria.Models;
 using EduriaData.Models.AnalyticLayer;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,20 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Add an DataHasDefault object to the database.
         /// </summary>
-        /// <param name="analyticDefaultId"></param>
-        /// <param name="analyticDataId"></param>
+        /// <param name="analyticDefaultId">The specific AnalyticDefaultId</param>
+        /// <param name="analyticDataId">The specific AnalyticDataId</param>
         public DataHasDefault AddDataHasDefault(int analyticDefaultId, int analyticDataId)
         {
+            // Make and new instance of DataHasDefault
             DataHasDefault dataHasDefault = new DataHasDefault
             {
                 AnalyticDataId = analyticDataId,
                 AnalyticDefaultId = analyticDefaultId
             };
 
+            // Add the new instance to the database
             Context.DataHasDefaults.Add(dataHasDefault);
             Context.SaveChanges();
 
@@ -42,7 +45,7 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Retrieve all the AnalyticData objects.
         /// </summary>
         /// <returns></returns>
         public override IEnumerable<AnalyticData> GetAll()
@@ -51,35 +54,37 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Retrieve an specific AnalyticData object from the database.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The specific id from the AnalyticData object.</param>
+        /// <returns>The AnalyticData object.</returns>
         public override AnalyticData GetById(int id)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// 
+        /// Retrieve all DataHasDefault objects from the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An IEnumberable with al the DataHasDefault objects.</returns>
         public IEnumerable<DataHasDefault> GetAllDataHasDefaults()
         {
             return Context.DataHasDefaults;
         }
 
         /// <summary>
-        /// 
+        /// Retrieve all AnalyticHasDefault object from an specific user.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The AnalyticData id.</param>
+        /// <returns>An IEnumberable with all the AnlyticDataHasDefaultModel objects.</returns>
         public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id)
         {
             var query = from dhd in Context.DataHasDefaults
                         join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        // Use an join, but the outcome can be null
                         join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
                         from dds in a.DefaultIfEmpty()
+                        // Use an join, but the outcome can be null
                         join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
                         from ddi in b.DefaultIfEmpty()
                         where dhd.AnalyticDataId == id
@@ -97,11 +102,11 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Returns an tuple (to the view) with all the ojects that are needed at the view to represent the data.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="category"></param>
-        /// <returns></returns>
+        /// <param name="id">The AnalyticData id.</param>
+        /// <param name="category">The AnalyticDefaults category.</param>
+        /// <returns>An tuple with all the data needed to feed at the view.</returns>
         public Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> GetCombinedAnalyticDefaultAndData(int id, int category)
         {
             IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category);
@@ -113,21 +118,21 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Retrieve all AnalyticDefaults from an specfic user.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="category"></param>
-        /// <returns></returns>
+        /// <param name="id">The AnalyticData id.</param>
+        /// <param name="category">The AnalyticDefaults category.</param>
+        /// <returns>An IEnumerable with all the AnalyticDefaultsModels.</returns>
         public IEnumerable<AnalyticHasDefaultModel> GetAllDefaultsByAnalyticDataIdAndCategoryName(int id, int category)
         {
             return GetAllDataByAnalyticDataId(id).Where(x => x.CategoryId == category);
         }
 
         /// <summary>
-        /// 
+        /// Retrieve all AnalyticDefaults from the database by an specific category.
         /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
+        /// <param name="category">The specific category.</param>
+        /// <returns>An IEnumerable with all the AnalyticDefaultModels.</returns>
         public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryId(int category)
         {
             var query = from ad in Context.AnalyticDefaults
@@ -145,12 +150,12 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Retrieve an specific AnalyticData per user, period and year.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="period"></param>
-        /// <param name="year"></param>
-        /// <returns></returns>
+        /// <param name="userId">The User id.</param>
+        /// <param name="period">The specific period.</param>
+        /// <param name="year">The specific year.</param>
+        /// <returns>An AnalyticData with all the requirements met.</returns>
         public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int period, int year)
         {
             var query = from ad in Context.AnalyticDatas
@@ -189,28 +194,31 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Add an DefaultDataInput object to the database.
         /// </summary>
-        /// <param name="analyticDefaultId"></param>
-        /// <param name="analyticDataId"></param>
-        /// <param name="text"></param>
+        /// <param name="analyticDefaultId">The specific AnalyticDefaultId.</param>
+        /// <param name="analyticDataId">The specific AnalyticDataId.</param>
+        /// <param name="text">The text that the user filled in on the form.</param>
         public void AddInputToAnalyticDefault(int analyticDefaultId, int analyticDataId, string text)
         {
             if (analyticDefaultId != 0 && analyticDataId != 0)
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
+                //When the DataHasDefault is null, adds it to the database.
                 if (dataHasDefault == null)
                 {
                     dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
+                //Make an new instance of DefaultDataInput object and fill it.
                 DefaultDataInput defaultDataInput = new DefaultDataInput
                 {
                     DataHasDefaultId = dataHasDefault.DataHasDefaultId,
                     Text = text
                 };
 
+                //Add the DefaultDataInput object to the database.
                 Context.DefaultDataInputs.Add(defaultDataInput);
                 Context.SaveChanges();
             }
@@ -218,39 +226,42 @@ namespace Eduria.Services
 
 
         /// <summary>
-        /// 
+        /// Add an DefaultDataScore object to the database.
         /// </summary>
-        /// <param name="analyticDefaultId"></param>
-        /// <param name="analyticDataId"></param>
-        /// <param name="score"></param>
+        /// <param name="analyticDefaultId">The specific AnalyticDefaultId.</param>
+        /// <param name="analyticDataId">The specific AnalyticDataId.</param>
+        /// <param name="score">The score that the teacher filled in.</param>
         public void AddScoreToAnalyticDefault(int analyticDefaultId, int analyticDataId, int score)
         {
             if (analyticDefaultId != 0 && analyticDataId != 0)
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
+                //When the DataHasDefault is null, adds it to the database.
                 if (dataHasDefault == null)
                 {
                     dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
+                //Make an new instance of DefaultDataScore object and fill it.
                 DefaultDataScore defaultDataScore = new DefaultDataScore
                 {
                     DataHasDefaultId = dataHasDefault.DataHasDefaultId,
                     Score = score
                 };
 
+                //Add the DefaultDataScore object to the database.
                 Context.DefaultDataScores.Add(defaultDataScore);
                 Context.SaveChanges();
             }
         }
 
         /// <summary>
-        /// 
+        /// Retrieve and specific DataHasDefault object from the database.
         /// </summary>
-        /// <param name="analyticDefaultId"></param>
-        /// <param name="analyticDataId"></param>
-        /// <returns></returns>
+        /// <param name="analyticDefaultId">The specific AnalyticDefaultId.</param>
+        /// <param name="analyticDataId">The specific AnalyticDataId.</param>
+        /// <returns>An specifc DataHasDefault object the meets the requirements.</returns>
         public DataHasDefault GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(int analyticDefaultId, int analyticDataId)
         {
             var query = from dhd in Context.DataHasDefaults
@@ -267,10 +278,10 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Retrieve the default option by AnalyticDefault id.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The specific id from the AnalyticDefault.</param>
+        /// <returns>The default option.</returns>
         public int GetDefaultOptionByAnalyticDefaultId(int id)
         {
             var defaultOption = Context.AnalyticDefaults.Where(x => x.AnalyticDefaultId == id).First();
@@ -282,6 +293,69 @@ namespace Eduria.Services
             else
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// When a user goes to the Subject page for the first time, add the DefaultData.
+        /// </summary>
+        /// <param name="analyticId"></param>
+        public bool AddSubjectToHasDefaults(int analyticId)
+
+
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        where dhd.AnalyticDataId == analyticId && ad.AnalyticCategory == (int)AnalyticCategory.Reflectie
+                        select new DataHasDefault
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            DataHasDefaultId = dhd.DataHasDefaultId
+                        };
+
+            if (query.ToList().Count() == 0)
+            {
+                var addQuery = from ad in Context.AnalyticDefaults
+                               where ad.AnalyticCategory == (int)AnalyticCategory.Reflectie
+                               select new AnalyticDefault
+                               {
+                                   AnalyticCategory = ad.AnalyticCategory,
+                                   AnalyticDefaultId = ad.AnalyticDefaultId,
+                                   AnalyticDefaultName = ad.AnalyticDefaultName,
+                                   AnalyticDefaultOption = ad.AnalyticDefaultOption
+                               };
+
+                // Loop through each item and add it to DataHasDefault table.
+                foreach (var item in addQuery.ToList())
+                {
+                    AddDataHasDefault(item.AnalyticDefaultId, analyticId);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get all the input from the form and add all DefaultDataScore
+        /// </summary>
+        /// <param name="form">The IFormCollection the is passed into the controller back to this service method.</param>
+        public void AddDefaultDataScore(IFormCollection form)
+        {
+            for (int i = 1; i <= form.ToList().Count - 1; i++)
+            {
+                DefaultDataScore defaultDataScore = new DefaultDataScore
+                {
+                    DataHasDefaultId = i,
+                    Score = int.Parse(form["radio_" + i]) // The score that is chosen by each radiobutton.
+                };
+
+                Context.DefaultDataScores.Add(defaultDataScore);
+                Context.SaveChanges();
             }
         }
     }

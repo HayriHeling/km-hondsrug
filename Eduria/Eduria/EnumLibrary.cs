@@ -11,6 +11,13 @@ namespace Eduria
         Docent,
         Student
     }
+    public enum MediaType
+    {
+        None,
+        Audio,
+        Image,
+        Video
+    }
 
     /// <summary>
     /// Enum for the different categories.
@@ -41,5 +48,17 @@ namespace Eduria
         Input,
         Score,
         InputScore
+    }
+
+    /// <summary>
+    /// Enum for the differect default scores.
+    /// </summary>
+    public enum DefaultScore
+    {
+        Rood,
+        Oranje,
+        Geel,
+        LichtGroen,
+        Groen
     }
 }
