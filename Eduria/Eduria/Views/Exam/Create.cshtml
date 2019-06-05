@@ -1,68 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Create";
 }
-
-<h2>Create</h2>
-<form id="examForm" method="post" enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index">
-    @{
-        if (ViewBag.success == 1)
-        {
-            <p style="color:green;">Nieuwe toets is aangemaakt!</p>
-        }
-    }
-    <p id="warning" style="color:red;"></p>
-    <div class="questionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto">
-        <input type="text" id="examName" name="examName" placeholder="Toets naam" />
-        <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
-        <select id="examCategory" name="examCategory">
-            @{
-                foreach (var tt in ViewBag.categories)
-                {
-                    <option value="@tt.TimeTableId">@tt.Text</option>
+    <section id="create">
+        <div class="row large">
+            <div class="medium-12 columns">
+                <h2>Toets samenstellen</h2>
+            </div>
+            <form id="examForm" method="post" enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index">
+                @{
+                    if (ViewBag.success == 1)
+                    {
+                        <p style="color:green;">Nieuwe toets is aangemaakt!</p>
+                    }
                 }
-            }
-        </select>
-        <div id="questionBox">
+                <div class="medium-6 columns">
+                    <p id="warning" style="color:red;"></p>
+                    <div class="questionDiv">
+                        <input type="text" id="examName" name="examName" placeholder="Toets naam" />
+                        <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
+                        <select id="examCategory" name="examCategory">
+                            @{
+                                foreach (var tt in ViewBag.categories)
+                                {
+                                    <option value="@tt.TimeTableId">@tt.Text</option>
+                                }
+                            }
+                        </select>
+                        <div id="questionBox">
 
-        </div>
-        <input type="button" onclick="AddQuestion(0)" value="Voeg Meerkeuze vraag toe.">
-        <input type="button" onclick="AddQuestion(2)" value="Voeg Open vraag toe.">
-    </div>
-    <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
-        <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText()" />
-        <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
-            <option value="99"></option>
-            @{
-                foreach (var tt in ViewBag.categories)
-                {
-                    <option value="@tt.TimeTableId">@tt.Text</option>
-                }
-            }
-        </select>
-        @{
-            foreach (var question in ViewBag.questions)
-            {
-                var text = question.Text;
-                var ttId = question.TimeTable.TimeTableId;
-                var ttText = question.TimeTable.Text;
-                var link = question.MediaLink ?? "none";
-                var type = (MediaType)question.MediaType;
-                var questionType = (QuestionType)question.QuestionType;
-                var typeInt = question.MediaType;
-                <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
-                    <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
-                    <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
-                    <p>Categorie: @ttText</p>
-                    <p>Type: @questionType</p>
+                        </div>
+                        <input type="button" class="button" onclick="AddQuestion(0)" value="+ Meerkeuze vraag.">
+                        <input type="button" class="button" onclick="AddQuestion(2)" value="+ Open vraag.">
+                    </div>
                 </div>
-            }
-        }
-    </div>
-    <div class="form-group" style="width: 100%; float: left;margin: 10px;">
-        <input type="button" onclick="SaveExam()" value="Toets aanmaken" />
-    </div>
-</form>
+                <div class="medium-6 columns">
+                    <div class="existingQuestionDiv">
+                        <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText()" />
+                        <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+                            <option value="99"></option>
+                            @{
+                                foreach (var tt in ViewBag.categories)
+                                {
+                                    <option value="@tt.TimeTableId">@tt.Text</option>
+                                }
+                            }
+                        </select>
+                        @{
+                            foreach (var question in ViewBag.questions)
+                            {
+                                var text = question.Text;
+                                var ttId = question.TimeTable.TimeTableId;
+                                var ttText = question.TimeTable.Text;
+                                var link = question.MediaLink ?? "none";
+                                var type = (MediaType)question.MediaType;
+                                var questionType = (QuestionType)question.QuestionType;
+                                var typeInt = question.MediaType;
+                                <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
+                                    <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
+                                    <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
+                                    <p>Categorie: @ttText</p>
+                                    <p>Type: @questionType</p>
+                                </div>
+                            }
+                        }
+                    </div>
 
+                    <div class="form-group" style="width: 100%; float: left;margin: 10px;">
+                        <input type="button" onclick="SaveExam()" class="button" value="Toets aanmaken" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
 <script>
     var questions = [];
     var questionBox;
@@ -214,7 +223,7 @@
                 var string = "<p><input type='button' id='show" + questionCount + "' onClick='Show(" + questionCount + ")' value='" + questionText + "'/></p>";
                 string += "<div id='question" + questionCount + "'>";
                 string += "<p>" + questionText + " ";
-                string += "<input type='button' onClick = 'RemoveQuestion(" + questionCount + ")' value='Verwijder'/></p>";
+                string += "<input type='button' class='button' onClick = 'RemoveQuestion(" + questionCount + ")' value='Verwijder'/></p>";
                 string += "<p>" + questionCatId + "</p>";
                 string += "<p>" + questionMediaType + "</p>";
                 string += "<p>" + questionMediaLink + "</p>";
@@ -233,11 +242,11 @@
                 questionText = questions[i].text;
             }
         }
-        var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
+        var string = "<p><input type='button' class='button blue' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
         string += "<div id='question" + count + "' style='border: 2px solid white;'>";
         string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
-        string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
+        string += "<input type='button' class='button red float-right' onClick = 'RemoveQuestion(" + count + ")' value='&times;'/></p>";
         string += "<p><select id='category" + count + "' name='questionCategory' selected>";
         string += $("#examCategory").html();
         string += "</select></p>";
@@ -262,7 +271,7 @@
         string += "</div>";
         string += "<div id='answers" + count + "'></div>";
         if (type == 0) {
-            string += "<p><input type='button' onclick='AddAnswer(" + count + ", 0)' value='Add Answer'/></p>";
+            string += "<p><input type='button' class='button' onclick='AddAnswer(" + count + ", 0)' value='Antwoord toevoegen'/></p>";
         }
         string += "</div>"
         questionBox.append(string);
@@ -298,7 +307,7 @@
         string += "</select></p>";
         string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
         if (type == 0) {
-            string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
+            string += "<input type='button' class='button red float-right' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='&times;'/></button></p>";
         }       
         string += "</div>";
         answersbox.append(string);
@@ -491,7 +500,7 @@
         const sourceEl = document.createElement('source');
         sourceEl.src = blobUrl;
         sourceEl.type = 'audio/webm';
-        const remove = "<button onclick='removeAudioElement(" + currentQuestion + ")'>Verwijder</button>"
+        const remove = "<button class='button red float-right' onclick='removeAudioElement(" + currentQuestion + ")'>&times;</button>"
         audioEl.appendChild(sourceEl);
         $(div).append(audioEl);
         $(div).append(remove);

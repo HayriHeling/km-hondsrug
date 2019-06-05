@@ -47,6 +47,17 @@ h4 {
     max-width: 100%;
 }
 
+input[type=text] {
+    border:1px solid #ddd;
+    font-size: 12px;
+
+}
+
+input[type=text]::placeholder {
+    font-size: 12px;
+    color: #ddd;
+}
+
 /* General Header*/
 #header {
     background-color: #1e1e1e;
@@ -81,14 +92,31 @@ footer {
 }
 
 .button {
-    background-color: #29abe2;
+    
     color: #fff;
     border-radius: unset;
 }
 
-    .button:hover {
-        background-color: #ed1c24;
-    }
+.blue {
+    background-color: #29abe2;
+}
+
+ .blue:hover {
+    background-color: #ed1c24;
+}
+
+
+.red {
+    background-color: #ed1c24;
+}
+
+.red:hover {
+    background-color: #900707;
+}
+
+ .green {
+   background-color: #81e212;
+}
 
 .ghost {
     background-color: unset;
@@ -354,11 +382,11 @@ a {
     height: 220px;
 }
 
-    .timeperiod:hover {
-        -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        filter: brightness(1.2) grayscale(.5) opacity(.9);
-    }
+.timeperiod:hover {
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
 
 [type='radio'] + label {
     margin-left: 0;
@@ -401,3 +429,9 @@ p {
 #exam p {
     color: #afacac;
 }
+
+#create {
+    padding: 50px 20px;
+}
+
+
