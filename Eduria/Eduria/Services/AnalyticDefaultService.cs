@@ -95,7 +95,8 @@ namespace Eduria.Services
                             AnalyticDefaultName = ad.AnalyticDefaultName,
                             CategoryId = ad.AnalyticCategory,
                             Score = dds.Score,
-                            Input = ddi.Text
+                            Input = ddi.Text,     
+                            Option = ad.AnalyticDefaultOption
                         };
 
             return query.ToList();
@@ -343,12 +344,15 @@ namespace Eduria.Services
         /// <param name="form">The IFormCollection the is passed into the controller back to this service method.</param>
         public void AddDefaultDataScore(IFormCollection form)
         {
-            for (int i = 1; i <= form.ToList().Count - 1; i++)
-            {
+            var listOfDefaultDataScore = form.ToList();
+            listOfDefaultDataScore.RemoveAt(listOfDefaultDataScore.Count - 1);
+
+            foreach (var item in listOfDefaultDataScore)
+            {    
                 DefaultDataScore defaultDataScore = new DefaultDataScore
                 {
-                    DataHasDefaultId = i,
-                    Score = int.Parse(form["radio_" + i]) // The score that is chosen by each radiobutton.
+                    DataHasDefaultId = int.Parse(item.Key),
+                    Score = int.Parse(item.Value)
                 };
 
                 Context.DefaultDataScores.Add(defaultDataScore);

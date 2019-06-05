@@ -1,6 +1,7 @@
 ﻿using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models.AnalyticLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,6 +35,7 @@ namespace Eduria.Controllers
         /// This is the Method action.
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Student")]
         public IActionResult Method()
         {
             return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Werkwijze));
@@ -45,6 +47,7 @@ namespace Eduria.Controllers
         /// <param name="methodParam"></param>
         /// <param name="textParam"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Student")]
         public IActionResult AddMethod(int[] methodParam, string textParam)
         {
             Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, textParam);
@@ -55,6 +58,7 @@ namespace Eduria.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Student")]
         public IActionResult Goal()
         {
             return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
@@ -64,6 +68,7 @@ namespace Eduria.Controllers
         /// IActionResult that shows the Subject action on the view.
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
+        [Authorize(Roles = "Student,Admin")]
         public IActionResult Subject()
         {
             Service.AddSubjectToHasDefaults(AnalyticDataId);
@@ -75,6 +80,7 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="form">IFormCollection that has all the data.</param>
         /// <returns>Redirects the user to the index page.</returns>
+        [Authorize(Roles = "Student")]
         public IActionResult AddScore(IFormCollection form)
         {
             Service.AddDefaultDataScore(form);
