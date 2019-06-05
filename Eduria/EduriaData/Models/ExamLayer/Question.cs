@@ -7,12 +7,14 @@ namespace EduriaData.Models
         [Key]
         public int QuestionId { get; set; }
         [Required]
-        public int CategoryId { get; set; }
+        public int TimeTableId { get; set; }
         [Required, MaxLength(200)]
         public string Text { get; set; }
-        [Required, MaxLength(500)]
+        [MaxLength(500)]
         public string MediaLink { get; set; }
         [Required]
         public int MediaType { get; set; }
+        [Required]
+        public int QuestionType { get; set; }
     }
 }

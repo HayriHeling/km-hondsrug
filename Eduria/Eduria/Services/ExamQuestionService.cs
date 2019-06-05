@@ -31,5 +31,10 @@ namespace Eduria.Services
         {
             return Context.ExamQuestions.Where(x => x.ExamId == examId);
         }
+
+        public ExamQuestion GetExamQuestionByQuestionIdExamId(int questionId, int examId)
+        {
+            return Context.ExamQuestions.First(x => x.QuestionId == questionId && x.ExamId == examId);
+        }
     }
 }

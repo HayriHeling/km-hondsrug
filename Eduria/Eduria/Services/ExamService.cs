@@ -29,5 +29,10 @@ namespace Eduria.Services
         {
             return GetAll().FirstOrDefault(x => x.ExamId == id);
         }
+
+        public Exam GetByName(string name)
+        {
+            return GetAll().FirstOrDefault(x => x.Name == name);
+        }
     }
 }
