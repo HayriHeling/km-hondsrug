@@ -61,8 +61,23 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Goal(Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>> modelsTuple)
         {
-            IEnumerable<AnalyticHasDefaultModel> analyticHasDefaultModels = modelsTuple.Item1;
-            IEnumerable<AnalyticDefaultModel> analyticDefaultModels = modelsTuple.Item2;
+            // check ischecked true on models met category doel
+            IEnumerable<AnalyticDefaultModel> checkedDefaults = modelsTuple.Item2.Where(x => x.IsChecked == true);
+
+            // check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
+            if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+            {
+                if (checkedDefaults.Count() < 2)
+                {
+                    ViewBag.Message = "Jo je moet twee aanvinken";
+                }
+            }
+
+            foreach (var item in checkedDefaults)
+            {
+
+            }
+            // als ze niet bestaan, dan toevoegen
 
             return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Leerdoel));
         }

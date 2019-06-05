@@ -28,7 +28,10 @@
         {
                 
             <tr>
-                <td>@Html.CheckBoxFor(m => item.IsChecked, new { @checked = item.IsChecked.ToString() }) </td>
+                <td>
+                    @Html.CheckBoxFor(m => item.IsChecked, new { @checked = item.IsChecked.ToString(), value = item.AnalyticDefaultId })
+                    @Html.HiddenFor(m => item.AnalyticDefaultId)
+                </td>
                 <td>@item.AnalyticDefaultName</td>
                 <td>@if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
                 {
