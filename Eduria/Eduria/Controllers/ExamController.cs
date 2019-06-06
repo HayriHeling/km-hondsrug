@@ -188,11 +188,23 @@ namespace Eduria.Controllers
             List<QuestionModel> outputList = new List<QuestionModel>();
             foreach (Question question in questions)
             {
+                TimeTable tt = _timeTableService.GetById(question.TimeTableId);
+                TimeTableModel ttModel = new TimeTableModel()
+                {
+                    TimeTableId = tt.TimeTableId,
+                    Text = tt.Text,
+                    // TODO: Line 283 & 284 give problems
+                    Source = "string"
+                    //Source = tt.Source
+                };
                 outputList.Add(new QuestionModel()
                 {
-                    Category = question.TimeTableId.ToString(),
-                    MediaLink = question.MediaLink,
-                    MediaType = 0,
+                    TimeTable = ttModel,
+                    // TODO: Line 288- 291 gives problems
+                    //MediaLink = question.MediaLink,
+                    //MediaType = (MediaType)question.MediaType,
+                    MediaLink = "",
+                    MediaType = (MediaType.Audio),
                     QuestionId = question.QuestionId,
                     Text = question.Text,
                     AnswerId = question.TimeTableId
@@ -222,6 +234,155 @@ namespace Eduria.Controllers
             }
 
             return tempAnswerModels;
+        }
+
+        /// <summary>
+        /// Gets tables from database and changes them to models to use in the view. Returns the view to create an exam.
+        /// if success is true, the view will display a message that an exam is successfully created.
+        /// </summary>
+        /// <param name="success"></param>
+        /// <returns></returns>
+        //GET: Exam/Create
+        public ActionResult Create(int success = 0)
+        {
+            ViewBag.Success = success;
+
+            IEnumerable<TimeTable> tables = _timeTableService.GetAll();
+            List<TimeTableModel> tableModels = new List<TimeTableModel>();
+            foreach(TimeTable table in tables)
+            {
+                TimeTableModel tableModel = new TimeTableModel()
+                {
+                    TimeTableId = table.TimeTableId,
+                    Text = table.Text,
+                    Source = table.Source
+                };
+                tableModels.Add(tableModel);
+            }
+            ViewBag.categories = tableModels;
+
+            IEnumerable<Question> questions = _questionService.GetAll();
+            List<QuestionModel> questionModels = new List<QuestionModel>();
+            foreach (Question question in questions)
+            {
+                QuestionModel questionModel = new QuestionModel()
+                {
+                    QuestionId = question.QuestionId,
+                    QuestionType = question.QuestionType,
+                    TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
+                    Text = question.Text,
+                    MediaType = (MediaType)question.MediaType,
+                    MediaLink = question.MediaLink
+                };
+                questionModels.Add(questionModel);
+            }
+            ViewBag.questions = questionModels;
+            return View();
+        }
+        /// <summary>
+        /// Creates an exam and saves all attributes to the database.
+        /// </summary>
+        /// <param name="examJson"> The complete exam in json format.</param>
+        /// <returns></returns>
+        public ActionResult CreateExam(string examJson)
+        {
+            string json = examJson;
+            exam exam;
+            try
+            {
+                using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+                {
+                    // Deserialization from JSON  
+                    DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(exam));
+                    exam = (exam)deserializer.ReadObject(ms);
+                }
+
+                Exam ex = new Exam()
+                {
+                    TimeTableId = exam.category,
+                    Name = exam.name,
+                    Description = exam.description
+                };
+                _examService.Add(ex);
+                int examId = _examService.GetByName(ex.Name).ExamId;
+
+                foreach(question q in exam.questions)
+                {
+                    int _questionId;
+                    if (!q.existing)
+                    {
+                        Question question = new Question()
+                        {
+                            Text = q.text,
+                            QuestionType = q.questionType,
+                            TimeTableId = q.category,
+                            MediaType = q.mediaType,
+                            MediaLink = q.mediaLink
+                        };
+                        _questionService.Add(question);
+                        _questionId = _questionService.GetQuestionByText(question.Text).QuestionId;
+                    }      
+                    else
+                    {
+                        _questionId = _questionService.GetQuestionByText(q.text).QuestionId;
+                    }
+
+                    ExamQuestion eq = new ExamQuestion()
+                    {
+                        ExamId = examId,
+                        QuestionId = _questionId
+                    };
+
+                    _examQuestionService.Add(eq);
+
+                    foreach (answer a in q.answers)
+                    {
+                        Answer answer = new Answer()
+                        {
+                            QuestionId = _questionId,
+                            Text = a.text,
+                            Correct = a.correct
+                        };
+                        _answerService.Add(answer);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            return RedirectToAction("Create", "Exam");
+        }            
+        /// <summary>
+        /// Gets called if files are being uploaded when creating a new exam. Files are being saved in the content folder and the question gets a reference.
+        /// </summary>
+        /// <param name="files">The files that needs to be uploaded to the server.</param>
+        /// <returns></returns>
+        [HttpPost("UploadFiles")]
+        public async Task<IActionResult> Upload(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+            var filePath = "lol";
+
+            foreach(var formFile in files)
+            {
+                if(formFile.Length > 0)
+                {
+                    Question q = _questionService.GetQuestionByMediaLink(formFile.FileName);
+                    string[] arr = formFile.FileName.Split(".");
+                    string ext = arr[arr.Length - 1];
+                    string newName = "questionImage" + q.QuestionId + "." + ext;
+                    filePath = "Content/" + newName;
+                    // TODO: Line 458 gives an error
+                    //q.MediaLink = newName;
+                    _questionService.Update(q);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            return RedirectToAction("Create", "Exam", new { success = 1 });
         }
     }
 }
