@@ -9,9 +9,7 @@ namespace EduriaData.Models.AnalyticLayer
         [Required]
         public int UserId { get; set; }
         [Required]
-        public int Period { get; set; }
-        [Required]
-        public int Year { get; set; }
+        public int PeriodId { get; set; }
         [Required]
         public string ExamCode { get; set; }
     }

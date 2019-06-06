@@ -7,8 +7,16 @@ using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols;
+using System.Web;
+using System.IO;
+using System.Text;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
 using EduriaData.Models.ExamLayer;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Eduria.Controllers
 {
@@ -16,15 +24,83 @@ namespace Eduria.Controllers
     {
         private ExamService _examService;
         private QuestionService _questionService;
+        private AnswerService _answerService;
         private TimeTableService _timeTableService;
         private ExamQuestionService _examQuestionService;
+        
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
+        [DataContract]
+        class exam
+        {
+            [DataMember]
+            public string name;
+            [DataMember]
+            public string description;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public question[] questions;
+        }
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
+        [DataContract]
+        class question
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int answerCount;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int category;
+            [DataMember]
+            public int mediaType;
+            [DataMember]
+            public string mediaLink;
+            [DataMember]
+            public answer[] answers;
+            [DataMember]
+            public bool existing;
+            [DataMember]
+            public int questionType;
+        }
+        /// <summary>
+        /// internal class for databinding the information from database to object.
+        /// </summary>
+        [DataContract]
+        class answer
+        {
+            [DataMember]
+            public int id;
+            [DataMember]
+            public int questionId;
+            [DataMember]
+            public string text;
+            [DataMember]
+            public int correct;
+        }
+
         private UserEQLogService _userEqLogService;
         private ExamResultService _examResultService;
 
         private int _examId;
         private DateTime _dateTime;
 
-        public ExamController(ExamService examService, QuestionService questionService,
+        /// <summary>
+        /// Constructor that creates all needed services.
+        /// </summary>
+        /// <param name="examService"></param>
+        /// <param name="questionService"></param>
+        /// <param name="answerService"></param>
+        /// <param name="timeTableService"></param>
+        /// <param name="examQuestionService"></param>
+        /// <param name="userEqLogService"></param>
+        /// <param name="examResultService"></param>
+        public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
             UserEQLogService userEqLogService, ExamResultService examResultService)
         {
@@ -34,6 +110,7 @@ namespace Eduria.Controllers
             this._timeTableService = timeTableService;
             this._userEqLogService = userEqLogService;
             this._examResultService = examResultService;
+            this._answerService = answerService;
         }
 
         /// <summary>
@@ -142,11 +219,16 @@ namespace Eduria.Controllers
             IEnumerable<ExamQuestion> tempExamQuestions = _examQuestionService.GetAllQuestionIdsAsList(id);
             IEnumerable<Question> tempQuestions = _questionService.GetQuestionsByExamQuestionList(tempExamQuestions);
             Exam exam = _examService.GetById(id);
-
+            TimeTable timeTable = _timeTableService.GetById(exam.TimeTableId);
             return new ExamModel()
             {
                 AnswerModels = null, //CreateAnswerModels(tempAnswers.ToList()),
-                Category = exam.TimeTableId.ToString(),
+                TimeTable = new TimeTableModel()
+                {
+                    TimeTableId = timeTable.TimeTableId,
+                    Text = timeTable.Text,
+                    Source = timeTable.Source
+                },
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
@@ -163,14 +245,18 @@ namespace Eduria.Controllers
         {
             List<Question> allQuestions = _questionService.GetAll().ToList();
             Exam exam = _examService.GetById(id);
-
+            TimeTable timeTable = _timeTableService.GetById(exam.TimeTableId);
             //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
-            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);
-
+            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);          
             return new ExamModel()
             {
                 AnswerModels = null,
-                Category = exam.TimeTableId.ToString(),
+                TimeTable = new TimeTableModel()
+                {
+                    TimeTableId = timeTable.TimeTableId,
+                    Text = timeTable.Text,
+                    Source = timeTable.Source
+                },
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
