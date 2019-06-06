@@ -137,7 +137,7 @@ namespace Eduria.Controllers
 
         public ActionResult ForgotPassword(string Email)
         {
-            Console.WriteLine("Testing!");
+            
             if (ModelState.IsValid)
             {
                 string To = Email, UserID, Password, SMTPPort, Host;
@@ -160,21 +160,6 @@ namespace Eduria.Controllers
                     EmailManager.SendEmail("info@adindatest3.nl", subject, body, Email, "info@adindatest3.nl", "wzRQ3Gg5mE", "465", "mail.axc.nl");
                     return Content("Er is een mail met een link naar " + Email + " verzonden.");
 
-
-                    //// Token moet toegevoegd worden aan User
-                    //try
-                    //{
-                    //    User user = new User();
-                    //    UserService service = new UserService(this.ControllerContext);
-                    //    user = Service.GetUserByEmail(Email);
-                    //    user.Token = token;
-                    //    Service.Update(user);
-                    //    return Content("Er is een mail met een link naar " + Email + " verzonden.");
-                    //}
-                    //catch
-                    //{
-                    //    return Content("Er ging iets goed mis..");
-                    //}
                 }
                 else
                 {
