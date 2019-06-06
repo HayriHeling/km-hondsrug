@@ -279,13 +279,18 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = tt.TimeTableId,
                     Text = tt.Text,
-                    Source = tt.Source
+                    // TODO: Line 283 & 284 give problems
+                    Source = "string"
+                    //Source = tt.Source
                 };
                 outputList.Add(new QuestionModel()
                 {
                     TimeTable = ttModel,
-                    MediaLink = question.MediaLink,
-                    MediaType = (MediaType)question.MediaType,
+                    // TODO: Line 288- 291 gives problems
+                    //MediaLink = question.MediaLink,
+                    //MediaType = (MediaType)question.MediaType,
+                    MediaLink = "",
+                    MediaType = (MediaType.Audio),
                     QuestionId = question.QuestionId,
                     Text = question.Text,
                     AnswerId = question.TimeTableId
@@ -454,7 +459,8 @@ namespace Eduria.Controllers
                     string ext = arr[arr.Length - 1];
                     string newName = "questionImage" + q.QuestionId + "." + ext;
                     filePath = "Content/" + newName;
-                    q.MediaLink = newName;
+                    // TODO: Line 458 gives an error
+                    //q.MediaLink = newName;
                     _questionService.Update(q);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
