@@ -9,16 +9,14 @@ namespace Eduria.Controllers
 {
     public class StudentController : Controller
     {
-        private UserExamService UserExamService { get; set; }
+        private ExamResultService ExamResultService { get; set; }
         private UserService UserService { get; set; }
-        private CategoryService CategoryService { get; set; }
         private ExamService ExamService { get; set; }
 
-        public StudentController(UserExamService userExamService, UserService userService, CategoryService categoryService, ExamService examService)
+        public StudentController(ExamResultService examResultService, UserService userService, ExamService examService)
         {
-            UserExamService = userExamService;
+            ExamResultService = examResultService;
             UserService = userService;
-            CategoryService = categoryService;
             ExamService = examService;
         }
 
@@ -37,24 +35,21 @@ namespace Eduria.Controllers
         /// <returns>An IActionResult that contains an IEnumerable<UserTest> with all its data.</returns>
         public IActionResult TestResults()
         {
-            IEnumerable<UserExam> userExams = UserExamService.GetAll();
+            IEnumerable<ExamResult> examResults = ExamResultService.GetAll();
             IEnumerable<User> users = UserService.GetAll();
             IEnumerable<Exam> exams = ExamService.GetAll();
-            IEnumerable<Category> categories = CategoryService.GetAll();
 
-            var result = (from ue in userExams
-                          join u in users on ue.UserId equals u.Id
-                          join e in exams on ue.ExamId equals e.Id
-                          join c in categories on ue.ExamId equals c.Id
+            var result = (from er in examResults
+                          join u in users on er.UserId equals u.UserId
+                          join e in exams on er.ExamId equals e.ExamId
 
                           select new UserTestModel
                           {
                               Firstname = u.Firstname,
                               Lastname = u.Lastname,
-                              Category = c.CategoryName,
-                              StartedAt = ue.StartedAt,
-                              FinishedAt = ue.FinishedAt,
-                              Score = ue.Score
+                              StartedAt = er.StartedAt,
+                              FinishedAt = er.FinishedAt,
+                              Score = er.Score
                           });
 
             return View(result);

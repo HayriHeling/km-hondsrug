@@ -1,0 +1,522 @@
+﻿@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+<form id="examForm" method="post" enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index">
+    @{
+        if (ViewBag.success == 1)
+        {
+            <p style="color:green;">Nieuwe toets is aangemaakt!</p>
+        }
+    }
+    <p id="warning" style="color:red;"></p>
+    <div class="questionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto">
+        <input type="text" id="examName" name="examName" placeholder="Toets naam" />
+        <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
+        <select id="examCategory" name="examCategory">
+            @{
+                foreach (var tt in ViewBag.categories)
+                {
+                    <option value="@tt.TimeTableId">@tt.Text</option>
+                }
+            }
+        </select>
+        <div id="questionBox">
+
+        </div>
+        <input type="button" onclick="AddQuestion(0)" value="Voeg Meerkeuze vraag toe.">
+        <input type="button" onclick="AddQuestion(2)" value="Voeg Open vraag toe.">
+    </div>
+    <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
+        <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText()" />
+        <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+            <option value="99"></option>
+            @{
+                foreach (var tt in ViewBag.categories)
+                {
+                    <option value="@tt.TimeTableId">@tt.Text</option>
+                }
+            }
+        </select>
+        @{
+            foreach (var question in ViewBag.questions)
+            {
+                var text = question.Text;
+                var ttId = question.TimeTable.TimeTableId;
+                var ttText = question.TimeTable.Text;
+                var link = question.MediaLink ?? "none";
+                var type = (MediaType)question.MediaType;
+                var questionType = (QuestionType)question.QuestionType;
+                var typeInt = question.MediaType;
+                <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
+                    <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
+                    <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
+                    <p>Categorie: @ttText</p>
+                    <p>Type: @questionType</p>
+                </div>
+            }
+        }
+    </div>
+    <div class="form-group" style="width: 100%; float: left;margin: 10px;">
+        <input type="button" onclick="SaveExam()" value="Toets aanmaken" />
+    </div>
+</form>
+
+<script>
+    var questions = [];
+    var questionBox;
+    var questionCount;
+
+    window.onload = function () {
+        questionBox = $("#questionBox");
+    }
+
+    //Filters existing questions on text.
+    function FilterOnText() {
+        var value = $("#searchInput").val();
+        var filter = $(".questiontext");
+        var values = [];
+        filter.each(function () {
+            if ($(this).text().toLowerCase().indexOf(value) >= 0) {
+                $(this).parent().show();
+            }
+            else {
+                $(this).parent().hide();
+            }
+        })
+    }
+    //Filters existing questions on category.
+    function FilterOnCategory(div) {       
+        var id = $('#examCategory option').eq(div.selectedIndex-1).val();
+        var filterOn = ".category" + id + "";
+        var filter = $(".category");
+        if (div.selectedIndex == 0) {
+            filter.show();
+        }
+        else {
+            filter.hide();
+            $(filterOn).show();
+        }
+
+    }
+    //Saves the question to the questions array, checks if all fields are filled in and submits the exam with ajax to the controller.
+    //Also submits the form so that potential files can be uploaded.
+    function SaveExam() { 
+        if (SaveQuestions() == false) {
+            return;
+        }
+        var name = $("#examName").val();
+        var description = $("#examDescription").val();
+        var category = $("#examCategory").val();
+        if (name == null || name == "" || description == null || description == "" || category == null || category == "") {
+            SetWarning("Het examen heeft geen naam of omschrijving!");
+            return;
+        }
+        var exam = new Exam(name, category, description, questions);
+        $.ajax({
+            type: "POST",
+            url: "/Exam/createExam",
+            data: { examJson: JSON.stringify(exam) },
+            success: function () {
+                $("#examForm").submit();
+            }
+        });     
+    }
+    //Shows given warning.
+    function SetWarning(warning) {
+        $("#warning").empty();
+        $("#warning").append(warning);
+    }
+    //Saves data of all questions to the objects in the array.
+    function SaveQuestions() {
+        for (var i = 0; i < questions.length; i++) {
+            if (!questions[i].existing) {
+                if (SaveQuestion(i) == false) {                    
+                    return false;
+                }
+            }
+        }
+    }
+    //Adds a new question to the array and draws it in the html.
+    function AddQuestion(type) {
+        if (questions.length == 0) {
+            questionCount = 0;
+        }
+        var newQuestion = new Question(questionCount);
+        newQuestion.questionType = type;
+        questions.push(newQuestion);
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == questionCount) {
+                DrawQuestion(questionCount, questions.length, type);               
+            }
+        }
+        questionCount++;
+    }
+    //Adds a new answer to given questionId answers array and draws it in the html.
+    function AddAnswer(qId, type) {
+        var index;
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == qId) {
+                index = i;
+            }
+        }
+
+        questions[index].CreateAnswer();
+        for (var j = 0; j < questions[index].answers.length; j++) {
+            if (questions[index].answers[j].id == (questions[index].answerCount - 1)) {
+                DrawAnswer(questions[index].answers[j].id, qId, type);
+            }
+        }
+    }
+    //Removes the question of given count(index) from the questions array and removes it from the html.
+    function RemoveQuestion(count) {
+        var div = "#question" + count + "";
+        var button = "#show" + count + "";
+        var questionDiv = $(div);
+        var questionButton = $(button);
+        questionDiv.remove();
+        questionButton.remove();
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == count) {
+                questions.splice(i, 1);
+                break;
+            }
+        }
+    }
+    //Removes the answer of given answerId from quesstionId answers array and removes it from the html.
+    function RemoveAnswer(questionId, answerId) {
+        var div = "#answer" + questionId + "-" + answerId + "";
+        var answerDiv = $(div);
+        answerDiv.remove();
+        var arr = questions[questionId].answers;
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id == answerId) {
+                arr.splice(i, 1);
+                break;
+            }
+        }
+    }
+    //Draws an existing question from the database to the html. Question consists of text, categoryId, MediaLink, MediaType and MediaTypeInt.
+    function DrawExistingQuestion(questionText, questionCatId, questionMediaLink, questionMediaType, questionMediaTypeInt) {
+        if (questions.length == 0) {
+            questionCount = 0;
+        }
+        var newQ = new Question(questionCount);
+        newQ.text = questionText;
+        newQ.category = questionCatId;
+        newQ.mediaLink = questionMediaLink;
+        newQ.mediaType = questionMediaTypeInt;
+        newQ.existing = true;
+        questions.push(newQ);
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == questionCount) {
+                var string = "<p><input type='button' id='show" + questionCount + "' onClick='Show(" + questionCount + ")' value='" + questionText + "'/></p>";
+                string += "<div id='question" + questionCount + "'>";
+                string += "<p>" + questionText + " ";
+                string += "<input type='button' onClick = 'RemoveQuestion(" + questionCount + ")' value='Verwijder'/></p>";
+                string += "<p>" + questionCatId + "</p>";
+                string += "<p>" + questionMediaType + "</p>";
+                string += "<p>" + questionMediaLink + "</p>";
+                string += "</div>";
+                questionBox.append(string);
+                Show(questionCount);
+            }
+        }
+        questionCount++;
+    }
+    //Draws new question input field.
+    function DrawQuestion(count, listIndex, type) {
+        var questionText = "Question";
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == count) {
+                questionText = questions[i].text;
+            }
+        }
+        var string = "<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
+        string += "<div id='question" + count + "' style='border: 2px solid white;'>";
+        string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
+        string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
+        string += "<input type='button' onClick = 'RemoveQuestion(" + count + ")' value='Verwijder'/></p>";
+        string += "<p><select id='category" + count + "' name='questionCategory' selected>";
+        string += $("#examCategory").html();
+        string += "</select></p>";
+        string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
+        string += "<option value = '0'>None</option>";
+        string += "<option value = '1'>Audio</option>";
+        string += "<option value = '2'>Image</option>";
+        string += "<option value = '3'>Video</option>";
+        string += "</select></p>"; 
+
+        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
+    
+        string += "<div id='audiodiv" + count + "'>";
+        string += "<p><input type='button' class='audiobuttons" + count + "' onclick='startRecording()' value='start recording audio'>";
+        string += "<input type='button' class='audiobuttons" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
+        string += "<input type='file' id='audiofile" + count + "' name='files' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
+        string += "<div id='audio" + count + "'></div>";
+        string += "</div>";
+
+        string += "<div id='imagediv" + count + "'>";
+        string += "<input type='file' id='imagefile" + count + "' name='files' accept='image/*' oninput='SetImageLink(" + count + ")'>";
+        string += "</div>";
+        string += "<div id='answers" + count + "'></div>";
+        if (type == 0) {
+            string += "<p><input type='button' onclick='AddAnswer(" + count + ", 0)' value='Add Answer'/></p>";
+        }
+        string += "</div>"
+        questionBox.append(string);
+        Show(count);
+        var select = "#category" + count + "";
+        $(select).val($("select#examCategory").children('option:selected').val()).change();
+        var qType = "#qtype" + count + "";
+         AddAnswer(count, type);
+    }
+    //Passes the file name from the audio file upload to the medialink input field. 
+    function SetAudiolink(index) {
+        var input = "#audiofile" + index + "";
+        var target = "#medialink" + index + "";
+        var val = $(input).val().split('\\');
+        $(target).val(val[val.length-1]);
+    }
+    //Passes the file name from the image file upload to the medialink input field.
+    function SetImageLink(index) {
+        var input = "#imagefile" + index + "";
+        var target = "#medialink" + index + "";
+        var val = $(input).val().split('\\');
+        $(target).val(val[val.length-1]);
+    }
+    //Draws new answer input field beneath the question from the given questionId.
+    function DrawAnswer(id, questionId, type) {
+        var div = "#answers" + questionId + "";
+        var answersbox = $(div);
+        var string = "<div id='answer" + questionId + "-" + id + "'>";
+        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='answer " + id + "'/>";
+        string += "<p><select id='answerCorrect" + id + "' name='answerCorrect' selected='0'>";
+        string += "<option value = '0'>Niet correct</option>";
+        string += "<option value = '1'>Correct</option>";
+        string += "</select></p>";
+        string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
+        if (type == 0) {
+            string += "<input type='button' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='Verwijder'/></button></p>";
+        }       
+        string += "</div>";
+        answersbox.append(string);
+        $(".answerQuestionId").hide();
+        if (type == 2) {
+            var select = "#answerCorrect" + id + "";
+            $(select).hide();
+        }
+    }
+    //Hides all questions and then shows the question of the given index.
+    function Show(index) {
+        for (var i = 0; i < questions.length; i++) {
+            if (!questions[i].existing) {
+                SaveQuestion(i, true);
+            }
+            var div = "#question" + questions[i].id + "";
+            if (questions[i].id == index) {
+                $(div).show();
+                OnChangeMediaType(index);
+            } else {
+                $(div).hide();
+            }
+        }
+        $(".questionId").hide();        
+    }
+    //Hides all potential fields and then shows one based on the mediatype dropdown menu.
+    //mediatype 0 shows nothing.
+    //mediatype 1 shows an audio upload field and a tool to record sound.
+    //mediatype 2 shows an image upload field.
+    //mediatype 3 shows a video link field. This should be an embeddable link.
+    function OnChangeMediaType(count) {
+        var type = "#mediatype" + count + "";
+        var link = "#medialink" + count + "";
+        var audiodiv = "#audiodiv" + count + "";
+        var imagediv = "#imagediv" + count + "";
+        var audioinput = "#audiofile" + count + "";
+        var imageinput = "#imagefile" + count + "";
+        $(audioinput).val("");
+        $(imageinput).val("");
+        $(link).hide();
+        $(imagediv).hide();
+        $(audiodiv).hide();
+        switch ($(type).val()) {
+            case "1":
+                $(audiodiv).show();
+                break;
+            case "2":
+                $(imagediv).show();
+                break;              
+            case "3":
+                $(link).val("");
+                $(link).show();
+                break;
+        }
+    }
+    //Saves all given data to the question object with given index. IgnoreError is true when the question is already existing in the database.
+    //Gives warning if the question doesn't exist yet but fields aren't filled in.
+    function SaveQuestion(index, ignoreError = false) {
+        var div = "#show" + index + "";
+        var input = "#text" + index + "";
+        var cat = "#category" + index + "";
+        var mType = "#mediatype" + index + "";
+        var mLink = "#medialink" + index + "";
+        var inputText = $(input).val();
+        var inputCat = $(cat).val();
+        var inputType = $(mType).val();
+        var inputLink = $(mLink).val();
+        $(div).empty();
+        questions[index].category = inputCat;
+        questions[index].mediaType = inputType;
+        questions[index].mediaLink = inputLink;
+        if (inputText != "") {
+            questions[index].text = inputText;
+            $(div).val(questions[index].text);
+        }
+        else {
+            $(div).append("Question");
+        }
+        if (!ignoreError) {
+            if (questions[index].SaveAnswers() == false) {
+                return false;
+            }
+            if (inputText == null || inputText == "" || inputCat == null || inputCat == "" || inputType == null || inputType == "") {
+                SetWarning("Vraag " + (index + 1) + " Heeft lege velden!");
+                return false;
+            }
+        }
+
+    }
+    //Saves all given data to the answer with answerId of the question with questionId.
+    //Gives warning if fields aren't filed in.
+    function SaveAnswer(questionId, answerId) {
+        var input = "#answertext" + questionId + "-" + answerId + "";
+        var correct = "#answerCorrect" + answerId + "";
+        var inputAnswerText = $(input).val();
+        var inputAnswerCorrect = $(correct).val();
+        var index = GetQuestionIndex(questionId);
+        if (inputAnswerText != "") {
+            questions[index].answers[answerId].text = inputAnswerText;
+        }
+        questions[index].answers[answerId].correct = inputAnswerCorrect;
+        if (inputAnswerText == null || inputAnswerText == "") {
+            SetWarning("De vraag '" + questions[index].text + "' heeft lege velden!");
+            return false;
+        }
+    }
+    //Returns question object from the questions array with given id.
+    function GetQuestionIndex(id) {
+        for (var i = 0; i < questions.length; i++) {
+            if (questions[i].id == id) {
+                return i;
+            }
+        }
+    }
+
+    //Question Object
+    function Question(id) {
+        this.id = id;
+        this.answerCount = 0;
+        this.text = "Question";
+        this.category = 0;
+        this.mediaType = 0;
+        this.mediaLink = "";
+        this.answers = [];
+        this.existing = false;
+        this.questionType = 0;
+        //Creates a new answer to the question.
+        this.CreateAnswer = function () {
+            if (this.answers.length == 0) {
+                this.answerCount = 0;
+            }
+            this.answers.push(new Answer(this.answerCount, id));
+            this.answerCount++;
+        }
+        //Saves all data of the answers in the answers array.
+        //Gives warning if an answer is created but not filled in.
+        this.SaveAnswers = function () {
+            for (var i = 0; i < this.answers.length; i++) {
+                if (SaveAnswer(this.id, this.answers[i].id) == false) {
+                    SetWarning("De vraag '" + this.text + "' heeft lege antwoorden.");
+                    return false;
+                }
+            }
+        }
+    }
+    //Answer Object.
+    function Answer(id, questionId) {
+        this.id = id;
+        this.questionId = questionId;
+        this.text = "";
+        this.correct = 0;
+    }
+    //Exam Object.
+    function Exam(name, category, description, questions) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.questions = questions;
+    }
+
+    //function to start recording  
+    function startRecording() {
+        if (recorder.state == 'inactive') {
+            chunks = [];
+            recorder.start(500);
+        }
+    }
+    //function to stop recording
+    function stopRecording(q) {
+        if (recorder.state == 'recording') {
+            recorder.stop();
+            const blob = new Blob(chunks, { type: 'audio/webm' });
+            // convert blob to URL so it can be assigned to a audio src attribute
+            createAudioElement(URL.createObjectURL(blob), q);
+        }
+    }
+
+    // appends an audio element to playback and download recording
+    function createAudioElement(blobUrl, currentQuestion) {
+        var div = "#audio" + currentQuestion + "";
+        var audiobuttons = ".audiobuttons" + currentQuestion + "";
+        $(div).empty();
+        const downloadEl = document.createElement('a');
+        downloadEl.style = 'display: block';
+        downloadEl.innerHTML = 'download';
+        downloadEl.download = 'audio.webm';
+        downloadEl.href = blobUrl;
+        const audioEl = document.createElement('audio');
+        audioEl.controls = true;
+        const sourceEl = document.createElement('source');
+        sourceEl.src = blobUrl;
+        sourceEl.type = 'audio/webm';
+        const remove = "<button onclick='removeAudioElement(" + currentQuestion + ")'>Verwijder</button>"
+        audioEl.appendChild(sourceEl);
+        $(div).append(audioEl);
+        $(div).append(remove);
+        $(div).append(downloadEl);
+        $(audiobuttons).hide();
+    }
+    //Removes created audio element of index q.
+    function removeAudioElement(q) {
+        var div = "#audio" + q + "";
+        var audiobuttons = ".audiobuttons" + q + "";
+        $(div).empty();
+        $(audiobuttons).show();
+    }
+
+    var recorder;
+    // store streaming data chunks in array
+    var chunks = [];
+    // request permission to access audio stream
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        // create media recorder instance to initialize recording
+        recorder = new MediaRecorder(stream);
+        // function to be called when data is received
+        recorder.ondataavailable = e => {
+          // add stream data to chunks
+          chunks.push(e.data);
+        };
+    }).catch(console.error);
+</script>
