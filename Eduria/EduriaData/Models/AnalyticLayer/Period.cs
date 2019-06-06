@@ -10,7 +10,7 @@ namespace EduriaData.Models.AnalyticLayer
         [Key]
         public int PeriodId { get; set; }
         [Required]
-        public int PeriodName { get; set; }
+        public int PeriodNum { get; set; }
         [Required]
         public DateTime PeriodStart { get; set; }
         [Required]

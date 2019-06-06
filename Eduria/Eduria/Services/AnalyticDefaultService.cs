@@ -191,10 +191,11 @@ namespace Eduria.Services
         /// <param name="period">The specific period.</param>
         /// <param name="year">The specific year.</param>
         /// <returns>An AnalyticData with all the requirements met.</returns>
-        public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int period, int year)
+        public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int periodNum, int startYear)
         {
             var query = from ad in Context.AnalyticDatas
-                        where ad.UserId == userId && ad.Period == period && ad.Year == year
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodNum
+                        where ad.UserId == userId && p.PeriodNum == periodNum && p.SchoolYearStart == startYear
                         select new AnalyticData
                         {
                             AnalyticDataId = ad.AnalyticDataId
@@ -406,7 +407,8 @@ namespace Eduria.Services
         public int GetAnalyticDataIdByYearAndPeriodAndUserId(IFormCollection form, int userId)
         {
             var query = from ad in Context.AnalyticDatas
-                        where ad.Year == int.Parse(form["year"]) && ad.Period == int.Parse(form["period"]) && ad.UserId == userId
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where p.SchoolYearStart == int.Parse(form["year"]) && p.PeriodNum== int.Parse(form["period"]) && ad.UserId == userId
                         select new AnalyticData
                         {
                             AnalyticDataId = ad.AnalyticDataId
@@ -426,7 +428,8 @@ namespace Eduria.Services
                         join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
                         from ddi in b.DefaultIfEmpty()
                         join add in Context.AnalyticDatas on dhd.AnalyticDataId equals add.AnalyticDataId
-                        where add.Year == int.Parse(form["year"]) && add.Period == int.Parse(form["period"]) && add.UserId == userId
+                        join p in Context.Periods on add.PeriodId equals p.PeriodId
+                        where p.SchoolYearStart== int.Parse(form["year"]) && p.PeriodNum == int.Parse(form["period"]) && add.UserId == userId
 
                         select new AnalyticHasDefaultModel
                         {
