@@ -89,10 +89,10 @@ namespace Eduria.Controllers
             return RedirectToAction("Index");
         }
 
+
         public IActionResult Search(IFormCollection form)
         {
-            Service.GetAnalyticDataIdByYearAndPeriodAndUserId(form, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return null;
+            return View("Index", Service.GetAnalyticDataByYearAndPeriodAndUserId(form, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
         }
     }
 }

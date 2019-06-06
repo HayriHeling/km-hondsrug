@@ -379,7 +379,9 @@ namespace Eduria.Services
         /// <param name="form">The IFormCollection the is passed into the controller back to this service method.</param>
         public void AddDefaultDataScore(IFormCollection form)
         {
+            // Make an List for all the IFormCollection data.
             var listOfDefaultDataScore = form.ToList();
+            // Remove unnecessary last data token.
             listOfDefaultDataScore.RemoveAt(listOfDefaultDataScore.Count - 1);
 
             foreach (var item in listOfDefaultDataScore)
@@ -411,6 +413,33 @@ namespace Eduria.Services
                         };
 
             return query.First().AnalyticDataId;
+        }
+
+        public IEnumerable<AnalyticHasDefaultModel> GetAnalyticDataByYearAndPeriodAndUserId(IFormCollection form, int userId)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        // Use an join, but the outcome can be null
+                        join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
+                        from dds in a.DefaultIfEmpty()
+                            // Use an join, but the outcome can be null
+                        join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
+                        from ddi in b.DefaultIfEmpty()
+                        join add in Context.AnalyticDatas on dhd.AnalyticDataId equals add.AnalyticDataId
+                        where add.Year == int.Parse(form["year"]) && add.Period == int.Parse(form["period"]) && add.UserId == userId
+
+                        select new AnalyticHasDefaultModel
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                            CategoryId = ad.AnalyticCategory,
+                            Score = dds.Score,
+                            Input = ddi.Text,
+                            Option = ad.AnalyticDefaultOption
+                        };
+
+            return query.ToList();
         }
     }
 }
