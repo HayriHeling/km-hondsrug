@@ -5,13 +5,13 @@ using System.Text;
 
 namespace EduriaData.Models.TimeLineLayer
 {
-    public class TimeLineHasTimeBlock
+    public class TimeLineHasTimeTable
     {
         [Key]
-        public int TimeLineHasTimeBlockId { get; set; }
+        public int TimeLineHasTimeTableId { get; set; }
         [Required]
         public int TimeLineId { get; set; }
         [Required]
-        public int TimeBlockId { get; set; }
+        public int TimeTableId { get; set; }
     }
 }

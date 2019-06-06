@@ -5,13 +5,13 @@ using System.Text;
 
 namespace EduriaData.Models.TimeLineLayer
 {
-    public class TimeBlockHasUser
+    public class TimeTableInfoHasMediaSrc
     {
         [Key]
-        public int TimeBlockHasUserId { get; set; }
+        public int TimeTableInfoHasMediaSrcId { get; set; }
         [Required]
-        public int TimeBlockId { get; set; }
+        public int TimeTableInformationId { get; set; }
         [Required]
-        public int UserId { get; set; }
+        public int MediaSourceId { get; set; }
     }
 }
