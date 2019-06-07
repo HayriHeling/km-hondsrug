@@ -227,7 +227,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    Source = timeTable.Source
+                    //Source = timeTable.Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -255,7 +255,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    Source = timeTable.Source
+                    //Source = timeTable.Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -341,7 +341,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = table.TimeTableId,
                     Text = table.Text,
-                    Source = table.Source
+                    //Source = table.Source
                 };
                 tableModels.Add(tableModel);
             }
@@ -357,8 +357,8 @@ namespace Eduria.Controllers
                     QuestionType = question.QuestionType,
                     TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
                     Text = question.Text,
-                    MediaType = (MediaType)question.MediaType,
-                    MediaLink = question.MediaLink
+                    //MediaType = (MediaType)question.MediaType,
+                    //MediaLink = question.MediaLink
                 };
                 questionModels.Add(questionModel);
             }
@@ -402,8 +402,8 @@ namespace Eduria.Controllers
                             Text = q.text,
                             QuestionType = q.questionType,
                             TimeTableId = q.category,
-                            MediaType = q.mediaType,
-                            MediaLink = q.mediaLink
+                            //MediaType = q.mediaType,
+                            //MediaLink = q.mediaLink
                         };
                         _questionService.Add(question);
                         _questionId = _questionService.GetQuestionByText(question.Text).QuestionId;
