@@ -3,29 +3,18 @@
     ViewData["Title"] = "Index";
 }
 
-<a asp-controller="Analytic" asp-action="Method">Werkwijze</a>
-<a asp-controller="Analytic" asp-action="Subject">Onderwerpen</a>
-<a asp-controller="Analytic" asp-action="Goal">Doelen</a>
-
-@using (Html.BeginForm("Search", "Analytic", FormMethod.Post))
-{
-    <p>Jaar</p>
-    @Html.TextBox("year", "Jaar", new { @type = "number", @min = "3", @max  = "4" })
-    <p>Periode</p>
-    @Html.TextBox("period", "Periode", new { @type = "number", @min = "1", @max  = "4" })
-    <input type="submit" value="Zoeken" />
-}
-
-
-@foreach (var item in Model)
-{
-    <p>AnalyticDataId: @item.AnalyticDataId</p>
-    <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
-    <p>Name: @item.AnalyticDefaultName</p>
-    <p>Category: @item.CategoryId</p>
-    <p>Score: @item.Score</p>
-    <hr />
-}
-
-
+    <div class="row xlarge">
+        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        <div class="medium-10 columns">
+            @foreach (var item in Model)
+            {
+                <p>AnalyticDataId: @item.AnalyticDataId</p>
+                <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
+                <p>Name: @item.AnalyticDefaultName</p>
+                <p>Category: @item.CategoryId</p>
+                <p>Score: @item.Score</p>
+                <hr />
+            }
+        </div>
+    </div>
 

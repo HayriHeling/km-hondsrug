@@ -39,5 +39,10 @@ namespace Eduria.Services
         {
             return Context.Users.FirstOrDefault(x => x.UserNum == userNum);
         }
+
+        public IEnumerable<User> GetAllUsersByUserType(int userType)
+        {
+            return GetAll().Where(ut => ut.UserType == userType);
+        }
     }
 }

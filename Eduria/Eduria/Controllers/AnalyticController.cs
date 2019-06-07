@@ -1,5 +1,6 @@
 ﻿using Eduria.Models;
 using Eduria.Services;
+using EduriaData.Models;
 using EduriaData.Models.AnalyticLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,12 +15,13 @@ namespace Eduria.Controllers
     public class AnalyticController : Controller
     {
         private AnalyticDefaultService Service { get; set; }
+        private UserService UserService { get; set; }
         private int AnalyticDataId { get; set; }
-        private int UserId { get; set; }
 
-        public AnalyticController(AnalyticDefaultService service)
+        public AnalyticController(AnalyticDefaultService service, UserService userService)
         {
             Service = service;
+            UserService = userService;
         }
 
         /// <summary>
@@ -31,6 +33,26 @@ namespace Eduria.Controllers
         {
             IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return View(analyticDefaultModels);
+        }
+
+        [Authorize(Roles = "Teacher")]
+        public IActionResult Period()
+        {
+            return View();
+        }
+        
+        public IActionResult AddPeriod(PeriodModel periodModel)
+        {
+            //First add the PeriodModel to the database.
+            Service.AddPeriod(periodModel);
+            //Then get that PeriodId by PeriodNum and SchoolYearStart.
+            int periodId = Service.GetByPeriodIdByPeriodNumAndStartYear(periodModel.PeriodNum, periodModel.SchoolYearStart);
+            //Then get all users by usertype.
+            IEnumerable<User> users = UserService.GetAllUsersByUserType((int)(UserRoles.Student));
+            //Finally adds for every user an AnalyticData.
+            Service.AddAnalyticDataPerUser(users, periodId);
+            //Redirect to the Period Action.
+            return RedirectToAction("Period");
         }
 
         /// <summary>
@@ -70,7 +92,7 @@ namespace Eduria.Controllers
         /// IActionResult that shows the Subject action on the view.
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
-        [Authorize(Roles = "Student,Admin")]
+        [Authorize(Roles = "Student,Teacher")]
         public IActionResult Subject()
         {
             Service.AddSubjectToHasDefaults(AnalyticDataId);

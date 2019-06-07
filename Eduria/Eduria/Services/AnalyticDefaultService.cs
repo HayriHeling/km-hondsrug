@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EduriaData.Models;
 
 namespace Eduria.Services
 {
@@ -63,6 +64,45 @@ namespace Eduria.Services
         public override AnalyticData GetById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddAnalyticDataPerUser(IEnumerable<User> users, int periodId)
+        {
+            if (users.Count() != 0)
+            {
+                foreach(var item in users.ToList())
+                {
+                    AnalyticData analyticData = new AnalyticData
+                    {
+                        UserId = item.UserId,
+                        PeriodId = periodId,
+                        ExamCode = "1"
+                    };
+
+                    Context.Add(analyticData);
+                    Context.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the specific Period by the periodNum and startYear.
+        /// </summary>
+        /// <param name="periodNum">The number of the period.</param>
+        /// <param name="startYear">The startyear of the period.</param>
+        /// <returns>Period object.</returns>
+        public int GetByPeriodIdByPeriodNumAndStartYear(int periodNum, int startYear)
+        {
+            var query = from p in Context.Periods
+                        where p.PeriodNum == periodNum && p.SchoolYearStart == startYear
+                        select new Period
+                        {
+                            PeriodId = p.PeriodId
+                        };
+            return query.First().PeriodId;
+
+
+            //return Context.Periods.Where(pn => pn.PeriodNum == periodNum).Where(sy => sy.SchoolYearStart == startYear).First().PeriodId;
         }
 
         /// <summary>
@@ -260,7 +300,6 @@ namespace Eduria.Services
             }
         }
 
-
         /// <summary>
         /// Add an DefaultDataScore object to the database.
         /// </summary>
@@ -443,6 +482,24 @@ namespace Eduria.Services
                         };
 
             return query.ToList();
+        }
+
+        public void AddPeriod(PeriodModel periodModel)
+        {
+            if (periodModel != null)
+            {
+                Period period = new Period
+                {
+                    PeriodNum = periodModel.PeriodNum,
+                    PeriodStart = periodModel.PeriodStart.Date,
+                    PeriodEnd = periodModel.PeriodEnd.Date,
+                    SchoolYearStart = periodModel.SchoolYearStart,
+                    SchoolYearEnd = periodModel.SchoolYearEnd
+                };
+
+                Context.Periods.Add(period);
+                Context.SaveChanges();
+            }
         }
     }
 }
