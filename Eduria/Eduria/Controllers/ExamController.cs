@@ -127,6 +127,51 @@ namespace Eduria.Controllers
             return View(GetExamModelByExamId(id));
         }
 
+        public IActionResult Take(int id)
+        {
+            ViewBag.exam = _examService.GetById(id);
+            IEnumerable<ExamQuestion> data = _examQuestionService.GetAllQuestionIdsAsList(id);
+            IEnumerable<Question> dataQuestions = _questionService.GetQuestionsByExamQuestionList(data);
+            IEnumerable<Answer> dataAnswers = _answerService.GetAnswersByQuestionsList(dataQuestions);
+            IEnumerable<TimeTable> dataTimeTables = _timeTableService.GetAll();
+            List<QuestionModel> questions = new List<QuestionModel>();
+            List<AnswerModel> answers = new List<AnswerModel>();
+            foreach(Question examQuestion in dataQuestions)
+            {
+                Question q = examQuestion;
+                QuestionModel qModel = new QuestionModel()
+                {
+                    QuestionId = q.QuestionId,
+                    QuestionType = q.QuestionType,
+                    Text = q.Text,
+                    MediaType = (MediaType)q.MediaType,
+                    MediaLink = q.MediaLink,
+                    TimeTable = new TimeTableModel()
+                    {
+                        TimeTableId = q.TimeTableId,
+                        Text = dataTimeTables.First(x => x.TimeTableId == q.TimeTableId).Text,
+                        Source = dataTimeTables.First(x => x.TimeTableId == q.TimeTableId).Source
+                    }
+                }; 
+                questions.Add(qModel);
+            }
+            foreach(Answer examAnswer in dataAnswers)
+            {
+                Answer a = examAnswer;
+                AnswerModel aModel = new AnswerModel()
+                {
+                    AnswerId = a.AnswerId,
+                    Text = a.Text,
+                    QuestionId = a.QuestionId,
+                    CorrectAnswer = (a.Correct == 1)
+                };
+                answers.Add(aModel);
+            }
+            ViewBag.questions = questions;
+            ViewBag.answers = answers;
+            return View();
+        }
+
         public IActionResult OverView()
         {
             ViewBag.exams = _examService.GetAll();

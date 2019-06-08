@@ -31,7 +31,7 @@
                     <td class="examname">@item.Name</td>
                     <td class="examsummary">@item.Description</td>
                     <td>@tt.Text</td>
-                    <td><a asp-controller="Exam" asp-action="Show" asp-route-id="@item.ExamId">Start toets</a></td>
+                    <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
                 </tr>
             }
         </table>

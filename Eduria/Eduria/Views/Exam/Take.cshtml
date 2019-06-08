@@ -3,5 +3,139 @@
     ViewData["Title"] = "Take";
 }
 
-<h2>Take</h2>
+<h2>@ViewBag.exam.Name</h2>
 
+    @foreach(QuestionModel q in ViewBag.questions)
+    {
+        List<AnswerModel> qAnswers = new List<AnswerModel>();
+<div id="question@(q.QuestionId)" class="questions">
+    <p>@q.Text</p>
+    @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+    {
+        foreach (AnswerModel a in ViewBag.answers)
+        {
+            if (a.QuestionId == q.QuestionId)
+            {
+                qAnswers.Add(a);
+            }
+        }
+        Random rng = new Random();
+        int n = qAnswers.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            AnswerModel value = qAnswers[k];
+            qAnswers[k] = qAnswers[n];
+            qAnswers[n] = value;
+        }
+        @foreach (AnswerModel a in qAnswers)
+        {
+            <p><input type="radio" name="@a.QuestionId" value="@a.CorrectAnswer" />@a.Text</p>
+        }
+    }
+    @if ((QuestionType)q.QuestionType == QuestionType.Open)
+    {
+        <input type="text" name="@q.QuestionId" placeholder="Antwoord" />
+    }
+    @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+    {
+        <div class="cc-selector">
+            <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
+            <label class="timeperiod prehistorie" for="1"></label>
+            <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
+            <label class="timeperiod oudheid" for="2"></label>
+            <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
+            <label class="timeperiod vmiddeleeuwen" for="3"></label>
+            <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
+            <label class="timeperiod lmiddeleeuwen" for="4"></label>
+            <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
+            <label class="timeperiod nieuwetijd" for="5"></label>
+            <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
+            <label class="timeperiod goudeneeuw" for="6"></label>
+            <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
+            <label class="timeperiod verlichting" for="7"></label>
+            <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
+            <label class="timeperiod industrie" for="8"></label>
+            <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
+            <label class="timeperiod oorlog" for="9"></label>
+            <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
+            <label class="timeperiod tv" for="10"></label>
+        </div>
+    }
+</div>
+    }
+<input type="button" value="Vorige Vraag" onclick="PreviousQuestion()"/>
+<input type="button" value="Volgende Vraag" onclick="NextQuestion()"/>
+
+<script>
+    var questionArray = [];
+    var currentQuestion = 0;
+
+    @foreach(QuestionModel q in ViewBag.questions)
+    {
+        @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTable.TimeTableId, @((int)q.MediaType), "@q.MediaLink", @(q.QuestionType));
+        @foreach (AnswerModel a in ViewBag.answers)
+        {
+            if(a.QuestionId == q.QuestionId)
+            {
+                @:var a = new Answer(@a.AnswerId, @a.QuestionId, "@a.Text", "@a.CorrectAnswer");
+                @:q.answers.push(a);
+            }
+        }
+        @:questionArray.push(q);
+    }
+
+    window.onload = function () {
+        Show(0);
+    }
+    function PreviousQuestion() {
+        if (currentQuestion <= 0) {
+            return;
+        }
+        currentQuestion -= 1;
+        Show(currentQuestion);
+    }
+
+    function NextQuestion() {
+        if (currentQuestion >= questionArray.length-1) {
+            return;
+        }
+        currentQuestion += 1;
+        Show(currentQuestion);
+    }
+
+    function Show(index) {
+        if (index >= questionArray.length || index < -1) {
+            return;
+        }
+
+        $(".questions").hide();
+        var div = "#question" + questionArray[index].id + "";
+        $(div).show();
+    }
+    //Question Object
+    function Question(id, text, category, mediaType, mediaLink, questionType) {
+        this.id = id;
+        this.text = text;
+        this.category = category;
+        this.mediaType = mediaType;
+        this.mediaLink = mediaLink;
+        this.answers = [];
+        this.questionType = questionType;
+    }
+    //Answer Object.
+    function Answer(id, questionId, text, correct) {
+        this.id = id;
+        this.questionId = questionId;
+        this.text = text;
+        this.correct = correct;
+    }
+    //Exam Object.
+    function Exam(name, category, description, questions) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.questions = questions;
+    }
+</script>
