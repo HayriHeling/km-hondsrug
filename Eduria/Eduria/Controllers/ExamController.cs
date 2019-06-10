@@ -210,7 +210,7 @@ namespace Eduria.Controllers
                 ExamResult examResult = new ExamResult()
                 {
                     ExamId = exam.id,
-                    UserId = 1, //(int)HttpContext.Session.GetInt32("Username"),
+                    UserId = 2,
                     StartedAt = Convert.ToDateTime(exam.dateStarted),
                     FinishedAt = Convert.ToDateTime(exam.dateEnded)
                 };
