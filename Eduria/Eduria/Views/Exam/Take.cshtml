@@ -4,74 +4,71 @@
 }
 
 <h2>@ViewBag.exam.Name</h2>
-
-    @foreach(QuestionModel q in ViewBag.questions)
-    {
-        List<AnswerModel> qAnswers = new List<AnswerModel>();
-<div id="question@(q.QuestionId)" class="questions">
-    <p>@q.Text</p>
-    @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
-    {
-        foreach (AnswerModel a in ViewBag.answers)
-        {
-            if (a.QuestionId == q.QuestionId)
-            {
-                qAnswers.Add(a);
-            }
-        }
-        Random rng = new Random();
-        int n = qAnswers.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            AnswerModel value = qAnswers[k];
-            qAnswers[k] = qAnswers[n];
-            qAnswers[n] = value;
-        }
-        @foreach (AnswerModel a in qAnswers)
-        {
-            <p><input type="radio" name="@a.QuestionId" value="@a.CorrectAnswer" />@a.Text</p>
-        }
-    }
-    @if ((QuestionType)q.QuestionType == QuestionType.Open)
-    {
-        <input type="text" name="@q.QuestionId" placeholder="Antwoord" />
-    }
-    @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
-    {
-        <div class="cc-selector">
-            <input id="1" type="radio" name="timeperiod" onclick="eventListener(this)" value="prehistorie" />
-            <label class="timeperiod prehistorie" for="1"></label>
-            <input id="2" type="radio" name="timeperiod" onclick="eventListener(this)" value="oudheid" />
-            <label class="timeperiod oudheid" for="2"></label>
-            <input id="3" type="radio" name="timeperiod" onclick="eventListener(this)" value="vmiddeleeuwen" />
-            <label class="timeperiod vmiddeleeuwen" for="3"></label>
-            <input id="4" type="radio" name="timeperiod" onclick="eventListener(this)" value="lmiddeleeuwen" />
-            <label class="timeperiod lmiddeleeuwen" for="4"></label>
-            <input id="5" type="radio" name="timeperiod" onclick="eventListener(this)" value="nieuwetijd" />
-            <label class="timeperiod nieuwetijd" for="5"></label>
-            <input id="6" type="radio" name="timeperiod" onclick="eventListener(this)" value="goudeneeuw" />
-            <label class="timeperiod goudeneeuw" for="6"></label>
-            <input id="7" type="radio" name="timeperiod" onclick="eventListener(this)" value="verlichting" />
-            <label class="timeperiod verlichting" for="7"></label>
-            <input id="8" type="radio" name="timeperiod" onclick="eventListener(this)" value="industrie" />
-            <label class="timeperiod industrie" for="8"></label>
-            <input id="9" type="radio" name="timeperiod" onclick="eventListener(this)" value="oorlog" />
-            <label class="timeperiod oorlog" for="9"></label>
-            <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
-            <label class="timeperiod tv" for="10"></label>
-        </div>
-    }
+<div id="startDiv">
+    <p>@ViewBag.exam.Description</p>
+    <input type="button" value="Start toets" onclick="StartExam()" />
 </div>
-    }
-<input type="button" value="Vorige Vraag" onclick="PreviousQuestion()"/>
-<input type="button" value="Volgende Vraag" onclick="NextQuestion()"/>
-
+    <div id="examDiv">
+        @foreach (QuestionModel q in ViewBag.questions)
+        {
+            List<AnswerModel> qAnswers = new List<AnswerModel>();
+            <div id="question@(q.QuestionId)" class="questions">
+                <p>@q.Text</p>
+                @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+                {
+                    foreach (AnswerModel a in ViewBag.answers)
+                    {
+                        if (a.QuestionId == q.QuestionId)
+                        {
+                            qAnswers.Add(a);
+                        }
+                    }
+                    Random rng = new Random();
+                    int n = qAnswers.Count;
+                    while (n > 1)
+                    {
+                        n--;
+                        int k = rng.Next(n + 1);
+                        AnswerModel value = qAnswers[k];
+                        qAnswers[k] = qAnswers[n];
+                        qAnswers[n] = value;
+                    }
+                    @foreach (AnswerModel a in qAnswers)
+                    {
+                        <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
+                    }
+                }
+                @if ((QuestionType)q.QuestionType == QuestionType.Open)
+                {
+                    <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
+                }
+                @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+                {
+                    int count = 0;
+                    <div class="cc-selector">
+                        @foreach (TimeTableModel tModel in ViewBag.timetables)
+                        {
+                            count++;
+                            <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
+                            <label class="timeperiod @tModel.Source" for="@q.QuestionId-@count"></label>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div id="questionCount"></div>
+        <input type="button" value="Vorige Vraag" onclick="PreviousQuestion()" />
+        <input type="button" value="Volgende Vraag" onclick="NextQuestion()" />
+        <input type="button" value="Eindig Examen" onclick="StopExam()" />
+    </div>
+<form id="examForm" method="post" asp-controller="Exam" asp-action="Results" hidden>
+    <input id="examJson" name="examJson" type="text" />
+</form>
 <script>
     var questionArray = [];
     var currentQuestion = 0;
-
+    var started = null;
+    var examId = @ViewBag.exam.ExamId;
     @foreach(QuestionModel q in ViewBag.questions)
     {
         @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTable.TimeTableId, @((int)q.MediaType), "@q.MediaLink", @(q.QuestionType));
@@ -88,10 +85,36 @@
 
     window.onload = function () {
         Show(0);
+        $("#examDiv").hide();
     }
 
     function StartExam() {
+        $("#examDiv").show();
+        $("#startDiv").hide();
+        started = new Date();
+    }
+    function StopExam() {
+        if (confirm("Wil je de toets stoppen?")) {
+            var exam = new Exam(questionArray, examId, started);
+            $("#examJson").val(JSON.stringify(exam));
+            $("#examForm").submit();
+        }
+    }
 
+    function SetAnswer(qId, qType, answer) {
+        for (var i = 0; i < questionArray.length; i++) {
+            if (questionArray[i].id == qId) {
+                switch (qType) {
+                    case 0:
+                    case 1:
+                        questionArray[i].chosenAnswer = answer;
+                        break;
+                    case 2:
+                        questionArray[i].chosenAnswer = answer.value;
+                        break;
+                }
+            }
+        }
     }
 
     function PreviousQuestion() {
@@ -114,7 +137,8 @@
         if (index >= questionArray.length || index < -1) {
             return;
         }
-
+        $("#questionCount").empty();
+        $("#questionCount").append("Vraag " + (currentQuestion + 1) + "/" + questionArray.length + "");
         $(".questions").hide();
         var div = "#question" + questionArray[index].id + "";
         $(div).show();
@@ -137,10 +161,14 @@
         this.text = text;
     }
     //Exam Object.
-    function Exam(name, category, description, questions) {
-        this.name = name;
-        this.category = category;
-        this.description = description;
+    function Exam(questions, id, dateStarted) {
+        this.id = id;
+        this.name = "-";
+        this.description = "-";
+        this.category = 0;
         this.questions = questions;
+        this.dateStarted = dateStarted;
+        this.dateEnded = new Date();
+        this.score = 0;
     }
 </script>
