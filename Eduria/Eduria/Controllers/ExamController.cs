@@ -462,16 +462,18 @@ namespace Eduria.Controllers
                     };
 
                     _examQuestionService.Add(eq);
-
-                    foreach (answer a in q.answers)
+                    if (!q.existing)
                     {
-                        Answer answer = new Answer()
+                        foreach (answer a in q.answers)
                         {
-                            QuestionId = _questionId,
-                            Text = a.text,
-                            Correct = a.correct
-                        };
-                        _answerService.Add(answer);
+                            Answer answer = new Answer()
+                            {
+                                QuestionId = _questionId,
+                                Text = a.text,
+                                Correct = a.correct
+                            };
+                            _answerService.Add(answer);
+                        }
                     }
                 }
             }
