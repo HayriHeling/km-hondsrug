@@ -79,7 +79,7 @@
         {
             if(a.QuestionId == q.QuestionId)
             {
-                @:var a = new Answer(@a.AnswerId, @a.QuestionId, "@a.Text", "@a.CorrectAnswer");
+                @:var a = new Answer(@a.AnswerId, @a.QuestionId, "@a.Text");
                 @:q.answers.push(a);
             }
         }
@@ -89,6 +89,11 @@
     window.onload = function () {
         Show(0);
     }
+
+    function StartExam() {
+
+    }
+
     function PreviousQuestion() {
         if (currentQuestion <= 0) {
             return;
@@ -123,13 +128,13 @@
         this.mediaLink = mediaLink;
         this.answers = [];
         this.questionType = questionType;
+        this.chosenAnswer = null;
     }
     //Answer Object.
-    function Answer(id, questionId, text, correct) {
+    function Answer(id, questionId, text) {
         this.id = id;
         this.questionId = questionId;
         this.text = text;
-        this.correct = correct;
     }
     //Exam Object.
     function Exam(name, category, description, questions) {
