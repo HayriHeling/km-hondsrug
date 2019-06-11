@@ -20,7 +20,7 @@ namespace Eduria.Controllers
 
         public StudentController(ExamResultService examResultService, UserService userService, 
             ExamService examService, QuestionService questionService, AnswerService answerService,
-            ExamQuestionService examQuestionService)
+            ExamQuestionService examQuestionService, TimeTableService timeTableService)
         {
             ExamResultService = examResultService;
             UserService = userService;
@@ -28,6 +28,7 @@ namespace Eduria.Controllers
             QuestionService = questionService;
             AnswerService = answerService;
             ExamQuestionService = examQuestionService;
+            TimeTableService = timeTableService;
         }
 
         /// <summary>
@@ -72,18 +73,42 @@ namespace Eduria.Controllers
         public IActionResult StudentExamResult(int studentId, int examId)
         {
             Exam exam = ExamService.GetById(studentId);
-            ExamModel examModel = new ExamModel
+            ExamModel examModel = CreateExamModel(examId, exam);
+            return View(new ExamPerStudentModel
             {
-                AnswerModels = null,
+                examModel = examModel,
+                UserEqLogModels = null
+            });
+        }
+
+        private ExamModel CreateExamModel(int examResultId)
+        {
+
+            List<Question> questions = QuestionService
+                .GetQuestionsByExamQuestionList(ExamQuestionService.GetAllQuestionIdsAsList(examId)).ToList();
+            TimeTable timeTable = TimeTableService.GetById(exam.TimeTableId);
+            List<Answer> answers = AnswerService.GetAnswersByQuestionsList(questions).ToList();
+
+            List<QuestionModel> questionModels = ConvertToQuestionModelList(questions);
+            List<AnswerModel> answerModels = ConvertToAnswerModelList(answers);
+
+            return new ExamModel
+            {
+                AnswerModels = answerModels,
                 Description = exam.Description,
                 ExamId = exam.ExamId,
                 Name = exam.Name,
-                QuestionModels = QuestionService.GetQuestionsByExamQuestionList(ExamQuestionService.GetAllQuestionIdsAsList(examId)),
+                QuestionModels = questionModels,
+                TimeTable = new TimeTableModel
+                {
+                    TimeTableId = timeTable.TimeTableId,
+                    MediaSourceId = timeTable.MediaSourceId,
+                    Text = timeTable.Text
+                }
             };
-            return View(new ExamPerStudentModel{});
         }
 
-        public List<QuestionModel> ConvertToQuestionModelList(List<Question> questions)
+        private List<QuestionModel> ConvertToQuestionModelList(List<Question> questions)
         {
             List<QuestionModel> questionModels = new List<QuestionModel>();
             foreach (Question question in questions)
@@ -91,9 +116,36 @@ namespace Eduria.Controllers
                 questionModels.Add(new QuestionModel
                 {
                     TimeTableId = question.TimeTableId,
-                    MediaSourceId = question.M
+                    MediaSourceId = question.MediaSourceId,
+                    QuestionId = question.QuestionId,
+                    QuestionType = question.QuestionType,
+                    Text = question.Text
                 });
             }
+
+            return questionModels;
+        }
+
+        private List<AnswerModel> ConvertToAnswerModelList(List<Answer> answers)
+        {
+            List<AnswerModel> answerModels = new List<AnswerModel>();
+            foreach (Answer answer in answers)
+            {
+                answerModels.Add(new AnswerModel
+                {
+                    AnswerId = answer.AnswerId,
+                    CorrectAnswer = answer.Correct.Equals(1),
+                    QuestionId = answer.QuestionId,
+                    Text = answer.Text
+                });
+            }
+
+            return answerModels;
+        }
+
+        public List<UserEQLogModel> CreateEqLogModel()
+        {
+
         }
     }
 }

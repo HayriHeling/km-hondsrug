@@ -9,6 +9,6 @@ namespace Eduria.Models
     {
         public int TimeTableId { get; set; }
         public string Text { get; set; }
-        public string Source { get; set; }
+        public int MediaSourceId { get; set; }
     }
 }
