@@ -74,11 +74,16 @@ namespace Eduria.Controllers
             return View(result);
         }
 
+        /// <summary>
+        /// Method that gets fired when a user goes to StudentExamResult. The id represents an examresultId
+        /// </summary>
+        /// <param name="id">The ExamResultId to get an examresult.</param>
+        /// <returns>A View with an ExamResultModel</returns>
         public IActionResult StudentExamResult(int id)
         {
             ExamResultModel examResultModel = GetExamResultModelById(id);
             Exam exam = ExamService.GetById(examResultModel.UserId);
-            ExamModel examModel = CreateExamModel(examResultModel.ExamId, exam);
+            ExamModel examModel = CreateExamModel(exam);
             return View(new ExamPerStudentModel
             {
                 ExamModel = examModel,
@@ -86,7 +91,12 @@ namespace Eduria.Controllers
             });
         }
 
-        private ExamModel CreateExamModel(int examId, Exam exam)
+        /// <summary>
+        /// Method that creates an ExamModel with data from an Exam model out of the EduriaContext namespace
+        /// </summary>
+        /// <param name="exam">The EduriaContext Exam Model </param>
+        /// <returns>An ExamModel object</returns>
+        private ExamModel CreateExamModel(Exam exam)
         {
             List<Question> questions = QuestionService
                 .GetQuestionsByExamQuestionList(ExamQuestionService.GetAllQuestionIdsAsList(exam.ExamId)).ToList();
@@ -112,6 +122,11 @@ namespace Eduria.Controllers
             };
         }
 
+        /// <summary>
+        /// Method that gets the ExamResultModel by its ExamResultId.
+        /// </summary>
+        /// <param name="examResultId">The ExamResultId of the ExamResult</param>
+        /// <returns>An ExamResultModel</returns>
         private ExamResultModel GetExamResultModelById(int examResultId)
         {
             ExamResult examResult = ExamResultService.GetById(examResultId);
@@ -126,6 +141,11 @@ namespace Eduria.Controllers
             };
         }
 
+        /// <summary>
+        /// Method that converts EduriaContext Questions to a list of QuestionModels.
+        /// </summary>
+        /// <param name="questions">The Question objects from the Eduria Context namespace</param>
+        /// <returns>A list of QuestionModels</returns>
         private List<QuestionModel> ConvertToQuestionModelList(List<Question> questions)
         {
             List<QuestionModel> questionModels = new List<QuestionModel>();
@@ -144,6 +164,11 @@ namespace Eduria.Controllers
             return questionModels;
         }
 
+        /// <summary>
+        /// Method to convert a list of Answers from the EduriaContext namespace to a list of Answermodels.
+        /// </summary>
+        /// <param name="answers">The list of Answers from the EduriaContext namespace</param>
+        /// <returns>A list of Answermodels</returns>
         private List<AnswerModel> ConvertToAnswerModelList(List<Answer> answers)
         {
             List<AnswerModel> answerModels = new List<AnswerModel>();
@@ -161,6 +186,11 @@ namespace Eduria.Controllers
             return answerModels;
         }
 
+        /// <summary>
+        /// Method that creates a list of UserEQLogModels from an examresultid.
+        /// </summary>
+        /// <param name="examResultId">The examResultId</param>
+        /// <returns>The list of UserEQLogModels</returns>
         private List<UserEQLogModel> CreateUserEqLogModels(int examResultId)
         {
             List<UserEQLog> userEqLogs = UserEqLogService.GetAllByResultId(examResultId).ToList();
