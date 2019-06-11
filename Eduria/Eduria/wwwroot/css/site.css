@@ -266,74 +266,75 @@ a {
     background-size: 100px 100px;
 }
 
-.oudheid:hover {
-    background-image: url(/images/oudheid2.png);
-}
+    .oudheid:hover {
+        background-image: url(/images/oudheid2.png);
+    }
 
 .vmiddeleeuwen {
     background-image: url(/images/vroegmiddeleeuwen.png);
 }
 
-.vmiddeleeuwen:hover {
-    background-image: url(/images/vroegmiddeleeuwen2.png);
-}
+    .vmiddeleeuwen:hover {
+        background-image: url(/images/vroegmiddeleeuwen2.png);
+    }
 
 .lmiddeleeuwen {
     background-image: url(/images/latemiddeleeuwen.png);
 }
 
-.lmiddeleeuwen:hover {
-    background-image: url(/images/latemiddeleeuwen2.png);
-}
+    .lmiddeleeuwen:hover {
+        background-image: url(/images/latemiddeleeuwen2.png);
+    }
 
 .nieuwetijd {
     background-image: url(/images/nieuwetijd.png);
 }
 
-.nieuwetijd:hover {
-    background-image: url(/images/nieuwetijd2.png);
-}
+    .nieuwetijd:hover {
+        background-image: url(/images/nieuwetijd2.png);
+    }
 
 .goudeneeuw {
     background-image: url(/images/goudeneeuw.png);
 }
 
-.goudeneeuw:hover {
-    background-image: url(/images/goudeneeuw2.png);
-}
+    .goudeneeuw:hover {
+        background-image: url(/images/goudeneeuw2.png);
+    }
 
 .verlichting {
     background-image: url(/images/verlichting.png);
 }
 
-.verlichting:hover {
-    background-image: url(/images/verlichting2.png);
-}
+    .verlichting:hover {
+        background-image: url(/images/verlichting2.png);
+    }
 
 .industrie {
     background-image: url(/images/industrie.png);
 }
 
-.industrie:hover {
-    background-image: url(/images/industrie2.png);
-}
+    .industrie:hover {
+        background-image: url(/images/industrie2.png);
+    }
 
 
 .oorlog {
     background-image: url(/images/oorlog.png);
 }
 
-.oorlog:hover {
-    background-image: url(/images/oorlog2.png);
-}
+    .oorlog:hover {
+        background-image: url(/images/oorlog2.png);
+    }
 
 .tv {
     background-image: url(/images/tv.png);
 }
 
-.tv:hover {
-    background-image: url(/images/tv2.png);
-}
+    .tv:hover {
+        background-image: url(/images/tv2.png);
+    }
+
 .cc-selector input:active + .timeperiod {
     opacity: .9;
 }
@@ -414,12 +415,12 @@ p {
     min-height: 150px;
 }
 
-.glider-slide img {
-    width: 100%;
-}
+    .glider-slide img {
+        width: 100%;
+    }
 
 .glider-dot {
-    display:none;
+    display: none;
 }
 
 .item span {
@@ -433,12 +434,12 @@ p {
 }
 
 .item {
-   transform:scale(1.0)
+    transform: scale(1.0)
 }
 
- .item:hover {
-     transform: scale(1.1)
- }
+    .item:hover {
+        transform: scale(1.1)
+    }
 
 .glider-contain {
     width: 100%;
