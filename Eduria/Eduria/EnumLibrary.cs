@@ -11,6 +11,7 @@ namespace Eduria
         Docent,
         Student
     }
+
     public enum MediaType
     {
         None,
@@ -36,8 +37,8 @@ namespace Eduria
     {
         Meerkeuze,
         Tijdvak,
-        OntbrekendWoord,
-        Begrip
+        Open
+
     } 
 
     /// <summary>
