@@ -4,14 +4,16 @@ using Eduria;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    partial class EduriaContextModelSnapshot : ModelSnapshot
+    [Migration("20190605140658_Sprint 3 refactor user password")]
+    partial class Sprint3refactoruserpassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +30,11 @@ namespace Eduria.Migrations
                     b.Property<string>("ExamCode")
                         .IsRequired();
 
-                    b.Property<int>("PeriodId");
+                    b.Property<int>("Period");
 
                     b.Property<int>("UserId");
+
+                    b.Property<int>("Year");
 
                     b.HasKey("AnalyticDataId");
 
@@ -101,28 +105,7 @@ namespace Eduria.Migrations
                     b.ToTable("DefaultDataScores");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.AnalyticLayer.Period", b =>
-                {
-                    b.Property<int>("PeriodId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("PeriodEnd");
-
-                    b.Property<int>("PeriodNum");
-
-                    b.Property<DateTime>("PeriodStart");
-
-                    b.Property<int>("SchoolYearEnd");
-
-                    b.Property<int>("SchoolYearStart");
-
-                    b.HasKey("PeriodId");
-
-                    b.ToTable("Periods");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.Answer", b =>
+            modelBuilder.Entity("EduriaData.Models.Answer", b =>
                 {
                     b.Property<int>("AnswerId")
                         .ValueGeneratedOnAdd()
@@ -141,7 +124,7 @@ namespace Eduria.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.Exam", b =>
+            modelBuilder.Entity("EduriaData.Models.Exam", b =>
                 {
                     b.Property<int>("ExamId")
                         .ValueGeneratedOnAdd()
@@ -162,7 +145,24 @@ namespace Eduria.Migrations
                     b.ToTable("Exams");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.ExamQuestion", b =>
+            modelBuilder.Entity("EduriaData.Models.ExamLayer.TimeTable", b =>
+                {
+                    b.Property<int>("TimeTableId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Source")
+                        .IsRequired();
+
+                    b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.HasKey("TimeTableId");
+
+                    b.ToTable("TimeTables");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.ExamQuestion", b =>
                 {
                     b.Property<int>("ExamHasQuestionId")
                         .ValueGeneratedOnAdd()
@@ -177,7 +177,7 @@ namespace Eduria.Migrations
                     b.ToTable("ExamQuestions");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.ExamResult", b =>
+            modelBuilder.Entity("EduriaData.Models.ExamResult", b =>
                 {
                     b.Property<int>("ExamResultId")
                         .ValueGeneratedOnAdd()
@@ -198,13 +198,16 @@ namespace Eduria.Migrations
                     b.ToTable("ExamResults");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.Question", b =>
+            modelBuilder.Entity("EduriaData.Models.Question", b =>
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("MediaSourceId");
+                    b.Property<string>("MediaLink")
+                        .HasMaxLength(500);
+
+                    b.Property<int>("MediaType");
 
                     b.Property<int>("QuestionType");
 
@@ -217,148 +220,6 @@ namespace Eduria.Migrations
                     b.HasKey("QuestionId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.ExamLayer.UserEQLog", b =>
-                {
-                    b.Property<int>("UserEQLogId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AnsweredOn");
-
-                    b.Property<int>("CorrectAnswered");
-
-                    b.Property<int>("ExamHasQuestionId");
-
-                    b.Property<int>("ExamResultId");
-
-                    b.Property<int>("TimesWrong");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("UserEQLogId");
-
-                    b.ToTable("UserEQLogs");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.MediaSource", b =>
-                {
-                    b.Property<int>("MediaSourceId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MediaType");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.HasKey("MediaSourceId");
-
-                    b.ToTable("MediaSources");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeLineLayer.TimeLine", b =>
-                {
-                    b.Property<int>("TimeLineId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.HasKey("TimeLineId");
-
-                    b.ToTable("TimeLines");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeLineLayer.TimeLineHasTimeTable", b =>
-                {
-                    b.Property<int>("TimeLineHasTimeTableId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("TimeLineId");
-
-                    b.Property<int>("TimeTableId");
-
-                    b.HasKey("TimeLineHasTimeTableId");
-
-                    b.ToTable("TimeLineHasTimeTables");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeLineLayer.TimeLineHasUser", b =>
-                {
-                    b.Property<int>("TimeLineHasUserId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("TimeLineId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("TimeLineHasUserId");
-
-                    b.ToTable("TimeLineHasUsers");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeLineLayer.TimeTableInfoHasMediaSrc", b =>
-                {
-                    b.Property<int>("TimeTableInfoHasMediaSrcId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MediaSourceId");
-
-                    b.Property<int>("TimeTableInformationId");
-
-                    b.HasKey("TimeTableInfoHasMediaSrcId");
-
-                    b.ToTable("TimeTableInfoHasMediaSrcs");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeLineLayer.TimeTableInformation", b =>
-                {
-                    b.Property<int>("TimeTableInformationId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AudioSource")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<int>("TimeTableId");
-
-                    b.Property<string>("VideoSource")
-                        .HasMaxLength(256);
-
-                    b.HasKey("TimeTableInformationId");
-
-                    b.ToTable("TimeTableInformations");
-                });
-
-            modelBuilder.Entity("EduriaData.Models.TimeTable", b =>
-                {
-                    b.Property<int>("TimeTableId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MediaSourceId");
-
-                    b.Property<string>("Text")
-                        .IsRequired();
-
-                    b.HasKey("TimeTableId");
-
-                    b.ToTable("TimeTables");
                 });
 
             modelBuilder.Entity("EduriaData.Models.User", b =>
@@ -381,8 +242,6 @@ namespace Eduria.Migrations
                         .IsRequired()
                         .HasMaxLength(45);
 
-                    b.Property<int>("MediaSourceId");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(200);
@@ -397,6 +256,29 @@ namespace Eduria.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EduriaData.Models.UserEQLog", b =>
+                {
+                    b.Property<int>("UserEQLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AnsweredOn");
+
+                    b.Property<int>("CorrectAnswered");
+
+                    b.Property<int>("ExamHasQuestionId");
+
+                    b.Property<int>("ExamResultId");
+
+                    b.Property<int>("TimesWrong");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("UserEQLogId");
+
+                    b.ToTable("UserEQLogs");
                 });
 #pragma warning restore 612, 618
         }
