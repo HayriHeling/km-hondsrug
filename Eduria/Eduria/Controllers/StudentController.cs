@@ -12,12 +12,20 @@ namespace Eduria.Controllers
         private ExamResultService ExamResultService { get; set; }
         private UserService UserService { get; set; }
         private ExamService ExamService { get; set; }
+        private QuestionService QuestionService { get; set; }
+        private AnswerService AnswerService { get; set; }
+        private ExamQuestionService ExamQuestionService { get; set; }
 
-        public StudentController(ExamResultService examResultService, UserService userService, ExamService examService)
+        public StudentController(ExamResultService examResultService, UserService userService, 
+            ExamService examService, QuestionService questionService, AnswerService answerService,
+            ExamQuestionService examQuestionService)
         {
             ExamResultService = examResultService;
             UserService = userService;
             ExamService = examService;
+            QuestionService = questionService;
+            AnswerService = answerService;
+            ExamQuestionService = examQuestionService;
         }
 
         /// <summary>
@@ -54,6 +62,33 @@ namespace Eduria.Controllers
                           });
 
             return View(result);
+        }
+
+        public IActionResult StudentExamResult(int studentId, int examId)
+        {
+            Exam exam = ExamService.GetById(studentId);
+            ExamModel examModel = new ExamModel
+            {
+                AnswerModels = null,
+                Description = exam.Description,
+                ExamId = exam.ExamId,
+                Name = exam.Name,
+                QuestionModels = QuestionService.GetQuestionsByExamQuestionList(ExamQuestionService.GetAllQuestionIdsAsList(examId)),
+            };
+            return View(new ExamPerStudentModel{});
+        }
+
+        public List<QuestionModel> ConvertToQuestionModelList(List<Question> questions)
+        {
+            List<QuestionModel> questionModels = new List<QuestionModel>();
+            foreach (Question question in questions)
+            {
+                questionModels.Add(new QuestionModel
+                {
+                    TimeTableId = question.TimeTableId,
+                    MediaSourceId = question.M
+                });
+            }
         }
     }
 }
