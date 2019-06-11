@@ -28,9 +28,6 @@ namespace Eduria
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<UserEQLog> UserEQLogs { get; set; }
         // TimeLineLayer
-        public DbSet<TimeLine> TimeLines { get; set; }
-        public DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
-        public DbSet<TimeLineHasUser> TimeLineHasUsers { get; set; }
         public DbSet<TimeTableInfoHasMediaSrc> TimeTableInfoHasMediaSrcs { get; set; }
         public DbSet<TimeTableInformation> TimeTableInformations { get; set; }
     }
