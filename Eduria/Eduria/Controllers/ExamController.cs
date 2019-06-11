@@ -28,7 +28,10 @@ namespace Eduria.Controllers
         private AnswerService _answerService;
         private TimeTableService _timeTableService;
         private ExamQuestionService _examQuestionService;
-        
+        private MediaService _mediaService;
+        private UserEQLogService _userEqLogService;
+        private ExamResultService _examResultService;
+
         /// <summary>
         /// internal class for databinding the information from database to object.
         /// </summary>
@@ -97,9 +100,6 @@ namespace Eduria.Controllers
             public int correct;
         }
 
-        private UserEQLogService _userEqLogService;
-        private ExamResultService _examResultService;
-
         private int _examId;
         private DateTime _dateTime;
 
@@ -115,7 +115,7 @@ namespace Eduria.Controllers
         /// <param name="examResultService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
-            UserEQLogService userEqLogService, ExamResultService examResultService)
+            UserEQLogService userEqLogService, ExamResultService examResultService, MediaService mediaService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
@@ -124,6 +124,7 @@ namespace Eduria.Controllers
             this._userEqLogService = userEqLogService;
             this._examResultService = examResultService;
             this._answerService = answerService;
+            this._mediaService = mediaService;
         }
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = t.TimeTableId,
                     Text = t.Text,
-                    Source = t.Source
+                    Source = _mediaService.GetById(t.MediaSourceId).Source
                 };
                 timetables.Add(tModel);
             }
@@ -173,8 +174,8 @@ namespace Eduria.Controllers
                     QuestionId = q.QuestionId,
                     QuestionType = q.QuestionType,
                     Text = q.Text,
-                    MediaType = (MediaType)q.MediaType,
-                    MediaLink = q.MediaLink,
+                    MediaType = (MediaType)_mediaService.GetById(q.MediaSourceId).MediaType,
+                    MediaLink = _mediaService.GetById(q.MediaSourceId).Source,
                     TimeTable = timetables.First(x => x.TimeTableId == q.TimeTableId)
                 }; 
                 questions.Add(qModel);
@@ -435,7 +436,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    //Source = timeTable.Source
+                    Source = _mediaService.GetById(timeTable.MediaSourceId).Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -463,7 +464,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    //Source = timeTable.Source
+                    Source = _mediaService.GetById(timeTable.MediaSourceId).Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -487,18 +488,13 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = tt.TimeTableId,
                     Text = tt.Text,
-                    // TODO: Line 283 & 284 give problems
-                    Source = "string"
-                    //Source = tt.Source
+                    Source = _mediaService.GetById(tt.MediaSourceId).Source
                 };
                 outputList.Add(new QuestionModel()
                 {
                     TimeTable = ttModel,
-                    // TODO: Line 288- 291 gives problems
-                    //MediaLink = question.MediaLink,
-                    //MediaType = (MediaType)question.MediaType,
-                    MediaLink = "",
-                    MediaType = (MediaType.Audio),
+                    MediaLink = _mediaService.GetById(question.MediaSourceId).Source,
+                    MediaType = (MediaType)_mediaService.GetById(question.MediaSourceId).MediaType,
                     QuestionId = question.QuestionId,
                     Text = question.Text,
                     AnswerId = question.TimeTableId
@@ -549,7 +545,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = table.TimeTableId,
                     Text = table.Text,
-                    //Source = table.Source
+                    Source = _mediaService.GetById(table.MediaSourceId).Source
                 };
                 tableModels.Add(tableModel);
             }
@@ -565,8 +561,8 @@ namespace Eduria.Controllers
                     QuestionType = question.QuestionType,
                     TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
                     Text = question.Text,
-                    //MediaType = (MediaType)question.MediaType,
-                    //MediaLink = question.MediaLink
+                    MediaType = (MediaType)_mediaService.GetById(question.MediaSourceId).MediaType,
+                    MediaLink = _mediaService.GetById(question.MediaSourceId).Source
                 };
                 questionModels.Add(questionModel);
             }
@@ -605,13 +601,26 @@ namespace Eduria.Controllers
                     int _questionId;
                     if (!q.existing)
                     {
+                        int mediaId;
+                        if(q.mediaType != 0)
+                        {
+                            MediaSource src = new MediaSource()
+                            {
+                                MediaType = q.mediaType,
+                                Source = q.mediaLink
+                            };
+                            _mediaService.Add(src);
+                            mediaId = _mediaService.GetBySource(src.Source).MediaSourceId;
+                        }else
+                        {
+                            mediaId = _mediaService.GetByMediaType(0).MediaSourceId;
+                        }
                         Question question = new Question()
                         {
                             Text = q.text,
                             QuestionType = q.questionType,
                             TimeTableId = q.category,
-                            //MediaType = q.mediaType,
-                            //MediaLink = q.mediaLink
+                            MediaSourceId = mediaId
                         };
                         _questionService.Add(question);
                         _questionId = _questionService.GetQuestionByText(question.Text).QuestionId;
@@ -667,11 +676,11 @@ namespace Eduria.Controllers
                     Question q = _questionService.GetQuestionByMediaLink(formFile.FileName);
                     string[] arr = formFile.FileName.Split(".");
                     string ext = arr[arr.Length - 1];
-                    string newName = "questionImage" + q.QuestionId + "." + ext;
+                    string newName = "questionMedia" + q.QuestionId + "." + ext;
                     filePath = "Content/" + newName;
-                    // TODO: Line 458 gives an error
-                    //q.MediaLink = newName;
-                    _questionService.Update(q);
+                    MediaSource src = _mediaService.GetById(q.MediaSourceId);
+                    src.Source = newName;
+                    _mediaService.Update(src);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
