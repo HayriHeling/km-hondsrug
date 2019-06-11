@@ -275,25 +275,13 @@ namespace Eduria.Controllers
             foreach (Question question in questions)
             {
                 TimeTable tt = _timeTableService.GetById(question.TimeTableId);
-                TimeTableModel ttModel = new TimeTableModel()
-                {
-                    TimeTableId = tt.TimeTableId,
-                    Text = tt.Text,
-                    // TODO: Line 283 & 284 give problems
-                    Source = "string"
-                    //Source = tt.Source
-                };
                 outputList.Add(new QuestionModel()
                 {
-                    TimeTable = ttModel,
-                    // TODO: Line 288- 291 gives problems
-                    //MediaLink = question.MediaLink,
-                    //MediaType = (MediaType)question.MediaType,
-                    MediaLink = "",
-                    MediaType = (MediaType.Audio),
+                    TimeTableId = question.TimeTableId,
+                    MediaSourceId = question.MediaSourceId,
                     QuestionId = question.QuestionId,
                     Text = question.Text,
-                    AnswerId = question.TimeTableId
+                    QuestionType = question.QuestionType
                 });
             }
 
@@ -355,10 +343,9 @@ namespace Eduria.Controllers
                 {
                     QuestionId = question.QuestionId,
                     QuestionType = question.QuestionType,
-                    TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
+                    TimeTableId = question.TimeTableId,
                     Text = question.Text,
-                    //MediaType = (MediaType)question.MediaType,
-                    //MediaLink = question.MediaLink
+                    MediaSourceId = question.MediaSourceId
                 };
                 questionModels.Add(questionModel);
             }
