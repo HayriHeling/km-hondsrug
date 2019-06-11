@@ -90,6 +90,7 @@ namespace Eduria.Services
                         where dhd.AnalyticDataId == id
                         select new AnalyticHasDefaultModel
                         {
+                            DataHasDefaultId = dhd.DataHasDefaultId,
                             AnalyticDataId = dhd.AnalyticDataId,
                             AnalyticDefaultId = dhd.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,

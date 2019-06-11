@@ -6,17 +6,31 @@
 
 <h2>Goals</h2>
 @ViewBag.Message
-@{int itemid = 1;}
+
 <!-- Shows all the user's existing goals -->
 <table>
-    @foreach (var item in Model.AnalyticHasDefaultModels)
+    @using (Html.BeginForm("AddGoalScore", "Analytic", FormMethod.Post))
     {
+        @for (int i = 0; i < Model.AnalyticHasDefaultModels.Count; i++)
+        {
+            <tr>
+                <td>@{(i + 1).ToString();}</td>
+                <td>@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</td>
+                <td>@Model.AnalyticHasDefaultModels[i].Input</td>
+                <td>
+                    @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
+                    @for (int j = 0; j < scoreEnum.Length; j++)
+                    {
+                        @Html.RadioButtonFor(m => Model.AnalyticHasDefaultModels[i].DataHasDefaultId, false)
+                        @Html.HiddenFor(m => Model.AnalyticHasDefaultModels[i].Score, new { Value = (int)scoreEnum.GetValue(j)})
+                    }
+                </td>
+                <td>@Model.AnalyticHasDefaultModels[i].Score</td>
+            </tr>
+        }
         <tr>
-            <td>@itemid</td>
-            <td>@item.AnalyticDefaultName</td>
-            <td>@item.Input</td>
-            <td>@item.Score</td>
-            @{itemid++;}
+            <td><input type="submit" value="Toevoegen" /></td>
+            <td><input type="reset" value="Formulier leegmaken" /></td>
         </tr>
     }
 </table>
@@ -26,7 +40,7 @@
 </p>
 <!-- Dynamically creates a form to add goals to AnalyticData -->
 <table>
-    @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
+    @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
     {
         @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
         {
@@ -42,9 +56,9 @@
                     {
                         @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
                     }
-            </td>
-        </tr>
-    }
+                </td>
+            </tr>
+        }
         <tr>
             <td><input type="submit" value="Toevoegen" /></td>
         </tr>

@@ -91,39 +91,61 @@ namespace Eduria.Controllers
         /// <param name="analyticDefaultAndHasDefaultModel"></param>
         /// <returns>The goal view with updated goals.</returns>
         [HttpPost]
-        public IActionResult Goal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
+        public IActionResult AddGoal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
             if (analyticDefaultAndHasDefaultModel != null)
             {
-                // Check ischecked true on models met category doel
-                IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
-
-                // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
-                if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+                if (analyticDefaultAndHasDefaultModel.AnalyticDefaultModels != null)
                 {
-                    if (checkedDefaults.Count() < 2)
-                    {
-                        ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
-                        return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
-                    }
-                }
+                    // Check ischecked true on models met category doel
+                    IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
 
-                foreach (var item in checkedDefaults)
-                {
-                    // Als item niet bestaat in hasdefaults, dan toevoegen.
-                    if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
+                    // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
+                    if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
                     {
-                        Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
-
-                        if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        if (checkedDefaults.Count() < 2)
                         {
-                            Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                            ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
+                            return RedirectToAction("Goal");
+                        }
+                    }
+
+                    foreach (var item in checkedDefaults)
+                    {
+                        // Als item niet bestaat in hasdefaults, dan toevoegen.
+                        if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
+                        {
+                            Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
+
+                            if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                            {
+                                Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                            }
                         }
                     }
                 }
             }
 
-            return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+            return RedirectToAction("Goal");
+        }
+
+        [HttpPost]
+        public IActionResult AddGoalScore(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
+        {
+            if (analyticDefaultAndHasDefaultModel != null)
+            {
+                List<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels;
+
+                if (analyticHasDefaults != null)
+                {
+                    foreach (var item in analyticHasDefaults)
+                    {
+                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Score);
+                    }
+                }
+            }
+
+            return RedirectToAction("Goal");
         }
     }
 }
