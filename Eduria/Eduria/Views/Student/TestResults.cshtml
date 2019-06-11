@@ -28,25 +28,28 @@
                 <strong>Score</strong>
             </div>
 
-                @foreach (var item in Model)
-                {
+            @foreach (var item in Model)
+            {
 
-                    <div class="medium-2 columns">
-                        <p>@item.Firstname</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.Lastname</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.StartedAt</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.FinishedAt</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.Score</p>
-                    </div>
+                <div class="medium-2 columns">
+                    <p>@item.Firstname</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.Lastname</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.TimeTable</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.StartedAt</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.FinishedAt</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.Score</p>
+                </div>
 
-                }
+            }
         </div>
     </section>

@@ -2,16 +2,20 @@
 @{
     ViewData["Title"] = "Goals";
 }
+    <div class="row xlarge">
+        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        <div class="medium-10 columns">
+            <h2>Goals</h2>
+            @foreach (var item in Model.Item1)
+            {
+                <p>@item.AnalyticDataId</p>
+                <p>@item.AnalyticDefaultName</p>
+            }
 
-<h2>Goals</h2>
-@foreach (var item in Model.Item1)
-{
-    <p>@item.AnalyticDataId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
-
-@foreach (var item in Model.Item2)
-{
-    <p>@item.AnalyticDefaultId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
+            @foreach (var item in Model.Item2)
+            {
+                <p>@item.AnalyticDefaultId</p>
+                <p>@item.AnalyticDefaultName</p>
+            }
+        </div>
+    </div>

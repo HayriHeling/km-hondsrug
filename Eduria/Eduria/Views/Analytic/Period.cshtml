@@ -1,0 +1,27 @@
+﻿@model Eduria.Models.PeriodModel
+
+@{
+    ViewData["Title"] = "Period";
+}
+
+<h2>Periode vaststellen</h2>
+
+@using (Html.BeginForm("AddPeriod", "Analytic", FormMethod.Post))
+{
+    @Html.LabelFor(m => m.PeriodNum, "Periode")
+    @Html.TextBoxFor(m => m.PeriodNum, "PeriodNum")
+
+    @Html.LabelFor(m => m.PeriodStart, "Startdatum periode")
+    @Html.TextBoxFor(m => m.PeriodStart, "PeriodStart", new { @type = "date" })
+
+    @Html.LabelFor(m => m.PeriodEnd, "Einddatum periode")
+    @Html.TextBoxFor(m => m.PeriodEnd, "PeriodEnd", new { @type = "date" })
+
+    @Html.LabelFor(m => m.SchoolYearStart, "Startjaar school")
+    @Html.TextBoxFor(m => m.SchoolYearStart, "SchoolYearStart")
+
+    @Html.LabelFor(m => m.SchoolYearEnd, "Eindjaar school")
+    @Html.TextBoxFor(m => m.SchoolYearEnd, "SchoolYearEnd")
+
+    <input type="submit" value="Vaststellen" />
+}
