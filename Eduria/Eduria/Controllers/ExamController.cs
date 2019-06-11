@@ -17,6 +17,7 @@ using EduriaData.Models.ExamLayer;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Eduria.Controllers
 {
@@ -138,7 +139,11 @@ namespace Eduria.Controllers
 
             return View(GetExamModelByExamId(id));
         }
-
+        /// <summary>
+        /// Get the exam of given id and changes database data into models to use in the view. 
+        /// </summary>
+        /// <param name="id">The id of the exam from the databases</param>
+        /// <returns></returns>
         public IActionResult Take(int id)
         {
             ViewBag.exam = _examService.GetById(id);
@@ -191,7 +196,12 @@ namespace Eduria.Controllers
             ViewBag.timetables = timetables;
             return View();
         }
-
+        /// <summary>
+        /// Calculates the results of the taken exam and calculates which answers were right and which answers were given.
+        /// Returns the exammodel and score in viewbag.
+        /// </summary>
+        /// <param name="examJson">The Json of the taken exam</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Results(string examJson)
         {
@@ -210,7 +220,7 @@ namespace Eduria.Controllers
                 ExamResult examResult = new ExamResult()
                 {
                     ExamId = exam.id,
-                    UserId = 2,
+                    UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     StartedAt = Convert.ToDateTime(exam.dateStarted),
                     FinishedAt = Convert.ToDateTime(exam.dateEnded)
                 };
@@ -310,7 +320,7 @@ namespace Eduria.Controllers
                     Description = _examService.GetById(exam.id).Description
                 };
                 ViewBag.exam = examModel;
-                ViewBag.score = examResult.Score;
+                ViewBag.score = (examResult.Score + 1);
                 ViewBag.questions = matches;
                 return View();
             }
@@ -320,7 +330,10 @@ namespace Eduria.Controllers
                 throw e;
             }
         }
-
+        /// <summary>
+        /// Shows an overview of all exams.
+        /// </summary>
+        /// <returns></returns>
         public IActionResult OverView()
         {
             ViewBag.exams = _examService.GetAll();
@@ -338,7 +351,6 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
         {
-            Debug.WriteLine("Done");
             ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
             ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, userId);
             return View(null);

@@ -8,7 +8,7 @@
     <p>@ViewBag.exam.Description</p>
     <input type="button" value="Start toets" onclick="StartExam()" />
 </div>
-    <div id="examDiv">
+    <div id="examDiv" style="display: none;">
         @foreach (QuestionModel q in ViewBag.questions)
         {
             List<AnswerModel> qAnswers = new List<AnswerModel>();
@@ -69,6 +69,7 @@
     var currentQuestion = 0;
     var started = null;
     var examId = @ViewBag.exam.ExamId;
+    //changes viewbag.questions list to javascript array
     @foreach(QuestionModel q in ViewBag.questions)
     {
         @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTable.TimeTableId, @((int)q.MediaType), "@q.MediaLink", @(q.QuestionType));
@@ -85,7 +86,6 @@
 
     window.onload = function () {
         Show(0);
-        $("#examDiv").hide();
     }
 
     function StartExam() {
@@ -95,6 +95,12 @@
     }
     function StopExam() {
         if (confirm("Wil je de toets stoppen?")) {
+            for (var i = 0; i < questionArray.length; i++) {
+                if (questionArray[i].chosenAnswer == null) {
+                    alert("Er zijn nog onbeantwoorde vragen in de toets. Vul alle vragen in voordat je stopt!");
+                    return;
+                }
+            }
             var exam = new Exam(questionArray, examId, started);
             $("#examJson").val(JSON.stringify(exam));
             $("#examForm").submit();
