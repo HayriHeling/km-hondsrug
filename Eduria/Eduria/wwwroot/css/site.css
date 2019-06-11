@@ -428,6 +428,10 @@ p {
     text-shadow: 0 0 10px #ddd;
 }
 
+.item {
+   transform:scale(1.0)
+}
+
  .item:hover {
      transform: scale(1.1)
  }
