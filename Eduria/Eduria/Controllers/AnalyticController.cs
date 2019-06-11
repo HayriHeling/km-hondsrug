@@ -114,11 +114,11 @@ namespace Eduria.Controllers
                     if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
                     {
                         Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
-                    }
 
-                    if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
-                    {
-                        Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                        if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        {
+                            Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                        }
                     }
                 }
             }
