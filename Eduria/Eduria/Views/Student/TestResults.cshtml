@@ -10,10 +10,7 @@
                 <h2>Toets resultaten</h2>
             </div>
             <div class="medium-2 columns">
-                <strong>Voornaam</strong>
-            </div>
-            <div class="medium-2 columns">
-                <strong>Achternaam</strong>
+                <strong>Naam</strong>
             </div>
             <div class="medium-2 columns">
                 <strong>Toets</strong>
@@ -27,26 +24,31 @@
             <div class="medium-2 columns">
                 <strong>Score</strong>
             </div>
+            <div class="medium-2 columns">
+                <strong>Open</strong>
+            </div>
 
-                @foreach (var item in Model)
-                {
+            @foreach (var item in Model)
+            {
 
-                    <div class="medium-2 columns">
-                        <p>@item.Firstname</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.Lastname</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.StartedAt</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.FinishedAt</p>
-                    </div>
-                    <div class="medium-2 columns">
-                        <p>@item.Score</p>
-                    </div>
-
-                }
+                <div class="medium-2 columns">
+                    <p>@item.Firstname @item.Lastname</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.ExamName</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.StartedAt</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.FinishedAt</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p>@item.Score</p>
+                </div>
+                <div class="medium-2 columns">
+                    <p><a href="#">Click</a></p>
+                </div>
+            }
         </div>
     </section>
