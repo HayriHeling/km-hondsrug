@@ -21,5 +21,6 @@ namespace Eduria
         public DbSet<DataHasDefault> DataHasDefaults { get; set; }
         public DbSet<DefaultDataInput> DefaultDataInputs { get; set; }
         public DbSet<DefaultDataScore> DefaultDataScores { get; set; }
+        public DbSet<Config> Configs { get; set; }
     }
 }
