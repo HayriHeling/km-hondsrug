@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EduriaData.Models;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
 {
@@ -49,7 +50,9 @@ namespace Eduria.Services
         }
         public Question GetQuestionByMediaLink(string text)
         {
-            return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
+            // TODO: Fix line 54
+            //return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
+            return new Question();
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduriaData.Models
+namespace EduriaData.Models.ExamLayer
 {
     public class Exam
     {
@@ -12,5 +12,7 @@ namespace EduriaData.Models
         public string Name { get; set; }
         [Required, MaxLength(256)]
         public string Description { get; set; }
+        [Required]
+        public int IsActive { get; set; }
     }
 }
