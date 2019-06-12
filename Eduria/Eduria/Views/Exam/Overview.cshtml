@@ -74,10 +74,7 @@
         $.ajax({
             type: "POST",
             url: "/Exam/ToggleActiveExam",
-            data: { examId: examId, state: isActive },
-            success: function () {
-                alert("exam with id " + examId + " state has changed to " + isActive + ".");
-            }
+            data: { examId: examId, state: isActive }
         }); 
     }
 
