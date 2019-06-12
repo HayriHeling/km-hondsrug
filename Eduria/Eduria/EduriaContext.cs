@@ -13,6 +13,7 @@ namespace Eduria
         public DbSet<MediaSource> MediaSources { get; set; }
         public DbSet<TimeTable> TimeTables { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Config> Configs { get; set; }
         // AnalyticLayer
         public DbSet<AnalyticData> AnalyticDatas { get; set; }
         public DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
@@ -28,9 +29,6 @@ namespace Eduria
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
         public DbSet<UserEQLog> UserEQLogs { get; set; }
         // TimeLineLayer
-        public DbSet<TimeLine> TimeLines { get; set; }
-        public DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
-        public DbSet<TimeLineHasUser> TimeLineHasUsers { get; set; }
         public DbSet<TimeTableInfoHasMediaSrc> TimeTableInfoHasMediaSrcs { get; set; }
         public DbSet<TimeTableInformation> TimeTableInformations { get; set; }
     }

@@ -12,5 +12,7 @@ namespace EduriaData.Models.ExamLayer
         public string Name { get; set; }
         [Required, MaxLength(256)]
         public string Description { get; set; }
+        [Required]
+        public int IsActive { get; set; }
     }
 }
