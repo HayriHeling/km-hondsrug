@@ -44,12 +44,12 @@
             foreach (var question in ViewBag.questions)
             {
                 var text = question.Text;
-                var ttId = question.TimeTable.TimeTableId;
-                var ttText = question.TimeTable.Text;
-                var link = question.MediaLink ?? "none";
-                var type = (MediaType)question.MediaType;
+                var ttId = question.TimeTableModel.TimeTableId;
+                var ttText = question.TimeTableModel.Text;
+                var link = question.MediaSourceModel.Source ?? "none";
+                var type = question.MediaSourceModel.MediaType;
                 var questionType = (QuestionType)question.QuestionType;
-                var typeInt = (int)question.MediaType;
+                var typeInt = (int)question.MediaSourceModel.MediaType;
                 <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
                     <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
                     <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
@@ -279,7 +279,7 @@
         }        
     }
     //Passes the file name from the audio file upload to the medialink input field. 
-    function SetAudiolink(index) {
+    function SetAudioLink(index) {
         var input = "#audiofile" + index + "";
         var target = "#medialink" + index + "";
         var val = $(input).val().split('\\');
@@ -478,7 +478,7 @@
     function stopRecording(q) {
         if (recorder.state == 'recording') {
             recorder.stop();
-            const blob = new Blob(chunks, { type: 'audio/webm' });
+            const blob = new Blob(chunks, { type: 'audio/mp3' });
             // convert blob to URL so it can be assigned to a audio src attribute
             createAudioElement(URL.createObjectURL(blob), q);
         }
@@ -492,7 +492,7 @@
         const downloadEl = document.createElement('a');
         downloadEl.style = 'display: block';
         downloadEl.innerHTML = 'download';
-        downloadEl.download = 'audio.webm';
+        downloadEl.download = 'audio.mp3';
         downloadEl.href = blobUrl;
         const audioEl = document.createElement('audio');
         audioEl.controls = true;

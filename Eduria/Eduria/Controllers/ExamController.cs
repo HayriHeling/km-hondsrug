@@ -663,7 +663,7 @@ namespace Eduria.Controllers
                     string[] arr = formFile.FileName.Split(".");
                     string ext = arr[arr.Length - 1];
                     string newName = "questionMedia" + q.QuestionId + "." + ext;
-                    filePath = "Content/" + newName;
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", newName);
                     MediaSource src = MediaSourceService.GetById(q.MediaSourceId);
                     src.Source = newName;
                     MediaSourceService.Update(src);
