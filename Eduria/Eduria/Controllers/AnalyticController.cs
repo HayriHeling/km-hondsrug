@@ -79,16 +79,6 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Student")]
-        public IActionResult Goal()
-        {
-            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
-        }
-
-        /// <summary>
         /// IActionResult that shows the Subject action on the view.
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
@@ -111,10 +101,58 @@ namespace Eduria.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public IActionResult Search(IFormCollection form)
+        /// <summary>
+        /// GET: Analytic/Goal
+        /// 
+        /// Shows the goal view page.
+        /// </summary>
+        /// <returns>The goal view.</returns>
+        public IActionResult Goal()
         {
-            return View("Index", Service.GetAnalyticDataByYearAndPeriodAndUserId(form, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+        }
+
+        /// <summary>
+        /// POST: Analytic/Goal
+        /// 
+        /// Adds goals to the AnalyticData for the user.
+        /// </summary>
+        /// <param name="analyticDefaultAndHasDefaultModel"></param>
+        /// <returns>The goal view with updated goals.</returns>
+        [HttpPost]
+        public IActionResult Goal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
+        {
+            if (analyticDefaultAndHasDefaultModel != null)
+            {
+                // Check ischecked true on models met category doel
+                IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
+
+                // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
+                if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+                {
+                    if (checkedDefaults.Count() < 2)
+                    {
+                        ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
+                        return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+                    }
+                }
+
+                foreach (var item in checkedDefaults)
+                {
+                    // Als item niet bestaat in hasdefaults, dan toevoegen.
+                    if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
+                    {
+                        Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
+
+                        if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        {
+                            Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                        }
+                    }
+                }
+            }
+
+            return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
         }
     }
 }
