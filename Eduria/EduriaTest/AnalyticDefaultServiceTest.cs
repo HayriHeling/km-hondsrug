@@ -16,6 +16,25 @@ namespace EduriaTest
 {
     public class AnalyticServiceTest
     {
+        /// <summary>
+        /// Method for Mocking generic DbSets.
+        /// </summary>
+        /// <typeparam name="T">Generic type.</typeparam>
+        /// <param name="elements">IEnumberable filled with the object(s).</param>
+        /// <returns>A Mock of the specific DbSet.</returns>
+        public static Mock<DbSet<T>> CreateDbSetMock<T>(IEnumerable<T> elements) where T : class
+        {
+            var elementsAsQueryable = elements.AsQueryable();
+            var dbSetMock = new Mock<DbSet<T>>();
+
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(elementsAsQueryable.Provider);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(elementsAsQueryable.Expression);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(elementsAsQueryable.ElementType);
+            dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(elementsAsQueryable.GetEnumerator());
+
+            return dbSetMock;
+        }
+
         [Fact]
         public void AddDataHasDefaultTest()
         {
@@ -49,8 +68,6 @@ namespace EduriaTest
                 Options;
 
             var fixture = new Fixture();
-            var analyticDefault = fixture.Build<AnalyticDefault>().With(x => x.AnalyticDefaultName, "Kennisbegrippen").Create();
-
             var analyticDefaults = new List<AnalyticDefault>
             {
                 fixture.Build<AnalyticDefault>().With(x => x.AnalyticDefaultName, "Kennisbegrippen").Create(),
@@ -58,12 +75,7 @@ namespace EduriaTest
                 fixture.Build<AnalyticDefault>().With(x => x.AnalyticDefaultName, "Tijdvakken").Create()
             }.AsQueryable();
 
-            var analyticDefaultMock = new Mock<DbSet<AnalyticDefault>>();
-            analyticDefaultMock.As<IQueryable<AnalyticDefault>>().Setup(x => x.Provider).Returns(analyticDefaults.Provider);
-            analyticDefaultMock.As<IQueryable<AnalyticDefault>>().Setup(x => x.Expression).Returns(analyticDefaults.Expression);
-            analyticDefaultMock.As<IQueryable<AnalyticDefault>>().Setup(x => x.ElementType).Returns(analyticDefaults.ElementType);
-            analyticDefaultMock.As<IQueryable<AnalyticDefault>>().Setup(x => x.GetEnumerator()).Returns(analyticDefaults.GetEnumerator());
-
+            var analyticDefaultMock = CreateDbSetMock(analyticDefaults);
             var contextMock = new Mock<EduriaContext>(options);
             contextMock.Setup(x => x.AnalyticDefaults).Returns(analyticDefaultMock.Object);
 
@@ -73,6 +85,33 @@ namespace EduriaTest
 
             //Assert
             Assert.Equal(analyticDefaults.Count(), result.Count());
+        }
+
+        [Fact]
+        public void GetAllAnalyticDataTest()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<EduriaContext>().
+                UseInMemoryDatabase(databaseName: "Eduria_Development").
+                Options;
+
+            var fixture = new Fixture();          
+            var analyticDatas = new List<AnalyticData>
+            {
+                fixture.Build<AnalyticData>().With(x => x.AnalyticDataId, 1).Create(),
+                fixture.Build<AnalyticData>().With(x => x.AnalyticDataId, 2).Create()
+            }.AsQueryable();
+
+            var analyticDataMock = CreateDbSetMock(analyticDatas);
+            var contextMock = new Mock<EduriaContext>(options);
+            contextMock.Setup(x => x.AnalyticDatas).Returns(analyticDataMock.Object);
+
+            //Act
+            var service = new AnalyticDefaultService(contextMock.Object);
+            var result = service.GetAll();
+
+            //Assert
+            Assert.Equal(analyticDatas.Count(), result.Count());
         }
     }
 }

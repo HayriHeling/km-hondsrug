@@ -14,8 +14,8 @@ namespace Eduria
         public DbSet<TimeTable> TimeTables { get; set; }
         public DbSet<User> Users { get; set; }
         // AnalyticLayer
-        public DbSet<AnalyticData> AnalyticDatas { get; set; }
-        public DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
+        public virtual DbSet<AnalyticData> AnalyticDatas { get; set; }
+        public virtual DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
         public DbSet<DataHasDefault> DataHasDefaults { get; set; }
         public DbSet<DefaultDataInput> DefaultDataInputs { get; set; }
         public DbSet<DefaultDataScore> DefaultDataScores { get; set; }
