@@ -467,8 +467,6 @@ input:checked + .slider:before {
 
 /* Analytic */
 
-/* Goal */
-
-#goal {
+#analytic {
     padding: 50px 0px;
 }
