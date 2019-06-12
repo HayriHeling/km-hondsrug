@@ -13,6 +13,15 @@ namespace EduriaTest
 {
     public class AnswerServiceTest
     {
+        private DbContextOptions<EduriaContext> Options;
+
+        public AnswerServiceTest()
+        {
+            Options = new DbContextOptionsBuilder<EduriaContext>().
+                UseInMemoryDatabase(databaseName: "Eduria_Development").
+                Options;
+        }
+
         /// <summary>
         /// Method for Mocking generic DbSets.
         /// </summary>
@@ -35,11 +44,7 @@ namespace EduriaTest
         [Fact]
         public void GetAllTest()
         {
-            //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-
+            //Arrange 
             var answerList = new List<Answer>
             {
                 new Answer { AnswerId = 1 },
@@ -51,12 +56,13 @@ namespace EduriaTest
             var answerMockSet = CreateDbSetMock(answerList);
 
             //Act
-            var contextMock = new Mock<EduriaContext>(options);
+            var contextMock = new Mock<EduriaContext>(Options);
             contextMock.Setup(x => x.Answers).Returns(answerMockSet.Object);
 
             var service = new AnswerService(contextMock.Object);
             var answers = service.GetAll();
 
+            //Assert
             Assert.Equal(answerList.Count(), answers.Count());
         }
 
@@ -64,10 +70,6 @@ namespace EduriaTest
         public void GetByIdTest()
         {
             //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-               UseInMemoryDatabase(databaseName: "Eduria_Development").
-               Options;
-
             Answer answer = new Answer
             {
                 AnswerId = 1,
@@ -76,8 +78,7 @@ namespace EduriaTest
                 Text = "Dit is een testvraag."
             };
 
-            //Act
-            var contextMock = new Mock<EduriaContext>(options);
+            var contextMock = new Mock<EduriaContext>(Options);
             contextMock.Setup(x => x.Answers.Find(1)).Returns(answer);
 
             var service = new AnswerService(contextMock.Object);
@@ -88,6 +89,30 @@ namespace EduriaTest
             Assert.Equal(answer.Correct, answerById.Correct);
             Assert.Equal(answer.QuestionId, answerById.QuestionId);
             Assert.Equal(answer.Text, answerById.Text);
+        }
+
+        [Fact]
+        public void GetAnswersByQuestionsListTest()
+        {
+            //Arrange
+            var answerList = new List<Answer>
+            {
+                new Answer { AnswerId = 1 },
+                new Answer { AnswerId = 2 },
+                new Answer { AnswerId = 3 },
+                new Answer { AnswerId = 4 }
+            }.AsQueryable();
+
+            var questionList = new List<Question>
+            {
+                new Question { QuestionId = 1, Text = "Dit is een vraag"}
+            };
+
+            var tempAnswerList = new List<Answer>();
+
+            //Act
+
+            //Assert
         }
     }
 }
