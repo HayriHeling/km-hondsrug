@@ -55,9 +55,14 @@ namespace EduriaTest
         }
 
         [Fact]
-        public void TestCase()
+        public void TestMethod()
         {
-            
+            //Arrange 
+
+            //Act
+
+            //Assert
         }
+
     }
 }

@@ -143,23 +143,5 @@ namespace EduriaTest
             //Assert
             Assert.Equal(dataHasDefaults.Count(), result.Count());
         }
-
-        [Fact]
-        public void AddAnalyticDataPerUserTest()
-        {
-            //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-            var contextMock = new Mock<EduriaContext>(options);
-
-            var fixture = new Fixture();
-            var users = new List<User>
-            {
-                fixture.Build<User>().With(x => x.UserId, 1).Create(),
-                fixture.Build<User>().With(x => x.UserId, 2).Create(),
-                fixture.Build<User>().With(x => x.UserId, 3).Create()
-            };
-        }
     }
 }
