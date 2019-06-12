@@ -134,13 +134,13 @@ namespace Eduria.Controllers
         {
             if (analyticDefaultAndHasDefaultModel != null)
             {
-                List<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels;
-
-                if (analyticHasDefaults != null)
+                if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels != null)
                 {
+                    IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
+
                     foreach (var item in analyticHasDefaults)
                     {
-                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Score);
+                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, (int)item.Score);
                     }
                 }
             }

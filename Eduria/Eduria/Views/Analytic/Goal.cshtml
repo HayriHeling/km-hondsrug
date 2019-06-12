@@ -19,13 +19,20 @@
                 <td>@Model.AnalyticHasDefaultModels[i].Input</td>
                 <td>
                     @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
-                    @for (int j = 0; j < scoreEnum.Length; j++)
+                    @if (Model.AnalyticHasDefaultModels[i].Score == null)
                     {
-                        @Html.RadioButtonFor(m => Model.AnalyticHasDefaultModels[i].DataHasDefaultId, false)
-                        @Html.HiddenFor(m => Model.AnalyticHasDefaultModels[i].Score, new { Value = (int)scoreEnum.GetValue(j)})
+                        @for (int j = 0; j < scoreEnum.Length; j++)
+                        {
+                            @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int)scoreEnum.GetValue(j), new { @checked = false })
+                            @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].DataHasDefaultId)
+                            @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].AnalyticDefaultId)
+                        }
+                    }
+                    else
+                    {
+                        @Model.AnalyticHasDefaultModels[i].Score
                     }
                 </td>
-                <td>@Model.AnalyticHasDefaultModels[i].Score</td>
             </tr>
         }
         <tr>
@@ -46,9 +53,9 @@
         {
             <tr>
                 <td>
-                    @Html.CheckBoxFor(m => Model.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
-                    @Html.HiddenFor(m => Model.AnalyticDefaultModels[i].AnalyticDefaultId)
-                    @Html.HiddenFor(m => Model.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                    @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                    @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
+                    @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
                 </td>
                 <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
                 <td>
