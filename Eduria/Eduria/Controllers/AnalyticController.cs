@@ -79,15 +79,6 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Goal()
-        {
-            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
-        }
-
-        /// <summary>
         /// IActionResult that shows the Subject action on the view.
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
