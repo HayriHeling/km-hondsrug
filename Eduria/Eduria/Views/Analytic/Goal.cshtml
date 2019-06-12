@@ -36,10 +36,13 @@
                 </td>
             </tr>
         }
-        <tr>
-            <td><input type="submit" value="Toevoegen" /></td>
-            <td><input type="reset" value="Formulier leegmaken" /></td>
-        </tr>
+        @if (User.IsInRole("Teacher"))
+        {
+            <tr>
+                <td><input type="submit" value="Toevoegen" /></td>
+                <td><input type="reset" value="Formulier leegmaken" /></td>
+            </tr>
+        }
     }
 </table>
 <p>
@@ -47,28 +50,31 @@
     de volgende periode gaat oefenen
 </p>
 <!-- Dynamically creates a form to add goals to AnalyticData -->
-<table>
-    @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
-    {
-        @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
+@if (User.IsInRole("Student"))
+{
+    <table>
+        @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
         {
+            @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
+                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                    </td>
+                    <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
+                    <td>
+                        @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        {
+                            @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
+                        }
+                    </td>
+                </tr>
+            }
             <tr>
-                <td>
-                    @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
-                    @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
-                    @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
-                </td>
-                <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
-                <td>
-                    @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
-                    {
-                        @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
-                    }
-                </td>
+                <td><input type="submit" value="Toevoegen" /></td>
             </tr>
         }
-        <tr>
-            <td><input type="submit" value="Toevoegen" /></td>
-        </tr>
-    }
-</table>
+    </table>
+}

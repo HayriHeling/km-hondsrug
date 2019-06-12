@@ -28,7 +28,7 @@ namespace Eduria.Controllers
         /// This is the Index result action.
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Student, Teacher")]
         public IActionResult Index()
         {
             IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -107,7 +107,7 @@ namespace Eduria.Controllers
         /// Shows the goal view page.
         /// </summary>
         /// <returns>The goal view.</returns>
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Student, Teacher")]
         public IActionResult Goal()
         {
             return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
@@ -120,7 +120,7 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="analyticDefaultAndHasDefaultModel"></param>
         /// <returns>The goal view with updated goals.</returns>
-        [Authorize(Roles = "Student, Teacher")]
+        [Authorize(Roles = "Student")]
         [HttpPost]
         public IActionResult AddGoal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
