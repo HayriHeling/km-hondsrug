@@ -8,6 +8,7 @@ function responsiveToggle() {
     }
 }
 
+/* Load slider and show/hide it */
 window.addEventListener('load', function () {
     document.querySelector('.glider').addEventListener('glider-slide-visible', function (event) {
         var glider = Glider(this);
@@ -23,23 +24,26 @@ window.addEventListener('load', function () {
         console.log('Loaded')
     });
 
+   /* Default settings slider */
     window._ = new Glider(document.querySelector('.glider'), {
         slidesToShow: 1, //'auto',
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         itemWidth: 400,
         draggable: true,
-        scrollLock: false,
+        scrollLock: true,
         dots: '#dots',
         rewind: true,
         arrows: {
             prev: '.glider-prev',
             next: '.glider-next'
         },
+
+        /* Responsive for different devices */
         responsive: [
             {
                 breakpoint: 800,
                 settings: {
-                    slidesToScroll: 1,
+                    slidesToScroll: 2,
                     itemWidth: 400,
                     slidesToShow: 'auto',
                     exactWidth: true
@@ -48,7 +52,7 @@ window.addEventListener('load', function () {
             {
                 breakpoint: 700,
                 settings: {
-                    slidesToScroll: 1,
+                    slidesToScroll: 2,
                     slidesToShow: 1,
                     dots: false,
                     arrows: false,
