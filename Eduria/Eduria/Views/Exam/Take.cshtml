@@ -50,7 +50,7 @@
                         {
                             count++;
                             <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
-                            <label class="timeperiod @tModel.Source" for="@q.QuestionId-@count"></label>
+                            <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
                         }
                     </div>
                 }
@@ -72,7 +72,7 @@
     //changes viewbag.questions list to javascript array
     @foreach(QuestionModel q in ViewBag.questions)
     {
-        @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTable.TimeTableId, @((int)q.MediaType), "@q.MediaLink", @(q.QuestionType));
+        @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTableModel.TimeTableId, @((int)q.MediaSourceModel.MediaType), "@q.MediaSourceModel.Source", @(q.QuestionType));
         @foreach (AnswerModel a in ViewBag.answers)
         {
             if(a.QuestionId == q.QuestionId)

@@ -47,8 +47,9 @@ namespace Eduria.Controllers
         /// <param name="success"></param>
         /// <returns></returns>
         // GET: CreateUser/Create
-        public ActionResult Create(int success = 0)
+        public ActionResult Create(string msg = "", int success = 0)
         {
+            ViewBag.msg = msg;
             ViewBag.success = success;
             return View();
         }
@@ -63,6 +64,15 @@ namespace Eduria.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(UserModel user)
         {
+            
+            if(Service.GetUserByStudNum(user.UserNum) != null)
+            {
+                return RedirectToAction("Create", new { msg = "De identificatie code bestaat al!", success = 0 });
+            }
+            if(Service.GetUserByEmail(user.Email) != null)
+            {
+                return RedirectToAction("Create", new { msg = "Het email adres bestaat al!", success = 0 });
+            }
             try
             {
                 User dataUser = new User
@@ -73,13 +83,14 @@ namespace Eduria.Controllers
                     UserNum = user.UserNum,
                     UserType = (int)user.UserType,
                     ClassId = user.ClassId,
-                    Password = user.Password
+                    Password = user.Password,
+                    Token = "token1"
                 };
                 Logic hash = new Logic(dataUser.Password);
                 byte[] HashBytes = hash.ToArray();
                 dataUser.Password = Convert.ToBase64String(HashBytes);
                 Service.Add(dataUser);
-                return RedirectToAction("Create", new { success = 1 });
+                return RedirectToAction("Create", new { msg = "Gebruiker is succesvol toegevoegd!", success = 1});
             }
             catch
             {

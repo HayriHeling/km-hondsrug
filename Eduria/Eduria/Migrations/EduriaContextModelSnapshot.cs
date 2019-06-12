@@ -128,7 +128,11 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("EntryCreatedAt");
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.Property<DateTime>("EntryChangedAt");
 
                     b.Property<string>("FromMail")
                         .IsRequired()
@@ -144,11 +148,7 @@ namespace Eduria.Migrations
 
                     b.Property<int>("SMTPPort");
 
-                    b.Property<string>("ToMail")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("UserMail")
+                    b.Property<string>("Subject")
                         .IsRequired()
                         .HasMaxLength(256);
 
