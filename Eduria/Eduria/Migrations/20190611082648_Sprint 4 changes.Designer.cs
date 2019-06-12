@@ -4,14 +4,16 @@ using Eduria;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    partial class EduriaContextModelSnapshot : ModelSnapshot
+    [Migration("20190611082648_Sprint 4 changes")]
+    partial class Sprint4changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,41 +124,6 @@ namespace Eduria.Migrations
                     b.ToTable("Periods");
                 });
 
-            modelBuilder.Entity("EduriaData.Models.Config", b =>
-                {
-                    b.Property<int>("ConfigId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EntryCreatedAt");
-
-                    b.Property<string>("FromMail")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Host")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<int>("SMTPPort");
-
-                    b.Property<string>("ToMail")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.Property<string>("UserMail")
-                        .IsRequired()
-                        .HasMaxLength(256);
-
-                    b.HasKey("ConfigId");
-
-                    b.ToTable("Configs");
-                });
-
             modelBuilder.Entity("EduriaData.Models.ExamLayer.Answer", b =>
                 {
                     b.Property<int>("AnswerId")
@@ -185,8 +152,6 @@ namespace Eduria.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256);
-
-                    b.Property<int>("IsActive");
 
                     b.Property<string>("Name")
                         .IsRequired()
