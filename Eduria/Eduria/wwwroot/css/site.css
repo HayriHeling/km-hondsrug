@@ -80,15 +80,6 @@ footer {
     width: 150px;
 }
 
-.toggle {
-    width: 100%;
-    padding: 10px;
-    color: #fff;
-}
-
-#correct, #wrong {
-    padding: 10px;
-}
 
 .button {
     background-color: #29abe2;
@@ -235,6 +226,25 @@ a {
 
 #testResults {
     padding: 50px 0;
+}
+
+.block {
+    background-color: #f7f7f9;
+    color: #6b6b6b;
+    padding: 20px;
+    height: 100px;
+    margin-bottom: 30px;
+}
+
+.toggle {
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#correct, #wrong {
+    padding: 10px;
 }
 
 /* Inloggen*/
