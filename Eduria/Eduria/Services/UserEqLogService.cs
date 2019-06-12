@@ -22,5 +22,10 @@ namespace Eduria.Services
         {
             return Context.UserEQLogs.Find(id);
         }
+
+        public IEnumerable<UserEQLog> GetAllByResultId(int id)
+        {
+            return Context.UserEQLogs.Where(x => x.ExamResultId == id);
+        }
     }
 }
