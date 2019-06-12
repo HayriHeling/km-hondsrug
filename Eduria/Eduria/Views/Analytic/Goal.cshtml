@@ -7,19 +7,18 @@
     <div class="row medium">
         <div class="medium-12 columns">
             <h2>Doel vaststellen</h2>
+        </div>
             @ViewBag.Message
 
             <!-- Shows all the user's existing goals -->
-            <table>
                 @using (Html.BeginForm("AddGoalScore", "Analytic", FormMethod.Post))
                 {
                 @for (int i = 0; i < Model.AnalyticHasDefaultModels.Count; i++)
                 {
-                <tr>
-                    <td>@{(i + 1).ToString();}</td>
-                    <td>@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</td>
-                    <td>@Model.AnalyticHasDefaultModels[i].Input</td>
-                    <td>
+                    <div class="medium-2 columns">@{(i + 1).ToString();}</div>
+                    <div class="medium-2 columns">@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</div>
+                    <div class="medium-2 columns">@Model.AnalyticHasDefaultModels[i].Input</div>
+                    <div class="medium-6 columns">
                         <!-- Creates score input if user is teacher -->
                         @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
                         @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
@@ -35,56 +34,52 @@
                         {
                         @Model.AnalyticHasDefaultModels[i].Score
                         }
-                    </td>
-                </tr>
+                    </div>
                 }
                 @if (User.IsInRole("Teacher"))
                 {
-                <tr>
-                    <td><input type="submit" value="Toevoegen" class="button" /></td>
-                    <td><input type="reset" value="Formulier leegmaken" class="button" /></td>
-                </tr>
+                 <div class="medium-12 columns">
+                   <input type="submit" value="Toevoegen" class="button" />
+                   <input type="reset" value="Formulier leegmaken" class="button" />
+                </div>
                 }
                 }
-            </table>
+            <div class="medium-12 columns">
             <p>
                 Je gaat je zelf doelen stellen voor de komende periode. Klik hieronder minstens twee doelen aan die
                 de volgende periode gaat oefenen
             </p>
+            </div>
             <!-- Dynamically creates a form to add goals to AnalyticData -->
             @if (User.IsInRole("Student"))
             {
-            <table>
                 @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
                 {
                 @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
                 {
-                <tr>
-                    <td>
+                 
+                    <div class="medium-1 columns grey">
                         <label class="container">
-                        @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
-                        <span class="checkmark"></span>
+                            @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                            <span class="checkmark"></span>
                         </label>
                         @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
                         @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
-                    </td>
-                    <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
-                    <td>
+                    </div>
+                    <div class="medium-6 columns grey">@Model.AnalyticDefaultModels[i].AnalyticDefaultName</div>
+                    <div class="medium-5 columns grey">
                         @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
                         {
                         @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
                         }
-                    </td>
-                </tr>
+                    </div>
                 }
-                <tr>
-                    <td><input type="submit" value="Toevoegen" class="button" /></td>
-                </tr>
+                <div class="medium-12 columns">
+                    <input type="submit" value="Toevoegen" class="button" />
+                </div>
                 }
-            </table>
             }
 
         </div>
-</div>
 </section>
 
