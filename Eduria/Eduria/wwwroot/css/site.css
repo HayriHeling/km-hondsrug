@@ -461,6 +461,14 @@ input:checked + .slider:before {
     border-radius: 34px;
 }
 
-    .slider.round:before {
-        border-radius: 50%;
-    }
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Analytic */
+
+/* Goal */
+
+#goal {
+    padding: 50px 0px;
+}
