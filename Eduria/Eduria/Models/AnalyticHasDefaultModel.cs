@@ -13,5 +13,6 @@ namespace Eduria.Models
         public int CategoryId { get; set; }
         public int? Score { get; set; }
         public string Input { get; set; }
+        public int Option { get; set; }
     }
 }

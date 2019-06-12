@@ -227,7 +227,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    Source = timeTable.Source
+                    //Source = timeTable.Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -255,7 +255,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = timeTable.TimeTableId,
                     Text = timeTable.Text,
-                    Source = timeTable.Source
+                    //Source = timeTable.Source
                 },
                 Description = exam.Description,
                 ExamId = id,
@@ -279,13 +279,18 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = tt.TimeTableId,
                     Text = tt.Text,
-                    Source = tt.Source
+                    // TODO: Line 283 & 284 give problems
+                    Source = "string"
+                    //Source = tt.Source
                 };
                 outputList.Add(new QuestionModel()
                 {
                     TimeTable = ttModel,
-                    MediaLink = question.MediaLink,
-                    MediaType = (MediaType)question.MediaType,
+                    // TODO: Line 288- 291 gives problems
+                    //MediaLink = question.MediaLink,
+                    //MediaType = (MediaType)question.MediaType,
+                    MediaLink = "",
+                    MediaType = (MediaType.Audio),
                     QuestionId = question.QuestionId,
                     Text = question.Text,
                     AnswerId = question.TimeTableId
@@ -336,7 +341,7 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = table.TimeTableId,
                     Text = table.Text,
-                    Source = table.Source
+                    //Source = table.Source
                 };
                 tableModels.Add(tableModel);
             }
@@ -352,8 +357,8 @@ namespace Eduria.Controllers
                     QuestionType = question.QuestionType,
                     TimeTable = tableModels.First(x => x.TimeTableId == question.TimeTableId),
                     Text = question.Text,
-                    MediaType = (MediaType)question.MediaType,
-                    MediaLink = question.MediaLink
+                    //MediaType = (MediaType)question.MediaType,
+                    //MediaLink = question.MediaLink
                 };
                 questionModels.Add(questionModel);
             }
@@ -397,8 +402,8 @@ namespace Eduria.Controllers
                             Text = q.text,
                             QuestionType = q.questionType,
                             TimeTableId = q.category,
-                            MediaType = q.mediaType,
-                            MediaLink = q.mediaLink
+                            //MediaType = q.mediaType,
+                            //MediaLink = q.mediaLink
                         };
                         _questionService.Add(question);
                         _questionId = _questionService.GetQuestionByText(question.Text).QuestionId;
@@ -454,7 +459,8 @@ namespace Eduria.Controllers
                     string ext = arr[arr.Length - 1];
                     string newName = "questionImage" + q.QuestionId + "." + ext;
                     filePath = "Content/" + newName;
-                    q.MediaLink = newName;
+                    // TODO: Line 458 gives an error
+                    //q.MediaLink = newName;
                     _questionService.Update(q);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {

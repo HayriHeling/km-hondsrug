@@ -73,6 +73,8 @@ namespace Eduria.Controllers
             // Signs a user in with an identity containing a name and a role.
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, LoggedInUser.Firstname + " " + LoggedInUser.Lastname));
+            //Add an NameIdentifier that represents the UserId in the database.
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, LoggedInUser.UserId.ToString()));
             if (LoggedInUser.UserType == 0)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));

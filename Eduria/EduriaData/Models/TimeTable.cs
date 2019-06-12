@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduriaData.Models.ExamLayer
+namespace EduriaData.Models
 {
     public class TimeTable
     {
@@ -9,6 +9,6 @@ namespace EduriaData.Models.ExamLayer
         [Required]
         public string Text { get; set; }
         [Required]
-        public string Source { get; set; }
+        public int MediaSourceId { get; set; }
     }
 }
