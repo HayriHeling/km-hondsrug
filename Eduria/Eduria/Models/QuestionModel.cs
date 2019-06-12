@@ -8,9 +8,9 @@ namespace Eduria.Models
     public class QuestionModel
     { 
         public int QuestionId { get; set; }
-        public int MediaSourceId { get; set; }
+        public MediaSourceModel MediaSourceModel { get; set; }
         public int QuestionType { get; set; }
         public string Text { get; set; }
-        public int TimeTableId { get; set; }
+        public TimeTableModel TimeTableModel { get; set; }
     }
 }

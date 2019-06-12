@@ -18,11 +18,12 @@ namespace Eduria.Controllers
         private ExamQuestionService ExamQuestionService { get; set; }
         private TimeTableService TimeTableService { get; set; }
         private UserEQLogService UserEqLogService { get; set; }
+        private MediaSourceService MediaSourceService { get; set; }
 
         public StudentController(ExamResultService examResultService, UserService userService, 
             ExamService examService, QuestionService questionService, AnswerService answerService,
             ExamQuestionService examQuestionService, TimeTableService timeTableService, 
-            UserEQLogService userEqLogService)
+            UserEQLogService userEqLogService, MediaSourceService mediaSourceService)
         {
             ExamResultService = examResultService;
             UserService = userService;
@@ -32,6 +33,7 @@ namespace Eduria.Controllers
             ExamQuestionService = examQuestionService;
             TimeTableService = timeTableService;
             UserEqLogService = userEqLogService;
+            MediaSourceService = mediaSourceService;
         }
 
         /// <summary>
@@ -153,8 +155,8 @@ namespace Eduria.Controllers
             {
                 questionModels.Add(new QuestionModel
                 {
-                    TimeTableId = question.TimeTableId,
-                    MediaSourceId = question.MediaSourceId,
+                    TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(question.TimeTableId)),
+                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(question.MediaSourceId)),
                     QuestionId = question.QuestionId,
                     QuestionType = question.QuestionType,
                     Text = question.Text
@@ -211,6 +213,25 @@ namespace Eduria.Controllers
             }
 
             return userEqLogModels;
+        }
+        public MediaSourceModel ConvertToMediaSourceModel(MediaSource mediaSource)
+        {
+            return new MediaSourceModel
+            {
+                MediaSourceId = mediaSource.MediaSourceId,
+                MediaType = (MediaType)mediaSource.MediaType,
+                Source = mediaSource.Source
+            };
+        }
+
+        public TimeTableModel ConvertToTimeTableModel(TimeTable timeTable)
+        {
+            return new TimeTableModel
+            {
+                TimeTableId = timeTable.TimeTableId,
+                MediaSourceId = timeTable.MediaSourceId,
+                Text = timeTable.Text
+            };
         }
     }
 }

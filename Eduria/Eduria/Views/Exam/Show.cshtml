@@ -60,6 +60,7 @@
 
     // Function that creates an question object from the inputs
     function createTempQuestion(id, text, answerId) {
+        console.log("Yes");
         maxScore = maxScore + pointsPerQuestion;
         return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
@@ -76,7 +77,7 @@
 
     @foreach (var d in Model.QuestionModels)
     {
-        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableId));
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
 
     @*@foreach (var e in Model.AnswerModels)
@@ -121,6 +122,7 @@
 
     // All logic for the exams is put in here.
     function ExamLogic(questionArray, answerArray, id) {
+        console.log(questionArray);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();

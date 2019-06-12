@@ -3,52 +3,89 @@
 @{
     ViewData["Title"] = "Toets Resultaten";
 }
-    <section id="testResults">
-        <div class="row medium">
-
-            <div class="medium-12 columns">
+<section id="testResults">
+    <table class="row medium">
+        <tr>
+            <th class="medium-12 columns">
                 <h2>Toets resultaten</h2>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Naam</strong>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Toets</strong>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Begonnen</strong>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Afgerond</strong>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Score</strong>
-            </div>
-            <div class="medium-2 columns">
+            </th>
+            <th class="medium-2 columns">
                 <strong>Open</strong>
-            </div>
+            </th>
+        </tr>
+        <tr>
+            <td class="medium-2 columns">
+                <input type="text" id="searchInput1" name="searchInput" placeholder="Naam Zoeken" oninput="FilterOnText(0)" />
+            </td>
+            <td class="medium-2 columns">
+                <input type="text" id="searchInput2" name="searchInput" placeholder="Examen Zoeken" oninput="FilterOnText(1)" />
+            </td>
+            <td class="medium-2 columns"></td>
+            <td class="medium-2 columns"></td>
+            <td class="medium-2 columns"></td>
+            <td class="medium-2 columns"></td>
+        </tr>
 
-            @foreach (var item in Model)
-            {
-
-                <div class="medium-2 columns">
-                    <p>@item.Firstname @item.Lastname</p>
-                </div>
-                <div class="medium-2 columns">
-                    <p>@item.ExamName</p>
-                </div>
-                <div class="medium-2 columns">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="medium-2 columns">
+                    <p class="TestResultsSearchable">@item.Firstname @item.Lastname</p>
+                </td>
+                <td class="medium-2 columns">
+                    <p class="ExamNameSearchable">@item.ExamName</p>
+                </td>
+                <td class="medium-2 columns">
                     <p>@item.StartedAt</p>
-                </div>
-                <div class="medium-2 columns">
+                </td>
+                <td class="medium-2 columns">
                     <p>@item.FinishedAt</p>
-                </div>
-                <div class="medium-2 columns">
+                </td>
+                <td class="medium-2 columns">
                     <p>@item.Score</p>
-                </div>
-                <div class="medium-2 columns">
+                </td>
+                <td class="medium-2 columns">
                     <p><a asp-controller="Student" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">Open data</a></p>
-                </div>
+                </td>
+            </tr>
+        }
+    </table>
+</section>
+
+<script>
+    function FilterOnText(state) {
+        var value;
+        var filter;
+        if (state === 0) {
+            value = $("#searchInput1").val();
+            filter = $(".TestResultsSearchable");
+        }
+        else if (state === 1) {
+            value = $("#searchInput2").val();
+            filter = $(".ExamNameSearchable");
+        }
+        var values = [];
+        filter.each(function() {
+            if ($(this).text().toLowerCase().indexOf(value) >= 0) {
+                $(this).parent().parent().show();
+            } else {
+                $(this).parent().parent().hide();
             }
-        </div>
-    </section>
+        });
+    }
+</script>

@@ -7,8 +7,6 @@ using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols;
-using System.Web;
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
@@ -22,12 +20,18 @@ namespace Eduria.Controllers
 {
     public class ExamController : Controller
     {
-        private ExamService _examService;
-        private QuestionService _questionService;
-        private AnswerService _answerService;
-        private TimeTableService _timeTableService;
-        private ExamQuestionService _examQuestionService;
-        
+        private ExamService ExamService;
+        private QuestionService QuestionService;
+        private AnswerService AnswerService;
+        private TimeTableService TimeTableService;
+        private ExamQuestionService ExamQuestionService;
+        private MediaSourceService MediaSourceService;
+        private UserEQLogService UserEqLogService;
+        private ExamResultService ExamResultService;
+
+        private int _examId;
+        private DateTime _dateTime;
+
         /// <summary>
         /// internal class for databinding the information from database to object.
         /// </summary>
@@ -84,12 +88,6 @@ namespace Eduria.Controllers
             public int correct;
         }
 
-        private UserEQLogService _userEqLogService;
-        private ExamResultService _examResultService;
-
-        private int _examId;
-        private DateTime _dateTime;
-
         /// <summary>
         /// Constructor that creates all needed services.
         /// </summary>
@@ -100,17 +98,20 @@ namespace Eduria.Controllers
         /// <param name="examQuestionService"></param>
         /// <param name="userEqLogService"></param>
         /// <param name="examResultService"></param>
+        /// <param name="mediaSourceService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
-            UserEQLogService userEqLogService, ExamResultService examResultService)
+            UserEQLogService userEqLogService, ExamResultService examResultService,
+            MediaSourceService mediaSourceService)
         {
-            this._examQuestionService = examQuestionService;
-            this._examService = examService;
-            this._questionService = questionService;
-            this._timeTableService = timeTableService;
-            this._userEqLogService = userEqLogService;
-            this._examResultService = examResultService;
-            this._answerService = answerService;
+            this.ExamQuestionService = examQuestionService;
+            this.ExamService = examService;
+            this.QuestionService = questionService;
+            this.TimeTableService = timeTableService;
+            this.UserEqLogService = userEqLogService;
+            this.ExamResultService = examResultService;
+            this.AnswerService = answerService;
+            this.MediaSourceService = mediaSourceService;
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Eduria.Controllers
 
         public IActionResult OverView()
         {
-            return View(_examService.GetAll());
+            return View(ExamService.GetAll());
         }
 
         /// <summary>
@@ -185,12 +186,12 @@ namespace Eduria.Controllers
                 {
                     AnsweredOn = userEqLogJson.AnsweredOn,
                     CorrectAnswered = userEqLogJson.CorrectAnswered,
-                    ExamHasQuestionId = _examQuestionService.GetExamQuestionByQuestionIdExamId(userEqLogJson.QuestionId, examId).ExamHasQuestionId,
-                    ExamResultId = _examResultService.GetExamResultByUserAndExamId(userId: 1, examId).ExamResultId,
+                    ExamHasQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(userEqLogJson.QuestionId, examId).ExamHasQuestionId,
+                    ExamResultId = ExamResultService.GetExamResultByUserAndExamId(userId: 1, examId).ExamResultId,
                     TimesWrong = userEqLogJson.TimesWrong,
                     UserId = userId
                 };
-                _userEqLogService.Add(userEqLog);
+                UserEqLogService.Add(userEqLog);
             }
         }
 
@@ -199,7 +200,7 @@ namespace Eduria.Controllers
         /// </summary>
         public void ImportExamResultToDatabase(int examId, int userId, int score, DateTime start, DateTime end)
         {
-            _examResultService.Add(new ExamResult()
+            ExamResultService.Add(new ExamResult()
             {
                 ExamId = examId,
                 StartedAt = start,
@@ -216,10 +217,10 @@ namespace Eduria.Controllers
         /// <returns>An complete ExamModel</returns>
         public ExamModel GetExamModelByExamId(int id)
         {
-            IEnumerable<ExamQuestion> tempExamQuestions = _examQuestionService.GetAllQuestionIdsAsList(id);
-            IEnumerable<Question> tempQuestions = _questionService.GetQuestionsByExamQuestionList(tempExamQuestions);
-            Exam exam = _examService.GetById(id);
-            TimeTable timeTable = _timeTableService.GetById(exam.TimeTableId);
+            IEnumerable<ExamQuestion> tempExamQuestions = ExamQuestionService.GetAllQuestionIdsAsList(id);
+            IEnumerable<Question> tempQuestions = QuestionService.GetQuestionsByExamQuestionList(tempExamQuestions);
+            Exam exam = ExamService.GetById(id);
+            TimeTable timeTable = TimeTableService.GetById(exam.TimeTableId);
             return new ExamModel()
             {
                 AnswerModels = null, //CreateAnswerModels(tempAnswers.ToList()),
@@ -243,9 +244,9 @@ namespace Eduria.Controllers
         /// <returns>a complete Exammodel</returns>
         public ExamModel GetExamDataById(int id)
         {
-            List<Question> allQuestions = _questionService.GetAll().ToList();
-            Exam exam = _examService.GetById(id);
-            TimeTable timeTable = _timeTableService.GetById(exam.TimeTableId);
+            List<Question> allQuestions = QuestionService.GetAll().ToList();
+            Exam exam = ExamService.GetById(id);
+            TimeTable timeTable = TimeTableService.GetById(exam.TimeTableId);
             //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
             List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);          
             return new ExamModel()
@@ -274,11 +275,11 @@ namespace Eduria.Controllers
             List<QuestionModel> outputList = new List<QuestionModel>();
             foreach (Question question in questions)
             {
-                TimeTable tt = _timeTableService.GetById(question.TimeTableId);
+                TimeTable tt = TimeTableService.GetById(question.TimeTableId);
                 outputList.Add(new QuestionModel()
                 {
-                    TimeTableId = question.TimeTableId,
-                    MediaSourceId = question.MediaSourceId,
+                    TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(question.TimeTableId)),
+                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(question.MediaSourceId)),
                     QuestionId = question.QuestionId,
                     Text = question.Text,
                     QuestionType = question.QuestionType
@@ -310,6 +311,26 @@ namespace Eduria.Controllers
             return tempAnswerModels;
         }
 
+        public MediaSourceModel ConvertToMediaSourceModel(MediaSource mediaSource)
+        {
+            return new MediaSourceModel
+            {
+                MediaSourceId = mediaSource.MediaSourceId,
+                MediaType = (MediaType)mediaSource.MediaType,
+                Source = mediaSource.Source
+            };
+        }
+
+        public TimeTableModel ConvertToTimeTableModel(TimeTable timeTable)
+        {
+            return new TimeTableModel
+            {
+                TimeTableId = timeTable.TimeTableId,
+                MediaSourceId = timeTable.MediaSourceId,
+                Text = timeTable.Text
+            };
+        }
+
         /// <summary>
         /// Gets tables from database and changes them to models to use in the view. Returns the view to create an exam.
         /// if success is true, the view will display a message that an exam is successfully created.
@@ -321,7 +342,7 @@ namespace Eduria.Controllers
         {
             ViewBag.Success = success;
 
-            IEnumerable<TimeTable> tables = _timeTableService.GetAll();
+            IEnumerable<TimeTable> tables = TimeTableService.GetAll();
             List<TimeTableModel> tableModels = new List<TimeTableModel>();
             foreach(TimeTable table in tables)
             {
@@ -335,7 +356,7 @@ namespace Eduria.Controllers
             }
             ViewBag.categories = tableModels;
 
-            IEnumerable<Question> questions = _questionService.GetAll();
+            IEnumerable<Question> questions = QuestionService.GetAll();
             List<QuestionModel> questionModels = new List<QuestionModel>();
             foreach (Question question in questions)
             {
@@ -343,9 +364,9 @@ namespace Eduria.Controllers
                 {
                     QuestionId = question.QuestionId,
                     QuestionType = question.QuestionType,
-                    TimeTableId = question.TimeTableId,
+                    TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(question.TimeTableId)),
                     Text = question.Text,
-                    MediaSourceId = question.MediaSourceId
+                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(question.MediaSourceId))
                 };
                 questionModels.Add(questionModel);
             }
@@ -376,8 +397,8 @@ namespace Eduria.Controllers
                     Name = exam.name,
                     Description = exam.description
                 };
-                _examService.Add(ex);
-                int examId = _examService.GetByName(ex.Name).ExamId;
+                ExamService.Add(ex);
+                int examId = ExamService.GetByName(ex.Name).ExamId;
 
                 foreach(question q in exam.questions)
                 {
@@ -392,12 +413,12 @@ namespace Eduria.Controllers
                             //MediaType = q.mediaType,
                             //MediaLink = q.mediaLink
                         };
-                        _questionService.Add(question);
-                        _questionId = _questionService.GetQuestionByText(question.Text).QuestionId;
+                        QuestionService.Add(question);
+                        _questionId = QuestionService.GetQuestionByText(question.Text).QuestionId;
                     }      
                     else
                     {
-                        _questionId = _questionService.GetQuestionByText(q.text).QuestionId;
+                        _questionId = QuestionService.GetQuestionByText(q.text).QuestionId;
                     }
 
                     ExamQuestion eq = new ExamQuestion()
@@ -406,7 +427,7 @@ namespace Eduria.Controllers
                         QuestionId = _questionId
                     };
 
-                    _examQuestionService.Add(eq);
+                    ExamQuestionService.Add(eq);
 
                     foreach (answer a in q.answers)
                     {
@@ -416,7 +437,7 @@ namespace Eduria.Controllers
                             Text = a.text,
                             Correct = a.correct
                         };
-                        _answerService.Add(answer);
+                        AnswerService.Add(answer);
                     }
                 }
             }
@@ -441,14 +462,14 @@ namespace Eduria.Controllers
             {
                 if(formFile.Length > 0)
                 {
-                    Question q = _questionService.GetQuestionByMediaLink(formFile.FileName);
+                    Question q = QuestionService.GetQuestionByMediaLink(formFile.FileName);
                     string[] arr = formFile.FileName.Split(".");
                     string ext = arr[arr.Length - 1];
                     string newName = "questionImage" + q.QuestionId + "." + ext;
                     filePath = "Content/" + newName;
                     // TODO: Line 458 gives an error
                     //q.MediaLink = newName;
-                    _questionService.Update(q);
+                    QuestionService.Update(q);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
