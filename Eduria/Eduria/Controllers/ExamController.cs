@@ -31,6 +31,7 @@ namespace Eduria.Controllers
         private MediaService _mediaService;
         private UserEQLogService _userEqLogService;
         private ExamResultService _examResultService;
+        private UserService _userService;
 
         /// <summary>
         /// internal class for databinding the information from database to object.
@@ -115,7 +116,7 @@ namespace Eduria.Controllers
         /// <param name="examResultService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
-            UserEQLogService userEqLogService, ExamResultService examResultService, MediaService mediaService)
+            UserEQLogService userEqLogService, ExamResultService examResultService, MediaService mediaService, UserService userService)
         {
             this._examQuestionService = examQuestionService;
             this._examService = examService;
@@ -125,6 +126,7 @@ namespace Eduria.Controllers
             this._examResultService = examResultService;
             this._answerService = answerService;
             this._mediaService = mediaService;
+            this._userService = userService;
         }
 
         /// <summary>
@@ -337,11 +339,19 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult OverView()
         {
+            ViewBag.userType = _userService.GetById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).UserType;
             ViewBag.exams = _examService.GetAll();
             ViewBag.ttService = _timeTableService;
             return View();
         }
-
+        [HttpPost]
+        public void ToggleActiveExam(int examId, int state)
+        {
+            Exam exam = _examService.GetById(examId);
+            exam.IsActive = state;
+            _examService.Update(exam);
+        } 
+            
         /// <summary>
         /// Method used for sending the data from the exam to this controller
         /// </summary>

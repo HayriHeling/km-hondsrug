@@ -10,7 +10,12 @@
                 <td><b>Toets</b></td>
                 <td><b>Omschrijving</b></td>
                 <td><b>Categorie</b></td>
-                <td></td>
+                <td>
+                    @if (ViewBag.userType == 1)
+                    {
+                        <b>Actief</b>
+                    }
+                </td>
             </tr>
             <tr>
                 <td><input type="text" id="searchInput1" name="searchInput" placeholder="Title Zoeken" oninput="FilterOnText(0)" /></td>
@@ -27,18 +32,55 @@
             @foreach (var item in ViewBag.exams)
             {
                 var tt = ViewBag.ttService.GetById(item.TimeTableId);
-                <tr class="category@(tt.TimeTableId) category">
-                    <td class="examname">@item.Name</td>
-                    <td class="examsummary">@item.Description</td>
-                    <td>@tt.Text</td>
-                    <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
-                </tr>
+        <tr class="category@(tt.TimeTableId) category">
+            <td class="examname">@item.Name</td>
+            <td class="examsummary">@item.Description</td>
+            <td>@tt.Text</td>
+            @if (ViewBag.userType == 2 && item.IsActive == 1)
+            {
+                <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
+            }else if(ViewBag.userType == 1)
+            {
+                <td style="text-align: center;">
+                    <label class="switch">
+                        @if (item.IsActive == 1)
+                        {
+                            <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))" checked>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))">
+                        }
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+            }
+
+        </tr>
             }
         </table>
     </div>
 </section>
 
 <script>
+    function CheckboxOnChange(examId) {
+        var isActive;
+        var checkbox = "#Active" + examId + "";
+        if ($(checkbox).is(":checked")) {
+            isActive = 1;
+        } else {
+            isActive = 0;
+        }      
+        $.ajax({
+            type: "POST",
+            url: "/Exam/ToggleActiveExam",
+            data: { examId: examId, state: isActive },
+            success: function () {
+                alert("exam with id " + examId + " state has changed to " + isActive + ".");
+            }
+        }); 
+    }
+
     //Filters existing questions on text.
     function FilterOnText(state) {
         var value;
