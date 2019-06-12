@@ -29,7 +29,7 @@ window.addEventListener('load', function () {
         slidesToShow: 1, //'auto',
         slidesToScroll: 2,
         itemWidth: 400,
-        dragVelocity: 0.5,
+        dragVelocity: 0.7,
         draggable: true,
         scrollLock: true,
         dots: '#dots',
