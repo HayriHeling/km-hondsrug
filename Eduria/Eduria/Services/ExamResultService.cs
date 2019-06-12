@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
+using System;
 
 namespace Eduria
 {
@@ -35,6 +36,11 @@ namespace Eduria
         public ExamResult GetExamResultByUserAndExamId(int userId, int examId)
         {
             return Context.ExamResults.First(x => x.UserId == userId && x.ExamId == examId);
+        }
+
+        public ExamResult GetExamResultByUserAndStartDate(int userId, DateTime dateStarted)
+        {
+            return Context.ExamResults.First(x => x.UserId == userId && x.StartedAt == dateStarted);
         }
     }
 }

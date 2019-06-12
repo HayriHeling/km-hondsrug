@@ -26,6 +26,7 @@
 
         </div>
         <input type="button" onclick="AddQuestion(0)" value="Voeg Meerkeuze vraag toe.">
+        <input type="button" onclick="AddQuestion(1)" value="Voeg Tijdvakken vraag toe.">
         <input type="button" onclick="AddQuestion(2)" value="Voeg Open vraag toe.">
     </div>
     <div class="existingQuestionDiv" style="width: 50%; float: left; padding: 5%; height: 500px; overflow:auto;">
@@ -48,12 +49,13 @@
                 var link = question.MediaLink ?? "none";
                 var type = (MediaType)question.MediaType;
                 var questionType = (QuestionType)question.QuestionType;
-                var typeInt = question.MediaType;
+                var typeInt = (int)question.MediaType;
                 <div class="category@(ttId) category" style="width: 98%; float: left; background-color: white; margin: 5px; padding: 5px;">
                     <input type="button" value="Voeg Toe" onclick="DrawExistingQuestion('@text', '@ttId', '@link', '@type', '@typeInt')" style="float: right;" />
                     <p id="questiontext@(ttId)" class="questiontext">@question.Text</p>
                     <p>Categorie: @ttText</p>
                     <p>Type: @questionType</p>
+                    <p>Media: @type</p>
                 </div>
             }
         }
@@ -241,28 +243,30 @@
         string += "<p><select id='category" + count + "' name='questionCategory' selected>";
         string += $("#examCategory").html();
         string += "</select></p>";
-        string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
-        string += "<option value = '0'>None</option>";
-        string += "<option value = '1'>Audio</option>";
-        string += "<option value = '2'>Image</option>";
-        string += "<option value = '3'>Video</option>";
-        string += "</select></p>"; 
+        if (type != 1) {
+            string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
+            string += "<option value = '0'>None</option>";
+            string += "<option value = '1'>Audio</option>";
+            string += "<option value = '2'>Image</option>";
+            string += "<option value = '3'>Video</option>";
+            string += "</select></p>";
 
-        string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
-    
-        string += "<div id='audiodiv" + count + "'>";
-        string += "<p><input type='button' class='audiobuttons" + count + "' onclick='startRecording()' value='start recording audio'>";
-        string += "<input type='button' class='audiobuttons" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
-        string += "<input type='file' id='audiofile" + count + "' name='files' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
-        string += "<div id='audio" + count + "'></div>";
-        string += "</div>";
+            string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
 
-        string += "<div id='imagediv" + count + "'>";
-        string += "<input type='file' id='imagefile" + count + "' name='files' accept='image/*' oninput='SetImageLink(" + count + ")'>";
-        string += "</div>";
-        string += "<div id='answers" + count + "'></div>";
-        if (type == 0) {
-            string += "<p><input type='button' onclick='AddAnswer(" + count + ", 0)' value='Add Answer'/></p>";
+            string += "<div id='audiodiv" + count + "'>";
+            string += "<p><input type='button' class='audiobuttons" + count + "' onclick='startRecording()' value='start recording audio'>";
+            string += "<input type='button' class='audiobuttons" + count + "' onclick ='stopRecording(" + count + ")' value ='stop recording audio'></p>";
+            string += "<input type='file' id='audiofile" + count + "' name='files' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
+            string += "<div id='audio" + count + "'></div>";
+            string += "</div>";
+
+            string += "<div id='imagediv" + count + "'>";
+            string += "<input type='file' id='imagefile" + count + "' name='files' accept='image/*' oninput='SetImageLink(" + count + ")'>";
+            string += "</div>";
+            string += "<div id='answers" + count + "'></div>";
+            if (type == 0) {
+                string += "<p><input type='button' onclick='AddAnswer(" + count + ", 0)' value='Add Answer'/></p>";
+            }
         }
         string += "</div>"
         questionBox.append(string);
@@ -270,7 +274,9 @@
         var select = "#category" + count + "";
         $(select).val($("select#examCategory").children('option:selected').val()).change();
         var qType = "#qtype" + count + "";
-         AddAnswer(count, type);
+        if (type != 1) {
+            AddAnswer(count, type);
+        }        
     }
     //Passes the file name from the audio file upload to the medialink input field. 
     function SetAudiolink(index) {
@@ -368,7 +374,9 @@
         var inputLink = $(mLink).val();
         $(div).empty();
         questions[index].category = inputCat;
-        questions[index].mediaType = inputType;
+        if (inputType != null || inputType != "") {
+            questions[index].mediaType = inputType;
+        }
         questions[index].mediaLink = inputLink;
         if (inputText != "") {
             questions[index].text = inputText;
@@ -381,7 +389,7 @@
             if (questions[index].SaveAnswers() == false) {
                 return false;
             }
-            if (inputText == null || inputText == "" || inputCat == null || inputCat == "" || inputType == null || inputType == "") {
+            if (inputText == null || inputText == "" || inputCat == null || inputCat == "") {
                 SetWarning("Vraag " + (index + 1) + " Heeft lege velden!");
                 return false;
             }
