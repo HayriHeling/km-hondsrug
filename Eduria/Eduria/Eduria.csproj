@@ -37,12 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Content\questionMedia1003.jpg" />
-    <None Include="wwwroot\Content\questionMedia1005.webm" />
-    <None Include="wwwroot\Content\questionMedia1006.mp3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EduriaData\EduriaData.csproj" />
   </ItemGroup>
 
