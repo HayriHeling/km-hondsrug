@@ -19,46 +19,51 @@
             </tr>
             <tr>
                 <td><input type="text" id="searchInput1" name="searchInput" placeholder="Title Zoeken" oninput="FilterOnText(0)" /></td>
-                <td><input type="text" id="searchInput2" name="searchInput" placeholder="Omschrijving Zoeken" oninput="FilterOnText(1)"/></td>
-                <td><select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
-                    <option value="99"></option>
-                    @foreach(var item in ViewBag.ttService.GetAll())
-                    {
-                        <option value="@item.TimeTableId">@item.Text</option>
-                    }
-                    </select></td>
+                <td><input type="text" id="searchInput2" name="searchInput" placeholder="Omschrijving Zoeken" oninput="FilterOnText(1)" /></td>
+                <td>
+                    <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+                        <option value="99"></option>
+                        @foreach (var item in ViewBag.ttService.GetAll())
+                        {
+                            <option value="@item.TimeTableId">@item.Text</option>
+                        }
+                    </select>
+                </td>
                 <td></td>
             </tr>
             @foreach (var item in ViewBag.exams)
             {
-                var tt = ViewBag.ttService.GetById(item.TimeTableId);
-        <tr class="category@(tt.TimeTableId) category">
-            <td class="examname">@item.Name</td>
-            <td class="examsummary">@item.Description</td>
-            <td>@tt.Text</td>
-            @if (ViewBag.userType == 2 && item.IsActive == 1)
-            {
-                <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
-            }else if(ViewBag.userType == 1)
-            {
-                <td style="text-align: center;">
-                    <label class="switch">
-                        @if (item.IsActive == 1)
+                @if ((ViewBag.userType == 2 && item.IsActive == 1) || ViewBag.userType != 2)
+                {
+                    var tt = ViewBag.ttService.GetById(item.TimeTableId);
+                    <tr class="category@(tt.TimeTableId) category">
+                        <td class="examname">@item.Name</td>
+                        <td class="examsummary">@item.Description</td>
+                        <td>@tt.Text</td>
+                        @if (ViewBag.userType == 2)
                         {
-                            <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))" checked>
+                            <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
                         }
-                        else
+                        @if (ViewBag.userType == 1)
                         {
-                            <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))">
+                            <td style="text-align: center;">
+                                <label class="switch">
+                                    @if (item.IsActive == 1)
+                                    {
+                                        <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))" checked>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))">
+                                    }
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
                         }
-                        <span class="slider round"></span>
-                    </label>
-                </td>
+                    </tr>
+                 }
             }
-
-        </tr>
-            }
-        </table>
+            </table>
     </div>
 </section>
 

@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
@@ -344,7 +345,9 @@ namespace Eduria.Controllers
             ViewBag.ttService = _timeTableService;
             return View();
         }
+
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         public void ToggleActiveExam(int examId, int state)
         {
             Exam exam = _examService.GetById(examId);
