@@ -44,5 +44,10 @@ namespace Eduria.Services
         {
             return GetAll().Where(ut => ut.UserType == userType);
         }
+
+        public IEnumerable<User> GetUserByEmail(string email)
+        {
+            return GetAll().Where(x => x.Email.ToLower() == email.ToLower());
+        }
     }
 }

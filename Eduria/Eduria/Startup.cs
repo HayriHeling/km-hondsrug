@@ -48,6 +48,7 @@ namespace Eduria
             services.AddScoped<TimeTableService>();
             services.AddScoped<UserEQLogService>();
             services.AddScoped<ExamQuestionService>();
+            services.AddScoped<MediaSourceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,7 +75,7 @@ namespace Eduria
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Index}/{id?}");   
             });
         }
     }

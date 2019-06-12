@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewData["Title"] = "Take";
+}
+
+<h2>@ViewBag.exam.Name</h2>
+<div id="startDiv">
+    <p>@ViewBag.exam.Description</p>
+    <input type="button" value="Start toets" onclick="StartExam()" />
+</div>
+    <div id="examDiv" style="display: none;">
+        @foreach (QuestionModel q in ViewBag.questions)
+        {
+            List<AnswerModel> qAnswers = new List<AnswerModel>();
+            <div id="question@(q.QuestionId)" class="questions">
+                <p>@q.Text</p>
+                @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+                {
+                    foreach (AnswerModel a in ViewBag.answers)
+                    {
+                        if (a.QuestionId == q.QuestionId)
+                        {
+                            qAnswers.Add(a);
+                        }
+                    }
+                    Random rng = new Random();
+                    int n = qAnswers.Count;
+                    while (n > 1)
+                    {
+                        n--;
+                        int k = rng.Next(n + 1);
+                        AnswerModel value = qAnswers[k];
+                        qAnswers[k] = qAnswers[n];
+                        qAnswers[n] = value;
+                    }
+                    @foreach (AnswerModel a in qAnswers)
+                    {
+                        <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
+                    }
+                }
+                @if ((QuestionType)q.QuestionType == QuestionType.Open)
+                {
+                    <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
+                }
+                @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+                {
+                    int count = 0;
+                    <div class="cc-selector">
+                        @foreach (TimeTableModel tModel in ViewBag.timetables)
+                        {
+                            count++;
+                            <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
+                            <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div id="questionCount"></div>
+        <input type="button" value="Vorige Vraag" onclick="PreviousQuestion()" />
+        <input type="button" value="Volgende Vraag" onclick="NextQuestion()" />
+        <input type="button" value="Eindig Examen" onclick="StopExam()" />
+    </div>
+<form id="examForm" method="post" asp-controller="Exam" asp-action="Results" hidden>
+    <input id="examJson" name="examJson" type="text" />
+</form>
+<script>
+    var questionArray = [];
+    var currentQuestion = 0;
+    var started = null;
+    var examId = @ViewBag.exam.ExamId;
+    //changes viewbag.questions list to javascript array
+    @foreach(QuestionModel q in ViewBag.questions)
+    {
+        @:var q = new Question(@q.QuestionId, "@q.Text", @q.TimeTableModel.TimeTableId, @((int)q.MediaSourceModel.MediaType), "@q.MediaSourceModel.Source", @(q.QuestionType));
+        @foreach (AnswerModel a in ViewBag.answers)
+        {
+            if(a.QuestionId == q.QuestionId)
+            {
+                @:var a = new Answer(@a.AnswerId, @a.QuestionId, "@a.Text");
+                @:q.answers.push(a);
+            }
+        }
+        @:questionArray.push(q);
+    }
+
+    window.onload = function () {
+        Show(0);
+    }
+
+    function StartExam() {
+        $("#examDiv").show();
+        $("#startDiv").hide();
+        started = new Date();
+    }
+    function StopExam() {
+        if (confirm("Wil je de toets stoppen?")) {
+            for (var i = 0; i < questionArray.length; i++) {
+                if (questionArray[i].chosenAnswer == null) {
+                    alert("Er zijn nog onbeantwoorde vragen in de toets. Vul alle vragen in voordat je stopt!");
+                    return;
+                }
+            }
+            var exam = new Exam(questionArray, examId, started);
+            $("#examJson").val(JSON.stringify(exam));
+            $("#examForm").submit();
+        }
+    }
+
+    function SetAnswer(qId, qType, answer) {
+        for (var i = 0; i < questionArray.length; i++) {
+            if (questionArray[i].id == qId) {
+                switch (qType) {
+                    case 0:
+                    case 1:
+                        questionArray[i].chosenAnswer = answer;
+                        break;
+                    case 2:
+                        questionArray[i].chosenAnswer = answer.value;
+                        break;
+                }
+            }
+        }
+    }
+
+    function PreviousQuestion() {
+        if (currentQuestion <= 0) {
+            return;
+        }
+        currentQuestion -= 1;
+        Show(currentQuestion);
+    }
+
+    function NextQuestion() {
+        if (currentQuestion >= questionArray.length-1) {
+            return;
+        }
+        currentQuestion += 1;
+        Show(currentQuestion);
+    }
+
+    function Show(index) {
+        if (index >= questionArray.length || index < -1) {
+            return;
+        }
+        $("#questionCount").empty();
+        $("#questionCount").append("Vraag " + (currentQuestion + 1) + "/" + questionArray.length + "");
+        $(".questions").hide();
+        var div = "#question" + questionArray[index].id + "";
+        $(div).show();
+    }
+    //Question Object
+    function Question(id, text, category, mediaType, mediaLink, questionType) {
+        this.id = id;
+        this.text = text;
+        this.category = category;
+        this.mediaType = mediaType;
+        this.mediaLink = mediaLink;
+        this.answers = [];
+        this.questionType = questionType;
+        this.chosenAnswer = null;
+    }
+    //Answer Object.
+    function Answer(id, questionId, text) {
+        this.id = id;
+        this.questionId = questionId;
+        this.text = text;
+    }
+    //Exam Object.
+    function Exam(questions, id, dateStarted) {
+        this.id = id;
+        this.name = "-";
+        this.description = "-";
+        this.category = 0;
+        this.questions = questions;
+        this.dateStarted = dateStarted;
+        this.dateEnded = new Date();
+        this.score = 0;
+    }
+</script>
