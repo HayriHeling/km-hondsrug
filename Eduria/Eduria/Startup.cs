@@ -48,6 +48,7 @@ namespace Eduria
             services.AddScoped<TimeTableService>();
             services.AddScoped<UserEQLogService>();
             services.AddScoped<ExamQuestionService>();
+            services.AddScoped<MediaService>();
             services.AddScoped<ConfigsService>();
         }
 
@@ -75,7 +76,7 @@ namespace Eduria
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Index}/{id?}");   
             });
         }
     }
