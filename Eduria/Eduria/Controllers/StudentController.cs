@@ -69,7 +69,7 @@ namespace Eduria.Controllers
                               ExamName = e.Name,
                               StartedAt = er.StartedAt,
                               FinishedAt = er.FinishedAt,
-                              TimeTable = tb.Text,
+                              TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(tb.TimeTableId)),
                               Score = er.Score
                           });
 
@@ -118,7 +118,7 @@ namespace Eduria.Controllers
                 TimeTable = new TimeTableModel
                 {
                     TimeTableId = timeTable.TimeTableId,
-                    MediaSourceId = timeTable.MediaSourceId,
+                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
                     Text = timeTable.Text
                 }
             };
@@ -229,7 +229,7 @@ namespace Eduria.Controllers
             return new TimeTableModel
             {
                 TimeTableId = timeTable.TimeTableId,
-                MediaSourceId = timeTable.MediaSourceId,
+                MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
                 Text = timeTable.Text
             };
         }
