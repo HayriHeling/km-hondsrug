@@ -23,16 +23,20 @@
                         @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
                         @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
                         {
-                        @for (int j = 0; j < scoreEnum.Length; j++)
-                        {
-                        @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int)scoreEnum.GetValue(j), new { @checked = false })
-                        @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].DataHasDefaultId)
-                        @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].AnalyticDefaultId)
-                        }
+                            @for (int j = 0; j < scoreEnum.Length; j++)
+                            {
+                                <label class="container">
+                                @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int) scoreEnum.GetValue(j), new { @checked = false })
+                                <span class="radiobtn"></span>
+                                </label>
+
+                                @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].DataHasDefaultId)
+                                @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].AnalyticDefaultId)
+                            }
                         }
                         else
                         {
-                        @Model.AnalyticHasDefaultModels[i].Score
+                            @Model.AnalyticHasDefaultModels[i].Score
                         }
                     </div>
                 }

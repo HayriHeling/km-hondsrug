@@ -22,16 +22,20 @@
         {
             @foreach (var item in Model.Item2)
             {
-                <p><input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />@item.AnalyticDefaultName</p>
+                <label class="container">
+                    <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
+                    <span class="checkmark"></span>
+                    @item.AnalyticDefaultName
+                </label>
+                }
+
+                <hr />
+                <button type="submit" onclick="submitMethodArray()" class="button">Toevoegen</button>
+
             }
 
-            <hr />
-            <button type="submit" onclick="submitMethodArray()">Toevoegen</button>
-
-        }
-
-        <div id="inputMethod"></div>
-    </div>
+            <div id="inputMethod"></div>
+        </div>
 </div>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
