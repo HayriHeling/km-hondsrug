@@ -581,14 +581,14 @@ p {
     height: 100%;
     left: 50%;
     width: 4px;
-    background: #9c9c9c;
+    background: #dad7d7;
     z-index: 1;
 }
 
 .timeline {
     position: relative;
     width: 100%;
-    background-color: #1d1d1d;
+    background-color: #f5f4f4;
 }
 
 
@@ -607,7 +607,7 @@ p {
 }
 
 .timeline ul li .right_content h2 {
-    color: rgba(59,112,239,1);
+    color: #29abe2;
     padding: 0px 2px 18px 0px;
 }
 
@@ -637,10 +637,9 @@ p {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: rgba(59,112,239,1);
+    background: #ed1c24;
     border-radius: 50%;
-    box-shadow: 0 0 0 3px rgba(58,112,239,0.2);
-    right: -6px;
+    right: -7px;
     top: 24px;
     z-index: 1;
 }
@@ -650,10 +649,10 @@ p {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: rgba(59,112,239,1);
+    background: #ed1c24;
     border-radius: 50%;
-    box-shadow: 0 0 0 3px rgba(58,112,239,0.2);
-    left: -6px;
+    left: -3px;
+    z-index: 1;
     top: 24px;
 }
 
@@ -663,20 +662,30 @@ p {
     right: 25px;
     margin: 0;
     padding: 8px 16px;
-    color: #fff;
-    background-color: #f1f1f1;
+    background-color: #29abe2;
     border-radius: 2px;
 }
 
-.timeline ul li:nth-child(even) .left_content {
-    position: absolute;
-    top: 12px;
-    left: 20px;
-    margin: 0;
-    padding: 8px 16px;
+.timeline ul li:nth-child(odd) .left_content h3 {
     color: #fff;
-    background-color: #f1f1f1;
-    border-radius: 2px;
+    padding-top: 4px;
+    font-size: 12px;
+}
+
+.timeline ul li:nth-child(even) .left_content h3 {
+    color: #fff;
+    padding-top: 4px;
+    font-size: 12px;
+}
+
+.timeline ul li:nth-child(even) .left_content {
+position: absolute;
+top: 12px;
+left: 20px;
+margin: 0;
+padding: 8px 16px;
+background-color: #29abe2;
+border-radius: 2px;
 }
 
 
