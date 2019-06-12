@@ -20,10 +20,16 @@
     </div>
     <div class="row medium">
         <div class="medium-6 columns">
-            Fout 
+            <button onclick="toggleWrong()" class="toggle red">Foute vragen</button>
+            <div id="wrong">
+                Hier komen de vragen die foutief zijn beantwoord.
+            </div>
         </div>
         <div class="medium-6 columns">
-           Goed
+            <button onclick="toggleCorrect()" class=" toggle green">Goede vragen</button>
+            <div id="correct">
+                Hier komen de vragen die correct zijn beantwoord.
+            </div>
         </div>
     </div>
 </section>

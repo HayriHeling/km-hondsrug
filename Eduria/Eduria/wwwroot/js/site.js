@@ -13,3 +13,25 @@ function responsiveToggle() {
         x.className = "topnav";
     }
 }
+
+
+/* Toggle Wrong answers */
+function toggleWrong() {
+    var x = document.getElementById("wrong");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    }
+    else {
+        x.style.display = "none";
+    }
+}
+
+/* Toggle Correct answers */
+function toggleCorrect() {
+    var y = document.getElementById("correct");
+    if (y.style.display === "none") {
+        y.style.display = "block";
+    } else {
+        y.style.display = "none";
+    }
+}

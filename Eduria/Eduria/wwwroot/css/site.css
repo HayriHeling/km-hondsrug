@@ -80,15 +80,31 @@ footer {
     width: 150px;
 }
 
+.toggle {
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+}
+
+#correct, #wrong {
+    padding: 10px;
+}
+
 .button {
     background-color: #29abe2;
     color: #fff;
     border-radius: unset;
 }
+.red {
+    background-color:#ed1c24;
+}
 
-    .button:hover {
-        background-color: #ed1c24;
-    }
+.green {
+    background-color: #74b027;
+}
+.button:hover {
+    background-color: #ed1c24;
+}
 
 .ghost {
     background-color: unset;
@@ -400,4 +416,12 @@ p {
 
 #exam p {
     color: #afacac;
+}
+
+#myDIV {
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    background-color: lightblue;
+    margin-top: 20px;
 }
