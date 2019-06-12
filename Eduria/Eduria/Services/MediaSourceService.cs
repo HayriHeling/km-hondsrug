@@ -21,5 +21,14 @@ namespace Eduria.Services
         {
             return Context.MediaSources.First(x => x.MediaSourceId == id);
         }
+
+        public MediaSource GetBySource(string source)
+        {
+            return GetAll().FirstOrDefault(x => x.Source == source);
+        }
+        public MediaSource GetByMediaType(int type)
+        {
+            return GetAll().FirstOrDefault(x => x.MediaType == type);
+        }
     }
 }
