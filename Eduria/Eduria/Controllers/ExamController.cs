@@ -32,6 +32,7 @@ namespace Eduria.Controllers
         private MediaSourceService MediaSourceService;
         private UserEQLogService UserEqLogService;
         private ExamResultService ExamResultService;
+        private UserService UserService;
 
         /// <summary>
         /// internal class for databinding the information from database to object.
@@ -116,16 +117,17 @@ namespace Eduria.Controllers
         /// <param name="examResultService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
-            UserEQLogService userEqLogService, ExamResultService examResultService, MediaService mediaService, UserService userService)
+            UserEQLogService userEqLogService, ExamResultService examResultService, MediaSourceService mediaSourceService, UserService userService)
         {
-            this.ExamQuestionService = examQuestionService;
-            this.ExamService = examService;
-            this.QuestionService = questionService;
-            this.TimeTableService = timeTableService;
-            this.UserEqLogService = userEqLogService;
-            this.ExamResultService = examResultService;
-            this.AnswerService = answerService;
-            this.MediaSourceService = mediaSourceService;
+            ExamQuestionService = examQuestionService;
+            ExamService = examService;
+            QuestionService = questionService;
+            TimeTableService = timeTableService;
+            UserEqLogService = userEqLogService;
+            ExamResultService = examResultService;
+            AnswerService = answerService;
+            MediaSourceService = mediaSourceService;
+            UserService = userService;
         }
 
         /// <summary>
@@ -337,9 +339,9 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult OverView()
         {
-            ViewBag.userType = _userService.GetById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).UserType;
-            ViewBag.exams = _examService.GetAll();
-            ViewBag.ttService = _timeTableService;
+            ViewBag.userType = UserService.GetById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).UserType;
+            ViewBag.exams = ExamService.GetAll();
+            ViewBag.ttService = TimeTableService;
             return View();
         }
 
@@ -347,9 +349,9 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Teacher")]
         public void ToggleActiveExam(int examId, int state)
         {
-            Exam exam = _examService.GetById(examId);
+            Exam exam = ExamService.GetById(examId);
             exam.IsActive = state;
-            _examService.Update(exam);
+            ExamService.Update(exam);
         } 
             
         /// <summary>
