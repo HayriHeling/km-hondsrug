@@ -1,21 +1,52 @@
-﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
+﻿@using Eduria.Models
+@model AnalyticDefaultAndHasDefaultModel
 @{
     ViewData["Title"] = "Goals";
 }
-    <div class="row xlarge">
-        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
-        <div class="medium-10 columns">
-            <h2>Goals</h2>
-            @foreach (var item in Model.Item1)
-            {
-                <p>@item.AnalyticDataId</p>
-                <p>@item.AnalyticDefaultName</p>
-            }
 
-            @foreach (var item in Model.Item2)
-            {
-                <p>@item.AnalyticDefaultId</p>
-                <p>@item.AnalyticDefaultName</p>
-            }
-        </div>
-    </div>
+<h2>Goals</h2>
+@ViewBag.Message
+@{int itemid = 1;}
+<!-- Shows all the user's existing goals -->
+<table>
+    @foreach (var item in Model.AnalyticHasDefaultModels)
+    {
+        <tr>
+            <td>@itemid</td>
+            <td>@item.AnalyticDefaultName</td>
+            <td>@item.Input</td>
+            <td>@item.Score</td>
+            @{itemid++;}
+        </tr>
+    }
+</table>
+<p>
+    Je gaat je zelf doelen stellen voor de komende periode. Klik hieronder minstens twee doelen aan die
+    de volgende periode gaat oefenen
+</p>
+<!-- Dynamically creates a form to add goals to AnalyticData -->
+<table>
+    @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
+    {
+        @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBoxFor(m => Model.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                    @Html.HiddenFor(m => Model.AnalyticDefaultModels[i].AnalyticDefaultId)
+                    @Html.HiddenFor(m => Model.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                </td>
+                <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
+                <td>
+                    @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                    {
+                        @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
+                    }
+            </td>
+        </tr>
+    }
+        <tr>
+            <td><input type="submit" value="Toevoegen" /></td>
+        </tr>
+    }
+</table>

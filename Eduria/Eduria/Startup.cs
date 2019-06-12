@@ -48,7 +48,7 @@ namespace Eduria
             services.AddScoped<TimeTableService>();
             services.AddScoped<UserEQLogService>();
             services.AddScoped<ExamQuestionService>();
-            services.AddScoped<MediaService>();
+            services.AddScoped<MediaSourceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
