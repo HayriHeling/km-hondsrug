@@ -441,6 +441,23 @@ namespace Eduria.Services
         }
 
         /// <summary>
+        /// Gets a combined AnalyticDefault and AnalyticHasDefault model to send to a view.
+        /// </summary>
+        /// <param name="id">The AnalyticData id to get the models from.</param>
+        /// <param name="category">The specific category to get a combined model from.</param>
+        /// <returns>A combined AnalyticDefault and AnalyticHasDefault model.</returns>
+        public AnalyticDefaultAndHasDefaultModel GetAnalyticDefaultAndHasDefaultModel(int id, int category)
+        {
+            AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel = new AnalyticDefaultAndHasDefaultModel
+            {
+                AnalyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category).ToList(),
+                AnalyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category).ToList()
+            };
+
+            return analyticDefaultAndHasDefaultModel;
+        }
+
+        /// <summary>
         /// Return the AnalyticDataId by the UserId, Year and Period.
         /// </summary>
         /// <param name="form">The IFormCollection that contains the value of year and period.</param>
