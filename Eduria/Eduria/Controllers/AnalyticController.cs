@@ -1,6 +1,7 @@
 ﻿using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models.AnalyticLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -78,18 +79,20 @@ namespace Eduria.Controllers
         /// Shows the goal view page.
         /// </summary>
         /// <returns>The goal view.</returns>
+        [Authorize(Roles = "Student")]
         public IActionResult Goal()
         {
             return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
         }
 
         /// <summary>
-        /// POST: Analytic/Goal
+        /// POST: Analytic/AddGoal
         /// 
         /// Adds goals to the AnalyticData for the user.
         /// </summary>
         /// <param name="analyticDefaultAndHasDefaultModel"></param>
         /// <returns>The goal view with updated goals.</returns>
+        [Authorize(Roles = "Student, Teacher")]
         [HttpPost]
         public IActionResult AddGoal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
@@ -129,6 +132,14 @@ namespace Eduria.Controllers
             return RedirectToAction("Goal");
         }
 
+        /// <summary>
+        /// POST: Analytic/AddGoalScore
+        /// 
+        /// Adds a score to the user's AnalyticDefault
+        /// </summary>
+        /// <param name="analyticDefaultAndHasDefaultModel"></param>
+        /// <returns>The goal view with updated scores.</returns>
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public IActionResult AddGoalScore(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
