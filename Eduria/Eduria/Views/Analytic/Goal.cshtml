@@ -6,7 +6,7 @@
 <section id="analytic">
     <div class="row medium">
         <div class="medium-12 columns">
-            <h2>Goals</h2>
+            <h2>Doel vaststellen</h2>
             @ViewBag.Message
 
             <!-- Shows all the user's existing goals -->
@@ -41,8 +41,8 @@
                 @if (User.IsInRole("Teacher"))
                 {
                 <tr>
-                    <td><input type="submit" value="Toevoegen" /></td>
-                    <td><input type="reset" value="Formulier leegmaken" /></td>
+                    <td><input type="submit" value="Toevoegen" class="button" /></td>
+                    <td><input type="reset" value="Formulier leegmaken" class="button" /></td>
                 </tr>
                 }
                 }
