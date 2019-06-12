@@ -73,5 +73,9 @@ namespace Eduria.Services
             Context.Entry(user).State = EntityState.Modified;
             Context.SaveChanges();
         }
+        public IEnumerable<User> GetAllUsersByUserType(int userType)
+        {
+            return GetAll().Where(ut => ut.UserType == userType);
+        }
     }
 }
