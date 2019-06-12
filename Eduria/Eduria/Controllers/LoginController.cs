@@ -143,22 +143,16 @@ namespace Eduria.Controllers
             
             if (ModelState.IsValid)
             {
-                string To = Email, UserID, Password, SMTPPort, Host;
                 string token = Guid.NewGuid().ToString();
 
                 if (token != null)
                 {
                     //Create URL with above token  
-                    var lnkHref = "<a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
                     Service.SetUserToken(Email, token);
 
-                    //HTML Template for Send email  
-                    string subject = "Verzoek om wachtwoord te wijzigen";
-                    string body = "Beste student, Klik op de link om je wachtwoord te resetten." + lnkHref;
-                    //return Content("UserID is: " + UserID);
                     //Call send email methods.  
-                    EmailManager.SendEmail(Email, _configService.GetNewest());
-                    //EmailManager.SendEmail("info@adindatest3.nl", subject, body, Email, "info@adindatest3.nl", "wzRQ3Gg5mE", "465", "mail.axc.nl");
+                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
                     return Content("Er is een mail met een link naar " + Email + " verzonden.");
 
                 }

@@ -22,6 +22,6 @@ namespace EduriaData.Models
         [Required, MaxLength(256)]
         public string Host { get; set; }
         [Required]
-        public DateTime EntryCreatedAt { get; set; }
+        public DateTime EntryChangedAt { get; set; }
     }
 }

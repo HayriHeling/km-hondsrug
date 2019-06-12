@@ -21,32 +21,17 @@ namespace Eduria.Controllers
 
     public class EmailManager
     {
-        public static void SendEmail(string To, Config config)
+        public static void SendEmail(string To, Config config, string link)
         {           
             MailMessage mail = new MailMessage();
             mail.To.Add(To);
             mail.From = new MailAddress(config.FromMail);
             mail.Subject = config.Subject;
-            mail.Body = config.Body;
+            mail.Body = (config.Body + link);
             SmtpClient smtp = new SmtpClient();
             smtp.Host = config.Host;
             smtp.Port = config.SMTPPort;
             smtp.Credentials = new NetworkCredential(config.FromMail, config.Password);
-            smtp.EnableSsl = false;
-            smtp.Send(mail);
-        }
-
-        public static void SendEmail(string From, string Subject, string Body, string To, string UserID, string Password, string SMTPPort, string Host)
-        {
-            MailMessage mail = new MailMessage();
-            mail.To.Add(To);
-            mail.From = new MailAddress(From);
-            mail.Subject = Subject;
-            mail.Body = Body;
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "mail.adindatest3.nl";
-            smtp.Port = 587;
-            smtp.Credentials = new NetworkCredential(UserID, Password);
             smtp.EnableSsl = false;
             smtp.Send(mail);
         }
