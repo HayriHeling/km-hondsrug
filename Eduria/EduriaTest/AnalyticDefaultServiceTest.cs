@@ -2,6 +2,7 @@
 using Eduria;
 using Eduria.Controllers;
 using Eduria.Services;
+using EduriaData.Models;
 using EduriaData.Models.AnalyticLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -37,7 +38,7 @@ namespace EduriaTest
 
         [Fact]
         public void AddDataHasDefaultTest()
-        {
+       {
             //Arrange
             var options = new DbContextOptionsBuilder<EduriaContext>().
                 UseInMemoryDatabase(databaseName: "Eduria_Development").
@@ -112,6 +113,53 @@ namespace EduriaTest
 
             //Assert
             Assert.Equal(analyticDatas.Count(), result.Count());
+        }
+
+        [Fact]
+        public void GetAllDataHasDefaultTest()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<EduriaContext>().
+                UseInMemoryDatabase(databaseName: "Eduria_Development").
+                Options;
+
+            var fixture = new Fixture();
+            var dataHasDefaults = new List<DataHasDefault>
+            {
+                fixture.Build<DataHasDefault>().With(x => x.DataHasDefaultId, 1).Create(),
+                fixture.Build<DataHasDefault>().With(x => x.DataHasDefaultId, 2).Create(),
+                fixture.Build<DataHasDefault>().With(x => x.DataHasDefaultId, 3).Create(),
+                fixture.Build<DataHasDefault>().With(x => x.DataHasDefaultId, 4).Create()
+            }.AsQueryable();
+
+            var analyticDataHasDefaultMock = CreateDbSetMock(dataHasDefaults);
+            var contextMock = new Mock<EduriaContext>(options);
+            contextMock.Setup(x => x.DataHasDefaults).Returns(analyticDataHasDefaultMock.Object);
+
+            //Act
+            var service = new AnalyticDefaultService(contextMock.Object);
+            var result = service.GetAllDataHasDefaults();
+
+            //Assert
+            Assert.Equal(dataHasDefaults.Count(), result.Count());
+        }
+
+        [Fact]
+        public void AddAnalyticDataPerUserTest()
+        {
+            //Arrange
+            var options = new DbContextOptionsBuilder<EduriaContext>().
+                UseInMemoryDatabase(databaseName: "Eduria_Development").
+                Options;
+            var contextMock = new Mock<EduriaContext>(options);
+
+            var fixture = new Fixture();
+            var users = new List<User>
+            {
+                fixture.Build<User>().With(x => x.UserId, 1).Create(),
+                fixture.Build<User>().With(x => x.UserId, 2).Create(),
+                fixture.Build<User>().With(x => x.UserId, 3).Create()
+            };
         }
     }
 }
