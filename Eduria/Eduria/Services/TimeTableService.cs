@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services

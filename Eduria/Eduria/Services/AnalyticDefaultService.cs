@@ -1,9 +1,12 @@
 ﻿using Eduria.Models;
 using EduriaData.Models.AnalyticLayer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EduriaData.Models;
 
 namespace Eduria.Services
 {
@@ -63,6 +66,45 @@ namespace Eduria.Services
             throw new NotImplementedException();
         }
 
+        public void AddAnalyticDataPerUser(IEnumerable<User> users, int periodId)
+        {
+            if (users.Count() != 0)
+            {
+                foreach(var item in users.ToList())
+                {
+                    AnalyticData analyticData = new AnalyticData
+                    {
+                        UserId = item.UserId,
+                        PeriodId = periodId,
+                        ExamCode = "1"
+                    };
+
+                    Context.Add(analyticData);
+                    Context.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the specific Period by the periodNum and startYear.
+        /// </summary>
+        /// <param name="periodNum">The number of the period.</param>
+        /// <param name="startYear">The startyear of the period.</param>
+        /// <returns>Period object.</returns>
+        public int GetByPeriodIdByPeriodNumAndStartYear(int periodNum, int startYear)
+        {
+            var query = from p in Context.Periods
+                        where p.PeriodNum == periodNum && p.SchoolYearStart == startYear
+                        select new Period
+                        {
+                            PeriodId = p.PeriodId
+                        };
+            return query.First().PeriodId;
+
+
+            //return Context.Periods.Where(pn => pn.PeriodNum == periodNum).Where(sy => sy.SchoolYearStart == startYear).First().PeriodId;
+        }
+
         /// <summary>
         /// Retrieve all DataHasDefault objects from the database.
         /// </summary>
@@ -84,10 +126,12 @@ namespace Eduria.Services
                         // Use an join, but the outcome can be null
                         join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
                         from dds in a.DefaultIfEmpty()
-                        // Use an join, but the outcome can be null
+                            // Use an join, but the outcome can be null
                         join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
                         from ddi in b.DefaultIfEmpty()
-                        where dhd.AnalyticDataId == id
+
+                        where dhd.AnalyticDataId == id 
+
                         select new AnalyticHasDefaultModel
                         {
                             AnalyticDataId = dhd.AnalyticDataId,
@@ -95,7 +139,41 @@ namespace Eduria.Services
                             AnalyticDefaultName = ad.AnalyticDefaultName,
                             CategoryId = ad.AnalyticCategory,
                             Score = dds.Score,
-                            Input = ddi.Text
+                            Input = ddi.Text,
+                            Option = ad.AnalyticDefaultOption,
+                        };
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Retrieve all AnalyticHasDefault object from an specific user.
+        /// </summary>
+        /// <param name="id">The AnalyticData id.</param>
+        /// <param name="userId">The UserID of the user that is currently logged in.</param>
+        /// <returns>An IEnumberable with all the AnlyticDataHasDefaultModel objects.</returns>
+        public IEnumerable<AnalyticHasDefaultModel> GetAllDataByAnalyticDataId(int id, int userId)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        // Use an join, but the outcome can be null
+                        join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
+                        from dds in a.DefaultIfEmpty()
+                            // Use an join, but the outcome can be null
+                        join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
+                        from ddi in b.DefaultIfEmpty()
+                        join add in Context.AnalyticDatas on dhd.AnalyticDataId equals add.AnalyticDataId
+                        where dhd.AnalyticDataId == id && add.UserId == userId
+
+                        select new AnalyticHasDefaultModel
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                            CategoryId = ad.AnalyticCategory,
+                            Score = dds.Score,
+                            Input = ddi.Text,
+                            Option = ad.AnalyticDefaultOption
                         };
 
             return query.ToList();
@@ -156,10 +234,11 @@ namespace Eduria.Services
         /// <param name="period">The specific period.</param>
         /// <param name="year">The specific year.</param>
         /// <returns>An AnalyticData with all the requirements met.</returns>
-        public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int period, int year)
+        public AnalyticData GetAnalyticDataByUserIdAndPeriodAndYear(int userId, int periodNum, int startYear)
         {
             var query = from ad in Context.AnalyticDatas
-                        where ad.UserId == userId && ad.Period == period && ad.Year == year
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodNum
+                        where ad.UserId == userId && p.PeriodNum == periodNum && p.SchoolYearStart == startYear
                         select new AnalyticData
                         {
                             AnalyticDataId = ad.AnalyticDataId
@@ -223,7 +302,6 @@ namespace Eduria.Services
                 Context.SaveChanges();
             }
         }
-
 
         /// <summary>
         /// Add an DefaultDataScore object to the database.
@@ -301,8 +379,6 @@ namespace Eduria.Services
         /// </summary>
         /// <param name="analyticId"></param>
         public bool AddSubjectToHasDefaults(int analyticId)
-
-
         {
             var query = from dhd in Context.DataHasDefaults
                         join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
@@ -346,12 +422,17 @@ namespace Eduria.Services
         /// <param name="form">The IFormCollection the is passed into the controller back to this service method.</param>
         public void AddDefaultDataScore(IFormCollection form)
         {
-            for (int i = 1; i <= form.ToList().Count - 1; i++)
-            {
+            // Make an List for all the IFormCollection data.
+            var listOfDefaultDataScore = form.ToList();
+            // Remove unnecessary last data token.
+            listOfDefaultDataScore.RemoveAt(listOfDefaultDataScore.Count - 1);
+
+            foreach (var item in listOfDefaultDataScore)
+            {    
                 DefaultDataScore defaultDataScore = new DefaultDataScore
                 {
-                    DataHasDefaultId = i,
-                    Score = int.Parse(form["radio_" + i]) // The score that is chosen by each radiobutton.
+                    DataHasDefaultId = int.Parse(item.Key),
+                    Score = int.Parse(item.Value)
                 };
 
                 Context.DefaultDataScores.Add(defaultDataScore);
@@ -360,20 +441,68 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// Gets a combined AnalyticDefault and AnalyticHasDefault model to send to a view.
+        /// Return the AnalyticDataId by the UserId, Year and Period.
         /// </summary>
-        /// <param name="id">The AnalyticData id to get the models from.</param>
-        /// <param name="category">The specific category to get a combined model from.</param>
-        /// <returns>A combined AnalyticDefault and AnalyticHasDefault model.</returns>
-        public AnalyticDefaultAndHasDefaultModel GetAnalyticDefaultAndHasDefaultModel(int id, int category)
+        /// <param name="form">The IFormCollection that contains the value of year and period.</param>
+        /// <param name="userId">The UserId of the user that is currently logged in.</param>
+        /// <returns>The AnalyticDataId.</returns>
+        public int GetAnalyticDataIdByYearAndPeriodAndUserId(IFormCollection form, int userId)
         {
-            AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel = new AnalyticDefaultAndHasDefaultModel
-            {
-                AnalyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category).ToList(),
-                AnalyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category).ToList()
-            };
+            var query = from ad in Context.AnalyticDatas
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where p.SchoolYearStart == int.Parse(form["year"]) && p.PeriodNum== int.Parse(form["period"]) && ad.UserId == userId
+                        select new AnalyticData
+                        {
+                            AnalyticDataId = ad.AnalyticDataId
+                        };
 
-            return analyticDefaultAndHasDefaultModel;
+            return query.First().AnalyticDataId;
+        }
+
+        public IEnumerable<AnalyticHasDefaultModel> GetAnalyticDataByYearAndPeriodAndUserId(IFormCollection form, int userId)
+        {
+            var query = from dhd in Context.DataHasDefaults
+                        join ad in Context.AnalyticDefaults on dhd.AnalyticDefaultId equals ad.AnalyticDefaultId
+                        // Use an join, but the outcome can be null
+                        join dds in Context.DefaultDataScores on dhd.DataHasDefaultId equals dds.DataHasDefaultId into a
+                        from dds in a.DefaultIfEmpty()
+                            // Use an join, but the outcome can be null
+                        join ddi in Context.DefaultDataInputs on dhd.DataHasDefaultId equals ddi.DataHasDefaultId into b
+                        from ddi in b.DefaultIfEmpty()
+                        join add in Context.AnalyticDatas on dhd.AnalyticDataId equals add.AnalyticDataId
+                        join p in Context.Periods on add.PeriodId equals p.PeriodId
+                        where p.SchoolYearStart== int.Parse(form["year"]) && p.PeriodNum == int.Parse(form["period"]) && add.UserId == userId
+
+                        select new AnalyticHasDefaultModel
+                        {
+                            AnalyticDataId = dhd.AnalyticDataId,
+                            AnalyticDefaultId = dhd.AnalyticDefaultId,
+                            AnalyticDefaultName = ad.AnalyticDefaultName,
+                            CategoryId = ad.AnalyticCategory,
+                            Score = dds.Score,
+                            Input = ddi.Text,
+                            Option = ad.AnalyticDefaultOption
+                        };
+
+            return query.ToList();
+        }
+
+        public void AddPeriod(PeriodModel periodModel)
+        {
+            if (periodModel != null)
+            {
+                Period period = new Period
+                {
+                    PeriodNum = periodModel.PeriodNum,
+                    PeriodStart = periodModel.PeriodStart.Date,
+                    PeriodEnd = periodModel.PeriodEnd.Date,
+                    SchoolYearStart = periodModel.SchoolYearStart,
+                    SchoolYearEnd = periodModel.SchoolYearEnd
+                };
+
+                Context.Periods.Add(period);
+                Context.SaveChanges();
+            }
         }
     }
 }

@@ -1,18 +1,20 @@
-﻿@model  IEnumerable<Eduria.Models.AnalyticHasDefaultModel> 
+﻿@model IEnumerable<Eduria.Models.AnalyticHasDefaultModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<a asp-controller="Analytic" asp-action="Method">Werkwijze</a>
-<a asp-controller="Analytic" asp-action="Subject">Onderwerpen</a>
-<a asp-controller="Analytic" asp-action="Goal">Doelen</a>
+    <div class="row xlarge">
+        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        <div class="medium-10 columns">
+            @foreach (var item in Model)
+            {
+                <p>AnalyticDataId: @item.AnalyticDataId</p>
+                <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
+                <p>Name: @item.AnalyticDefaultName</p>
+                <p>Category: @item.CategoryId</p>
+                <p>Score: @item.Score</p>
+                <hr />
+            }
+        </div>
+    </div>
 
-@foreach(var item in Model)
-{
-    <p>AnalyticDataId: @item.AnalyticDataId</p>
-    <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
-    <p>Name: @item.AnalyticDefaultName</p>
-    <p>Category: @item.CategoryId</p>
-    <p>Score: @item.Score</p>
-    <hr />
-}

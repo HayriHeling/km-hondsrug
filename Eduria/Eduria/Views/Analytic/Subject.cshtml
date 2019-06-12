@@ -1,31 +1,51 @@
-﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
+
 @{
     ViewData["Title"] = "Subject";
 }
 
-<h2>Toetsanalyse | Onderwerpen</h2>
-<p>
-    Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed
-    ging.
-    Deze analyse heb je nodig voor het vaststellen van de planning voor de komende periode.
-    Planning en analyse worden beoordeeld voor je tijdvakkendossier.
-</p>
+<div class="row xlarge">
+    <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+    <div class="medium-10 columns">
+        <h2>Toetsanalyse | Onderwerpen</h2>
+        <p>
+            Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed
+            ging.
+            Deze analyse heb je nodig voor het vaststellen van de planning voor de komende periode.
+            Planning en analyse worden beoordeeld voor je tijdvakkendossier.
+        </p>
 
-@using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post))
-{
-    @foreach (var item in Model.Item1)
-    {
-        
-            <p>@item.AnalyticDefaultName</p>
+        @using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
+        {
+            @foreach (var item in Model.Item1)
+            {
 
-            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Rood)
-            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Oranje)
-            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Geel)
-            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.LichtGroen)
-            @Html.RadioButton("radio_" + item.AnalyticDefaultId, (int)DefaultScore.Groen)
-    }
+                if (item.Option == (int)DefaultOption.Score)
+                {
+                    <p>@item.AnalyticDefaultName</p>
 
-    <input type="submit" value="Opslaan" />
-}
+                    if (User.IsInRole("Student"))
+                    {
+                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Rood)
+                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Oranje)
+                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Geel)
+                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.LichtGroen)
+                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Groen)
+                    }
+                }
+                else
+                {
+                    <p>@item.AnalyticDefaultName</p>
+                    @Html.TextBox("Hello");
+                }
+            }
 
-
+            if (User.IsInRole("Student"))
+            {
+                <input type="submit" value="Opslaan" />
+            }
+        }
+    </div>
+</div>
