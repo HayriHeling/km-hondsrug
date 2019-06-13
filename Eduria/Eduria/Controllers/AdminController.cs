@@ -1,4 +1,5 @@
 ﻿using System;
+using Eduria.Models;
 using Eduria.Services;
 using Microsoft.SqlServer.Management.Smo;
 using Microsoft.SqlServer.Management.Diagnostics;
@@ -17,15 +18,23 @@ namespace Eduria.Controllers
             _databaseService = databaseService;
         }
         
-        [HttpPost]
         public IActionResult Database()
         {
             return View();
         }
 
-        public void BackupDatabase()
+        /// <summary>
+        /// This method calls the backup method in the databaseservice
+        /// </summary>
+        public IActionResult BackupDatabase()
         {
-            _databaseService.Backup("Download");
+            string backupData = _databaseService.Backup();
+            return View(new DatabaseModel
+            {
+                BackupData = backupData,
+                ConnectionString = "",
+                Name = "EduriaData"
+            });
         }
 
         public void UploadDatabase()

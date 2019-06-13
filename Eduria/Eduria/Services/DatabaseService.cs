@@ -25,7 +25,11 @@ namespace Eduria.Services
             _appSettingsService = appSettingsService.Value;
         }
 
-        public void Backup(string param = "")
+        /// <summary>
+        /// This method creates a backup of the database server.
+        /// </summary>
+        /// <param name="param"></param>
+        public string Backup(string param = "")
         {
             _backupName = BackupNameGenerator(param);
             SqlConnection sqlConnection = OpenConnection();
@@ -33,6 +37,7 @@ namespace Eduria.Services
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection) {CommandType = CommandType.Text};
             int iRows = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
+            return BackupPlace + _backupName;
         }
 
         public string QueryBuilder()
