@@ -1,7 +1,9 @@
 ﻿using Eduria.Services;
-using EduriaData.Models;
 using System.Collections.Generic;
 using System.Linq;
+using EduriaData.Models;
+using EduriaData.Models.ExamLayer;
+using System;
 
 namespace Eduria
 {
@@ -29,6 +31,16 @@ namespace Eduria
         public override ExamResult GetById(int id)
         {
             return GetAll().FirstOrDefault(x => x.ExamResultId == id);
+        }
+
+        public ExamResult GetExamResultByUserAndExamId(int userId, int examId)
+        {
+            return Context.ExamResults.First(x => x.UserId == userId && x.ExamId == examId);
+        }
+
+        public ExamResult GetExamResultByUserAndStartDate(int userId, DateTime dateStarted)
+        {
+            return Context.ExamResults.First(x => x.UserId == userId && x.StartedAt == dateStarted);
         }
     }
 }

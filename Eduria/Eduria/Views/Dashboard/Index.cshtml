@@ -1,39 +1,25 @@
-﻿
+
 @{
     ViewData["Title"] = "Index";
 }
 
 <section id="dashboardContent">
     <div class="row large">
-        <div class="medium-12 columns">
+        <div class="medium-3 columns ">
             <div class="columns dashboardItem">
-                <form>
-                    <div class="cc-selector">
-                        <input id="prehistorie" type="radio" name="timeperiod" value="prehistorie" />
-                        <label class="timeperiod prehistorie" for="prehistorie"></label>
-                        <input id="oudheid" type="radio" name="timeperiod" value="oudheid" />
-                        <label class="timeperiod oudheid" for="oudheid"></label>
-                        <input id="vmiddeleeuwen" type="radio" name="timeperiod" value="vmiddeleeuwen" />
-                        <label class="timeperiod vmiddeleeuwen" for="vmiddeleeuwen"></label>
-                        <input id="lmiddeleeuwen" type="radio" name="timeperiod" value="lmiddeleeuwen" />
-                        <label class="timeperiod lmiddeleeuwen" for="lmiddeleeuwen"></label>
-                        <input id="nieuwetijd" type="radio" name="timeperiod" value="nieuwetijd" />
-                        <label class="timeperiod nieuwetijd" for="nieuwetijd"></label>
-                        <input id="goudeneeuw" type="radio" name="timeperiod" value="goudeneeuw" />
-                        <label class="timeperiod goudeneeuw" for="goudeneeuw"></label>
-                        <input id="verlichting" type="radio" name="timeperiod" value="verlichting" />
-                        <label class="timeperiod verlichting" for="verlichting"></label>
-                        <input id="industrie" type="radio" name="timeperiod" value="industrie" />
-                        <label class="timeperiod industrie" for="industrie"></label>
-                        <input id="oorlog" type="radio" name="timeperiod" value="oorlog" />
-                        <label class="timeperiod oorlog" for="oorlog"></label>
-                        <input id="tv" type="radio" name="timeperiod" value="tv" />
-                        <label class="timeperiod tv" for="tv"></label>
-                    </div>
-                </form>
+                <input type="button" class="button" value="Start toets" />
             </div>
-            <div class="medium-offset-10 medium-2 columns">
-                <input type="text" value="next" class="button"/>
+        </div>
+        <div class="medium-3 columns ">
+            <div class="columns dashboardItem">
+                <input type="button" class="button ghost" value="Bekijk resultaten" />
+            </div>
+        </div>
+        <div class="medium-3 columns ">
+            <div class="columns dashboardItem">
+                <a asp-controller="CreateUser" asp-action="Create">
+                    Gebruiker aanmaken
+                </a>
             </div>
         </div>
     </div>
