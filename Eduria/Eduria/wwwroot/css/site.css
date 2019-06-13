@@ -35,7 +35,18 @@ h4 {
     font-family: 'Open Sans', sans-serif;
 }
 
-
+/* Alerts */
+.alert {
+    color: #fff;
+    padding: 10px;
+    font-size: 12px;
+}
+.alert.red {
+    background-color: #ed1c24;
+}
+.alert.green {
+    background-color: #74b027;
+}
 
 .medium {
     max-width: 80%;
@@ -925,7 +936,7 @@ input:checked + .slider:before {
     border-radius: 50%;
     background: white;
 }
-    .slider.round:before {
-        border-radius: 50%;
-    }
+.slider.round:before {
+    border-radius: 50%;
+}
 
