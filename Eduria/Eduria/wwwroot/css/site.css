@@ -35,6 +35,8 @@ h4 {
     font-family: 'Open Sans', sans-serif;
 }
 
+
+
 .medium {
     max-width: 80%;
 }
@@ -791,6 +793,138 @@ input:checked + .slider:before {
     border-radius: 34px;
 }
 
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Analytic */
+
+#analytic {
+    padding: 50px 0px;
+}
+
+.grey {
+    background-color: #f7f7f7;
+    padding-top: 10px;
+    height: 45px;
+    margin-bottom: 20px;
+}
+
+/* Checkboxes*/
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    float:left;
+}
+
+.goal {
+    height: 50px;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #dedddd;
+}
+
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.container input:checked ~ .checkmark {
+    background-color: #29abe2;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Radio buttons*/
+
+/* Hide the browser's default radio button */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.radiobtn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+
+.container:hover input ~ .radiobtn {
+    background-color: #ccc;
+}
+
+.container input:checked ~ .radiobtn {
+    background-color: #29abe2;
+}
+
+.radiobtn:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input:checked ~ .radiobtn:after {
+    display: block;
+}
+
+.container .radiobtn:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
     .slider.round:before {
         border-radius: 50%;
     }
