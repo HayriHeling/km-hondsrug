@@ -493,6 +493,11 @@ input:checked + .slider:before {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    float:left;
+}
+
+.goal {
+    height: 50px;
 }
 
 /* Hide the browser's default checkbox */

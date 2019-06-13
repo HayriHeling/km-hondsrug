@@ -15,10 +15,10 @@
                 {
                 @for (int i = 0; i < Model.AnalyticHasDefaultModels.Count; i++)
                 {
-                    <div class="medium-2 columns">@{(i + 1).ToString();}</div>
-                    <div class="medium-2 columns">@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</div>
-                    <div class="medium-2 columns">@Model.AnalyticHasDefaultModels[i].Input</div>
-                    <div class="medium-6 columns">
+                    <div class="medium-1 columns goal">@{(i + 1).ToString();}</div>
+                    <div class="medium-6 columns goal">@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</div>
+                    <div class="medium-2 columns goal">@Model.AnalyticHasDefaultModels[i].Input</div>
+                    <div class="medium-3 columns goal">
                         <!-- Creates score input if user is teacher -->
                         @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
                         @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
