@@ -12,17 +12,18 @@ namespace Eduria.Services
 {
     public class DatabaseService
     {
-        private readonly AppSettingsService AppSettingsService;
+        private readonly AppSettingsService _appSettingsService;
 
-        private readonly string DatabaseName = "Eduria_Development";
+        private const string DatabaseName = "Eduria_Development";
 
-        private string BackupName;
+        private readonly string _backupName;
 
-        private readonly string BackupPlace = "D:\\";
+        private const string BackupPlace = "D:\\";
+
         public DatabaseService(IOptions<AppSettingsService> appSettingsService)
         {
-            AppSettingsService = appSettingsService.Value;
-            BackupName = BackupNameGenerator();
+            _appSettingsService = appSettingsService.Value;
+            _backupName = BackupNameGenerator();
         }
 
         public void Backup()
@@ -37,14 +38,14 @@ namespace Eduria.Services
         public string QueryBuilder()
         {
             return "BACKUP DATABASE " + DatabaseName + "" +
-                   " TO DISK = '" + BackupPlace + BackupName + "' " +
+                   " TO DISK = '" + BackupPlace + _backupName + "' " +
                    "WITH FORMAT, MEDIANAME = 'Z_SQLServerBackups', " +
-                   "NAME = '" + BackupName + "';";
+                   "NAME = '" + _backupName + "';";
         }
 
         public SqlConnection OpenConnection()
         {
-            SqlConnection sqlConnection = new SqlConnection {ConnectionString = AppSettingsService.EduriaDevelopment};
+            SqlConnection sqlConnection = new SqlConnection {ConnectionString = _appSettingsService.EduriaDevelopment};
             sqlConnection.Open();
             return sqlConnection;
         }
