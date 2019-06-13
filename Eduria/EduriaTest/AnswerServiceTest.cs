@@ -97,22 +97,32 @@ namespace EduriaTest
             //Arrange
             var answerList = new List<Answer>
             {
-                new Answer { AnswerId = 1 },
-                new Answer { AnswerId = 2 },
-                new Answer { AnswerId = 3 },
-                new Answer { AnswerId = 4 }
+                new Answer { AnswerId = 1, QuestionId = 1, Correct = 0, Text = "Dit is antwoord 1" },
+                new Answer { AnswerId = 2, QuestionId = 2, Correct = 0, Text = "Dit is antwoord 2" },
+                new Answer { AnswerId = 3, QuestionId = 3, Correct = 0, Text = "Dit is antwoord 3" },
+                new Answer { AnswerId = 4, QuestionId = 4, Correct = 0, Text = "Dit is antwoord 4" }
             }.AsQueryable();
 
             var questionList = new List<Question>
             {
-                new Question { QuestionId = 1, Text = "Dit is een vraag"}
-            };
+                new Question { QuestionId = 1, Text = "Dit is vraag 1" },
+                new Question { QuestionId = 2, Text = "Dit is vraag 2" },
+                new Question { QuestionId = 3, Text = "Dit is vraag 3" },
+                new Question { QuestionId = 4, Text = "Dit is vraag 4" }
+            }.AsQueryable();
 
-            var tempAnswerList = new List<Answer>();
+            var answerMockSet = CreateDbSetMock(answerList);
 
             //Act
+            var contextMock = new Mock<EduriaContext>(Options);
+            contextMock.Setup(x => x.Answers).Returns(answerMockSet.Object);
+
+            var service = new AnswerService(contextMock.Object);
+            var tempAnswerList = service.GetAnswersByQuestionsList(questionList);
 
             //Assert
+            Assert.NotEmpty(tempAnswerList);
+            Assert.Equal(4, tempAnswerList.Count());
         }
     }
 }
