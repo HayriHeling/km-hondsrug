@@ -221,6 +221,28 @@ a {
     padding: 50px 0;
 }
 
+/* Inloggen*/
+
+#login {
+    padding: 50px 0;
+}
+
+#login {
+    width: 400px;
+}
+
+.center-screen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 400px;
+    height: 400px;
+    padding: 20px;
+    background-color: #f7f7f9;
+}
 
 .cc-selector input {
     margin: 0;
