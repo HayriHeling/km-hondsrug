@@ -29,12 +29,20 @@
                 <div class="topnav" id="myTopnav">
                     <a href="/" class="active"><i class="fas fa-home"></i></a>
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
-                    <a asp-controller="Exam" asp-action="Show">Toetsen </a>
-                    <a href="#">Prikbord</a>
-                    <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
-                    <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
-                        <i class="fa fa-bars"></i>
-                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Exam" asp-action="Show">Toetsen </a>
+                        <a href="#">Prikbord</a>
+                        <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+                        <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Exam" asp-action="Show">Info </a>
+                    }
+
                 </div>
             </div>
 

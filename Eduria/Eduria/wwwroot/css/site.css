@@ -35,6 +35,17 @@ h4 {
     font-family: 'Open Sans', sans-serif;
 }
 
+
+#myBtn {
+    font-style: italic;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#myBtn:hover {
+    color: #29abe2;
+}
+
 /* Alerts */
 .alert {
     color: #fff;
@@ -46,6 +57,21 @@ h4 {
 }
 .alert.green {
     background-color: #74b027;
+}
+
+.alert a {
+    color: #fff;
+    text-decoration: underline;
+}
+.alert a:visited {
+    color: #fff;
+    text-decoration:underline;
+}
+
+.alert a:hover {
+    color: #ed1c24;
+    color: #ed1c24;
+    text-decoration: underline;
 }
 
 .medium {
@@ -252,7 +278,7 @@ a {
     right: 0;
     margin: auto;
     width: 400px;
-    height: 400px;
+    height: 450px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.8);
 }
