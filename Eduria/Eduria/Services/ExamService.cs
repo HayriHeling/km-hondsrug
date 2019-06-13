@@ -1,6 +1,7 @@
 ﻿using EduriaData.Models;
 using System.Collections.Generic;
 using System.Linq;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
 {
@@ -28,6 +29,11 @@ namespace Eduria.Services
         public override Exam GetById(int id)
         {
             return GetAll().FirstOrDefault(x => x.ExamId == id);
+        }
+
+        public Exam GetByName(string name)
+        {
+            return GetAll().FirstOrDefault(x => x.Name == name);
         }
     }
 }

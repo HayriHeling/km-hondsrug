@@ -7,10 +7,11 @@ namespace Eduria.Models
     /// </summary>
     public class UserTestModel
     {
-        public int Id { get; set; }
+        public int ExamResultId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public string Category { get; set; }
+        public string ExamName { get; set; }
+        public TimeTableModel TimeTableModel { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public int Score { get; set; }

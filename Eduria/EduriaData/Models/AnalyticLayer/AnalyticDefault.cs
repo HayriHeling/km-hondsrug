@@ -7,8 +7,10 @@ namespace EduriaData.Models.AnalyticLayer
         [Key]
         public int AnalyticDefaultId { get; set; }
         [Required]
-        public int CategoryId { get; set; }
+        public int AnalyticCategory { get; set; }
         [Required]
         public string AnalyticDefaultName { get; set; }
+        [Required]
+        public int AnalyticDefaultOption { get; set; }
     }
 }

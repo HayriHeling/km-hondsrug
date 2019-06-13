@@ -1,0 +1,80 @@
+﻿@using Eduria.Models
+@model AnalyticDefaultAndHasDefaultModel
+@{
+    ViewData["Title"] = "Goals";
+}
+
+<h2>Goals</h2>
+@ViewBag.Message
+
+<!-- Shows all the user's existing goals -->
+<table>
+    @using (Html.BeginForm("AddGoalScore", "Analytic", FormMethod.Post))
+    {
+        @for (int i = 0; i < Model.AnalyticHasDefaultModels.Count; i++)
+        {
+            <tr>
+                <td>@{(i + 1).ToString();}</td>
+                <td>@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</td>
+                <td>@Model.AnalyticHasDefaultModels[i].Input</td>
+                <td>
+                    <!-- Creates score input if user is teacher -->
+                    @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
+                    @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
+                    {
+                        @for (int j = 0; j < scoreEnum.Length; j++)
+                        {
+                            @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int)scoreEnum.GetValue(j), new { @checked = false })
+                            @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].DataHasDefaultId)
+                            @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].AnalyticDefaultId)
+                        }
+                    }
+                    else
+                    {
+                        @Model.AnalyticHasDefaultModels[i].Score
+                    }
+                </td>
+            </tr>
+        }
+        @if (User.IsInRole("Teacher"))
+        {
+            <tr>
+                <td><input type="submit" value="Toevoegen" /></td>
+                <td><input type="reset" value="Formulier leegmaken" /></td>
+            </tr>
+        }
+    }
+</table>
+<p>
+    Je gaat je zelf doelen stellen voor de komende periode. Klik hieronder minstens twee doelen aan die
+    de volgende periode gaat oefenen
+</p>
+<!-- Dynamically creates a form to add goals to AnalyticData -->
+@if (User.IsInRole("Student"))
+{
+    <table>
+        @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
+        {
+            @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
+                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                    </td>
+                    <td>@Model.AnalyticDefaultModels[i].AnalyticDefaultName</td>
+                    <td>
+                        @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        {
+                            @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td><input type="submit" value="Toevoegen" /></td>
+            </tr>
+        }
+    </table>
+}

@@ -17,10 +17,11 @@ namespace Eduria.Controllers
     public class LoginController : Controller
     {
         private UserService Service { get; set; }
-
-        public LoginController(UserService service)
+        private ConfigsService _configService { get; set; }
+        public LoginController(UserService service, ConfigsService configService)
         {
             Service = service;
+            _configService = configService;
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace Eduria.Controllers
         {
             ClaimsIdentity identity = null;
 
-            User LoggedInUser = Service.GetUserByStudNum(user.StudNum);
+            User LoggedInUser = Service.GetUserByStudNum(user.UserNum);
 
             if (LoggedInUser == null)
             {
@@ -72,6 +73,8 @@ namespace Eduria.Controllers
             // Signs a user in with an identity containing a name and a role.
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, LoggedInUser.Firstname + " " + LoggedInUser.Lastname));
+            //Add an NameIdentifier that represents the UserId in the database.
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, LoggedInUser.UserId.ToString()));
             if (LoggedInUser.UserType == 0)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -89,7 +92,7 @@ namespace Eduria.Controllers
             Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             // Save user information in session.
-            HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
+            HttpContext.Session.SetInt32("Username", LoggedInUser.UserNum);
             HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
             HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
             HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
@@ -133,6 +136,34 @@ namespace Eduria.Controllers
             Task login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login");
+        }
+
+        public ActionResult ForgotPassword(string Email)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                string token = Guid.NewGuid().ToString();
+
+                if (token != null)
+                {
+                    //Create URL with above token  
+                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    Service.SetUserToken(Email, token);
+
+                    //Call send email methods.  
+                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
+                    return Content("Er is een mail met een link naar " + Email + " verzonden.");
+
+                }
+                else
+                {
+                    // If user does not exist or is not confirmed.  
+                    return View("Password");
+
+                }
+            }
+            return View("Password");
         }
     }
 }
