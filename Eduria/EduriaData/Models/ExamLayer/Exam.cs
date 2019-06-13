@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EduriaData.Models
+namespace EduriaData.Models.ExamLayer
 {
     public class Exam
     {
         [Key]
         public int ExamId { get; set; }
         [Required]
-        public int CategoryId { get; set; }
+        public int TimeTableId { get; set; }
         [Required, MaxLength(45)]
         public string Name { get; set; }
         [Required, MaxLength(256)]
         public string Description { get; set; }
+        [Required]
+        public int IsActive { get; set; }
     }
 }

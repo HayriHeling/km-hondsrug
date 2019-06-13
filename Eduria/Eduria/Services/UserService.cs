@@ -34,28 +34,28 @@ namespace Eduria.Services
         /// <summary>
         /// Get a user by the specified student number.
         /// </summary>
-        /// <param name="studNum">The student number from the user.</param>
+        /// <param name="userNum">The student number from the user.</param>
         /// <returns>The user with the specific student number</returns>
-        public User GetUserByStudNum(int studNum)
+        public User GetUserByStudNum(int userNum)
         {
-            return Context.Users.FirstOrDefault(x => x.StudNum == studNum);
+            return Context.Users.FirstOrDefault(x => x.UserNum == userNum);
         }
 
         /// <summary>
         /// Get a user by the specified email.
         /// </summary>
         /// <param name="studNum">The student number from the user.</param>
-        /// <returns>The user with the specific student number</returns>
-        public User GetUserByEmail(string email)
+        /// <returns>The user with the specific email</returns>
+        public IEnumerable<User> GetUserByEmail(string email)
         {
-            return Context.Users.FirstOrDefault(x => x.Email == email);
+            return GetAll().Where(x => x.Email.ToLower() == email.ToLower());
         }
 
         /// <summary>
-        /// Get a user by the specified email.
+        /// Get a user by the specified Token.
         /// </summary>
-        /// <param name="token">The student number from the user.</param>
-        /// <returns>The user with the specific student number</returns>
+        /// <param name="token">The token from the user.</param>
+        /// <returns>The user with the specific token</returns>
         public User GetUserByToken(string token)
         {
             return Context.Users.FirstOrDefault(x => x.Token == token);
@@ -72,6 +72,10 @@ namespace Eduria.Services
         {
             Context.Entry(user).State = EntityState.Modified;
             Context.SaveChanges();
+        }
+        public IEnumerable<User> GetAllUsersByUserType(int userType)
+        {
+            return GetAll().Where(ut => ut.UserType == userType);
         }
     }
 }

@@ -17,10 +17,11 @@ namespace Eduria.Controllers
     public class LoginController : Controller
     {
         private UserService Service { get; set; }
-
-        public LoginController(UserService service)
+        private ConfigsService _configService { get; set; }
+        public LoginController(UserService service, ConfigsService configService)
         {
             Service = service;
+            _configService = configService;
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace Eduria.Controllers
         {
             ClaimsIdentity identity = null;
 
-            User LoggedInUser = Service.GetUserByStudNum(user.StudNum);
+            User LoggedInUser = Service.GetUserByStudNum(user.UserNum);
 
             if (LoggedInUser == null)
             {
@@ -72,6 +73,8 @@ namespace Eduria.Controllers
             // Signs a user in with an identity containing a name and a role.
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, LoggedInUser.Firstname + " " + LoggedInUser.Lastname));
+            //Add an NameIdentifier that represents the UserId in the database.
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, LoggedInUser.UserId.ToString()));
             if (LoggedInUser.UserType == 0)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -89,7 +92,7 @@ namespace Eduria.Controllers
             Task login = HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             // Save user information in session.
-            HttpContext.Session.SetInt32("Username", LoggedInUser.StudNum);
+            HttpContext.Session.SetInt32("Username", LoggedInUser.UserNum);
             HttpContext.Session.SetInt32("Role", LoggedInUser.UserType);
             HttpContext.Session.SetString("Firstname", LoggedInUser.Firstname);
             HttpContext.Session.SetString("Lastname", LoggedInUser.Lastname);
@@ -137,44 +140,21 @@ namespace Eduria.Controllers
 
         public ActionResult ForgotPassword(string Email)
         {
-            Console.WriteLine("Testing!");
+            
             if (ModelState.IsValid)
             {
-                string To = Email, UserID, Password, SMTPPort, Host;
                 string token = Guid.NewGuid().ToString();
 
                 if (token != null)
                 {
                     //Create URL with above token  
-                    var lnkHref = "<a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
                     Service.SetUserToken(Email, token);
 
-                    //HTML Template for Send email  
-                    string subject = "Verzoek om wachtwoord te wijzigen";
-                    string body = "Beste student, Klik op de link om je wachtwoord te resetten." + lnkHref;
-
-                    //Get and set the AppSettings using configuration manager.  
-                    EmailManager.AppSettings(out UserID, out Password, out SMTPPort, out Host);
-                    //return Content("UserID is: " + UserID);
                     //Call send email methods.  
-                    EmailManager.SendEmail("info@adindatest3.nl", subject, body, Email, "info@adindatest3.nl", "wzRQ3Gg5mE", "465", "mail.axc.nl");
+                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
                     return Content("Er is een mail met een link naar " + Email + " verzonden.");
 
-
-                    //// Token moet toegevoegd worden aan User
-                    //try
-                    //{
-                    //    User user = new User();
-                    //    UserService service = new UserService(this.ControllerContext);
-                    //    user = Service.GetUserByEmail(Email);
-                    //    user.Token = token;
-                    //    Service.Update(user);
-                    //    return Content("Er is een mail met een link naar " + Email + " verzonden.");
-                    //}
-                    //catch
-                    //{
-                    //    return Content("Er ging iets goed mis..");
-                    //}
                 }
                 else
                 {

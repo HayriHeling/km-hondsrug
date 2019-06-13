@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Eduria.Models.AnalyticHasDefaultModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <div class="row xlarge">
+        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        <div class="medium-10 columns">
+            @foreach (var item in Model)
+            {
+                <p>AnalyticDataId: @item.AnalyticDataId</p>
+                <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
+                <p>Name: @item.AnalyticDefaultName</p>
+                <p>Category: @item.CategoryId</p>
+                <p>Score: @item.Score</p>
+                <hr />
+            }
+        </div>
+    </div>
+

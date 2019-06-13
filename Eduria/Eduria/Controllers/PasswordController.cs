@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
-using Microsoft.AspNetCore.Identity.UI.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
-using WebMatrix.WebData;
-using System.Web;
 using EduriaData;
 
 namespace Eduria.Controllers
@@ -22,13 +15,33 @@ namespace Eduria.Controllers
         {
             Service = service;
         }
-
-        public IActionResult Password()
-        {
-            return View();
-        }
         
-
+        /// <summary>
+        /// Checks if given token is valid and returns view. Returns an empty page with content when token is not valid.
+        /// This can only happen when a change password link is used multiple times after already being changed.
+        /// </summary>
+        /// <param name="Token">The given token to compare with the user.</param>
+        /// <returns></returns>
+        public IActionResult Reset(string Token)
+        {
+            User user = Service.GetUserByToken(Token);
+            if(user != null)
+            {
+                ViewBag.Token = Token;
+                return View();
+            }
+            else
+            {
+                return Content("Token is niet geldig!");
+            }                
+        }
+        /// <summary>
+        /// Rechecks if token is valid and changes the password for the user to given password.
+        /// </summary>
+        /// <param name="Token">The given token to compare with the user.</param>
+        /// <param name="Password">The new password to save in the database.</param>
+        /// <returns></returns>
+        [HttpPost]
         public IActionResult Reset(string Token, string Password)
         {
             try
@@ -41,131 +54,15 @@ namespace Eduria.Controllers
                     Logic hash = new Logic(Password);
                     byte[] HashBytes = hash.ToArray();
                     user.Password = Convert.ToBase64String(HashBytes);
+                    user.Token = null;
                     Service.Update(user);
                 }
-                return RedirectToAction("Edit", new { UserId = user.UserId });
+                return RedirectToAction("Login", "Login");
             }
             catch
             {
                 return Content("Token is niet geldig!");
             }
         }
-
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        //public ActionResult ForgotPassword(string Email)
-        //{
-        //    Console.WriteLine("Testing!");
-        //    if (ModelState.IsValid)
-        //    {
-        //        string To = Email, UserID, Password, SMTPPort, Host;
-        //        string token = Guid.NewGuid().ToString();
-
-        //        if (token != null)
-        //        {
-        //            //Create URL with above token  
-        //            var lnkHref = "<a href='" + Url.Action("Reset", "Password", new { code = token }, "https") + "'> Wachtwoord wijzigen</a>";
-                    
-        //            //HTML Template for Send email  
-        //            string subject = "Verzoek om wachtwoord te wijzigen";
-        //            string body = "Beste student, Klik op de link om je wachtwoord te resetten." + lnkHref;
-                    
-        //            //Get and set the AppSettings using configuration manager.  
-        //            EmailManager.AppSettings(out UserID, out Password, out SMTPPort, out Host);
-        //            //return Content("UserID is: " + UserID);
-        //            //Call send email methods.  
-        //            EmailManager.SendEmail("info@adindatest3.nl", subject, body, Email, "info@adindatest3.nl", "wzRQ3Gg5mE", "465", "mail.axc.nl");
-        //            return Content("Er is een mail met een link naar " + Email + " verzonden.");
-
-
-        //            //// Token moet toegevoegd worden aan User
-        //            //try
-        //            //{
-        //            //    User user = new User();
-        //            //    UserService service = new UserService(this.ControllerContext);
-        //            //    user = Service.GetUserByEmail(Email);
-        //            //    user.Token = token;
-        //            //    Service.Update(user);
-        //            //    return Content("Er is een mail met een link naar " + Email + " verzonden.");
-        //            //}
-        //            //catch
-        //            //{
-        //            //    return Content("Er ging iets goed mis..");
-        //            //}
-        //        }
-        //        else
-        //        {
-        //            // If user does not exist or is not confirmed.  
-        //            return View("Password");
-
-        //        }
-        //    }
-        //    return View("Password");
-        //}
-
-        public ActionResult Edit(int? userId)
-        {
-            //try
-            //{
-            //    string Token = Request.QueryString["Token"];
-            User user = new User();
-            user = Service.GetById(userId.Value);
-
-            //Logic hash = new Logic(Password);
-            //byte[] HashBytes = hash.ToArray();
-            //user.Password = Convert.ToBase64String(HashBytes);
-            //Service.Update(user);
-            //    return RedirectToAction("Reset", new { success = 1 });
-            //}
-            //catch
-            //{
-            //    return Content("Token is niet geldig!");
-            //}
-            return View(user);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(include: "Password")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                Service.SetPassword(user);
-                return RedirectToAction("Edit");
-            }
-
-            return View();
-        }
-
-
-        //public ActionResult ResetPassword(string code, string email)
-        //{
-        //    ///
-        //}
-
-        //[HttpPost]
-        //public ActionResult ResetPassword(ResetPasswordModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        bool resetResponse = WebSecurity.ResetPassword(model.ReturnToken, model.Password);
-        //        if (resetResponse)
-        //        {
-        //            ViewBag.Message = "Successfully Changed";
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "Something went horribly wrong!";
-        //        }
-        //    }
-        //    return View(model);
-        //}
     }
-
-
-
 }

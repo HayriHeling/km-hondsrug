@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EduriaData.Models;
+using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
 {
@@ -39,8 +40,20 @@ namespace Eduria.Services
                     questions.Add(question);
                 }
             }
-            
+
             return questions;
         }
+
+        public Question GetQuestionByText(string text)
+        {
+            return Context.Questions.FirstOrDefault(x => x.Text == text);
+        }
+        public Question GetQuestionByMediaLink(string text)
+        {
+            // TODO: Fix line 54
+            //return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
+            return new Question();
+        }
+
     }
 }

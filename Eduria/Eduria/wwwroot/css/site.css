@@ -86,9 +86,9 @@ footer {
     border-radius: unset;
 }
 
-    .button:hover {
-        background-color: #ed1c24;
-    }
+.button:hover {
+    background-color: #ed1c24;
+}
 
 .ghost {
     background-color: unset;
@@ -107,9 +107,9 @@ a {
     border-radius: 1px;
 }
 
-    [type='text']::placeholder {
-        font-size: 12px;
-    }
+[type='text']::placeholder {
+    font-size: 12px;
+}
 
 
 .profile {
@@ -121,10 +121,10 @@ a {
     font-size: 12px;
 }
 
-    .myAccount i {
-        color: #808080;
-        font-size: 16px;
-    }
+.myAccount i {
+    color: #808080;
+    font-size: 16px;
+}
 
 /* Responsive menu */
 .topnav {
@@ -132,21 +132,21 @@ a {
     width: 100%;
 }
 
-    .topnav a {
-        float: left;
-        display: block;
-        color: #f2f2f2;
-        line-height: 30px;
-        text-align: center;
-        padding: 17px 16px;
-        text-decoration: none;
-        font-size: 14px;
-    }
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    line-height: 30px;
+    text-align: center;
+    padding: 17px 16px;
+    text-decoration: none;
+    font-size: 14px;
+}
 
-        .topnav a:hover {
-            background-color: #ddd;
-            color: #29abe2;
-        }
+.topnav a:hover {
+    background-color: #ddd;
+    color: #29abe2;
+}
 
 .active {
     color: #29abe2;
@@ -235,9 +235,9 @@ a {
     background-size: 100px 100px;
 }
 
-    .prehistorie:hover {
-        background-image: url(/images/prehistorieimg2.png);
-    }
+.prehistorie:hover {
+    background-image: url(/images/prehistorieimg2.png);
+}
 
 .oudheid {
     background-image: url(/images/oudheidicon.png);
@@ -312,6 +312,7 @@ a {
 .tv:hover {
     background-image: url(/images/tv2.png);
 }
+
 .cc-selector input:active + .timeperiod {
     opacity: .9;
 }
@@ -332,11 +333,11 @@ a {
     height: 220px;
 }
 
-    .timeperiod:hover {
-        -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-        filter: brightness(1.2) grayscale(.5) opacity(.9);
-    }
+.timeperiod:hover {
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+    filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
 
 [type='radio'] + label {
     margin-left: 0;
@@ -379,3 +380,234 @@ p {
 #exam p {
     color: #afacac;
 }
+
+
+
+/* TimePeriod Slider*/
+
+.glider-contain {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.glider-slide {
+    min-height: 150px;
+}
+
+.glider-slide img {
+    width: 100%;
+}
+
+.glider-dot {
+    display: none;
+}
+
+.item span {
+    position: absolute;
+    bottom: 10%;
+    left: 20px;
+    font-size: 25px;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    text-shadow: 0 0 10px #ddd;
+}
+
+.item {
+    transform: scale(1.0)
+}
+
+    .item:hover {
+        transform: scale(1.1)
+    }
+
+.glider-contain {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.glider {
+    margin: 0 auto;
+    position: relative;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    transform: translateZ(0);
+}
+
+.glider-track {
+    transform: translateZ(0);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    z-index: 1;
+}
+
+.glider.draggable {
+    user-select: none;
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
+    .glider.draggable .glider-slide img {
+        user-select: none;
+        pointer-events: none;
+    }
+
+.glider.drag {
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+}
+
+.glider-slide {
+    user-select: none;
+    justify-content: center;
+    align-content: center;
+    width: 100%;
+}
+
+    .glider-slide img {
+        max-width: 100%;
+    }
+
+.glider::-webkit-scrollbar {
+    opacity: 0;
+    height: 0;
+}
+
+.glider-prev, .glider-next {
+    user-select: none;
+    position: absolute;
+    outline: none;
+    background: none;
+    padding: 0;
+    z-index: 2;
+    font-size: 40px;
+    text-decoration: none;
+    left: 0;
+    border: 0;
+    top: unset;
+    cursor: pointer;
+    color: #666;
+    opacity: 1;
+    line-height: 1;
+    transition: opacity .5s cubic-bezier(.17,.67,.83,.67), color .5s cubic-bezier(.17,.67,.83,.67);
+}
+
+    .glider-prev:hover,
+    .glider-next:hover,
+    .glider-prev:focus,
+    .glider-next:focus {
+        color: #a89cc8;
+    }
+
+.glider-next {
+    right: 0;
+    left: auto;
+}
+
+    .glider-next.disabled,
+    .glider-prev.disabled {
+        opacity: .25;
+        color: #666;
+        cursor: default;
+    }
+
+.glider-slide {
+    min-width: 150px;
+}
+
+.glider-hide {
+    opacity: 0;
+}
+
+.glider-dots {
+    user-select: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0;
+}
+
+
+@media(max-width: 36em) {
+    .glider::-webkit-scrollbar {
+        opacity: 1;
+        -webkit-appearance: none;
+        width: 7px;
+        height: 3px;
+    }
+
+    .glider::-webkit-scrollbar-thumb {
+        opacity: 1;
+        border-radius: 99px;
+        background-color: rgba(156, 156, 156, 0.25);
+        box-shadow: 0 0 1px rgba(255,255,255,.25);
+    }
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
