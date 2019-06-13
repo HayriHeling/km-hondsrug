@@ -4,4 +4,11 @@
 }
 
 <h2>Database</h2>
+<form method="post" enctype="multipart/form-data" asp-controller="Admin" asp-action="">
+    <input type="file" name="fileDownload"/>
+    <input type="submit" value="Download" asp-action="BackupDatabase"/>
+    <p></p>
+    <input type="file" name="fileUpload"/>
+    <input type="submit" value="Upload" asp-action="UploadDatabase"/>
+</form>
 

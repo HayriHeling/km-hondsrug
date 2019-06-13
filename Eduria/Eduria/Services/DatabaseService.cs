@@ -16,18 +16,18 @@ namespace Eduria.Services
 
         private const string DatabaseName = "Eduria_Development";
 
-        private readonly string _backupName;
+        private string _backupName;
 
         private const string BackupPlace = "D:\\";
 
         public DatabaseService(IOptions<AppSettingsService> appSettingsService)
         {
             _appSettingsService = appSettingsService.Value;
-            _backupName = BackupNameGenerator();
         }
 
-        public void Backup()
+        public void Backup(string param = "")
         {
+            _backupName = BackupNameGenerator(param);
             SqlConnection sqlConnection = OpenConnection();
             string sqlQuery = QueryBuilder();
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection) {CommandType = CommandType.Text};

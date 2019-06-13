@@ -10,21 +10,27 @@ namespace Eduria.Controllers
 {
     public class AdminController : Controller
     {
-        private DatabaseService DatabaseService;
+        private readonly DatabaseService _databaseService;
 
         public AdminController(DatabaseService databaseService)
         {
-            DatabaseService = databaseService;
+            _databaseService = databaseService;
         }
+        
+        [HttpPost]
         public IActionResult Database()
         {
-            BackupDatabase();
             return View();
         }
 
         public void BackupDatabase()
         {
-            DatabaseService.Backup();
+            _databaseService.Backup("Download");
+        }
+
+        public void UploadDatabase()
+        {
+            _databaseService.Backup("Upload");
         }
     }
 }
