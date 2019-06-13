@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EduriaData\EduriaData.csproj" />
     <ProjectReference Include="..\Eduria\Eduria.csproj" />
   </ItemGroup>
 

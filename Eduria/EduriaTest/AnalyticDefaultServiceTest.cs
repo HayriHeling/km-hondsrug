@@ -36,29 +36,29 @@ namespace EduriaTest
             return dbSetMock;
         }
 
-        [Fact]
-        public void AddDataHasDefaultTest()
-       {
-            //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-            var contextMock = new Mock<EduriaContext>(options);
+       // [Fact]
+       // public void AddDataHasDefaultTest()
+       //{
+       //     //Arrange
+       //     var options = new DbContextOptionsBuilder<EduriaContext>().
+       //         UseInMemoryDatabase(databaseName: "Eduria_Development").
+       //         Options;
+       //     var contextMock = new Mock<EduriaContext>(options);
 
-            //Act
-            var service = new AnalyticDefaultService(contextMock.Object);
-            var result = service.AddDataHasDefault(1, 1);
+       //     //Act
+       //     var service = new AnalyticDefaultService(contextMock.Object);
+       //     var result = service.AddDataHasDefault(1, 1);
 
-            DataHasDefault dataHasDefault = new DataHasDefault
-            {
-                AnalyticDataId = 1,
-                AnalyticDefaultId = 1
-            };
+       //     DataHasDefault dataHasDefault = new DataHasDefault
+       //     {
+       //         AnalyticDataId = 1,
+       //         AnalyticDefaultId = 1
+       //     };
 
-            //Assert
-            Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
-            Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
-        }
+       //     //Assert
+       //     Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
+       //     Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
+       // }
 
         [Fact]
         public void GetAllAnalyticDefaultTest()
