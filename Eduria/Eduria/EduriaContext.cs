@@ -21,12 +21,12 @@ namespace Eduria
         public DbSet<DefaultDataScore> DefaultDataScores { get; set; }
         public DbSet<Period> Periods { get; set; }
         // ExamLayer
-        public DbSet<Question> Questions { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
-        public DbSet<Exam> Exams { get; set; }
-        public DbSet<ExamResult> ExamResults { get; set; }
-        public DbSet<ExamQuestion> ExamQuestions { get; set; }
-        public DbSet<UserEQLog> UserEQLogs { get; set; }
+        public virtual DbSet<Exam> Exams { get; set; }
+        public virtual DbSet<ExamResult> ExamResults { get; set; }
+        public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public virtual DbSet<UserEQLog> UserEQLogs { get; set; }
         // TimeLineLayer
         public DbSet<TimeLine> TimeLines { get; set; }
         public DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
