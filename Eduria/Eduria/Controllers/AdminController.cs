@@ -19,7 +19,7 @@ namespace Eduria.Controllers
             _databaseService = databaseService;
         }
         
-        public IActionResult Database()
+        public IActionResult Index()
         {
             return View();
         }
@@ -27,9 +27,8 @@ namespace Eduria.Controllers
         /// <summary>
         /// This method calls the backup method in the databaseservice
         /// </summary>
-        public IActionResult BackupDatabase(IFormFile file)
+        public IActionResult BackupDatabase()
         {
-
             string backupData = _databaseService.Backup();
             return View(new DatabaseModel
             {
