@@ -155,14 +155,19 @@ a {
     width: 35px;
     margin: 0 10px;
 }
+.search {
+    padding-top: 10px;
+}
 
 .myAccount {
     font-size: 12px;
+    line-height: 55px;
 }
 
 .myAccount i {
     color: #808080;
     font-size: 16px;
+    padding-left: 20px;
 }
 
 /* Responsive menu */
