@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebPages.WebData" Version="3.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="2.1.1" />
@@ -14,10 +13,6 @@
     <Content Remove="Models\Interfaces\**" />
     <EmbeddedResource Remove="Models\Interfaces\**" />
     <None Remove="Models\Interfaces\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\ResetController.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,17 +26,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
-    <PackageReference Include="Nancy.Authentication.Forms" Version="2.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
-    <Folder Include="Content\" />
     <Folder Include="wwwroot\css\" />
-
-    <Folder Include="wwwroot\js\" />
-    <Folder Include="wwwroot\audio\" />
   </ItemGroup>
 
   <ItemGroup>
