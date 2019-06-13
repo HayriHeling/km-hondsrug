@@ -1,6 +1,7 @@
 ﻿using System;
 using Eduria.Models;
 using Eduria.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.SqlServer.Management.Smo;
 using Microsoft.SqlServer.Management.Diagnostics;
 using Microsoft.SqlServer;
@@ -26,8 +27,9 @@ namespace Eduria.Controllers
         /// <summary>
         /// This method calls the backup method in the databaseservice
         /// </summary>
-        public IActionResult BackupDatabase()
+        public IActionResult BackupDatabase(IFormFile file)
         {
+
             string backupData = _databaseService.Backup();
             return View(new DatabaseModel
             {
