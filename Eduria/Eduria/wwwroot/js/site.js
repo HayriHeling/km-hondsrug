@@ -31,7 +31,7 @@ window.addEventListener('load', function () {
     window._ = new Glider(document.querySelector('.glider'), {
         slidesToShow: 1, //'auto',
         slidesToScroll: 2,
-        itemWidth: 400,
+        itemWidth: 550,
         dragVelocity: 0.7,
         draggable: true,
         scrollLock: true,
@@ -48,7 +48,7 @@ window.addEventListener('load', function () {
                 breakpoint: 800,
                 settings: {
                     slidesToScroll: 2,
-                    itemWidth: 400,
+                    itemWidth: 550,
                     slidesToShow: 'auto',
                     exactWidth: true
                 }

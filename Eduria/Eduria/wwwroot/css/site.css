@@ -511,8 +511,11 @@ p {
     border: 0;
     top: unset;
     cursor: pointer;
-    color: #666;
+    color: #fff;
+    padding: 5px 25%;
+    background-color: #ddd;
     opacity: 1;
+    cursor: pointer;
     line-height: 1;
     transition: opacity .5s cubic-bezier(.17,.67,.83,.67), color .5s cubic-bezier(.17,.67,.83,.67);
 }
@@ -521,7 +524,9 @@ p {
     .glider-next:hover,
     .glider-prev:focus,
     .glider-next:focus {
-        color: #a89cc8;
+        color: #fff;
+        background-color: #afacac;
+        cursor:pointer;
     }
 
 .glider-next {
