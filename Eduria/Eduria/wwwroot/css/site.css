@@ -99,6 +99,9 @@ footer {
     padding: 10px 0;
     color: #808080;
     font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 /* Dashboard */
