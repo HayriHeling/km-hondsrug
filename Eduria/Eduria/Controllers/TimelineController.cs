@@ -30,7 +30,7 @@ namespace Eduria.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(CreateTimeLineModel());
         }
 
         public TimelineModel CreateTimeLineModel()
@@ -38,37 +38,52 @@ namespace Eduria.Controllers
             return new TimelineModel
             {
                 Name = "Tijdlijn 1",
-                TimeblockModels = CreateTimeblockModels(1)
+                // TODO: userid ophalen en toevoegen
+                TimeblockModels = CreateTimeblockModels(userId: 1)
             };
         }
 
-        public List<TimeblockModel> CreateTimeblockModels(int timeTableId)
+        public List<TimeblockModel> CreateTimeblockModels(int userId)
         {
             List<TimeblockModel> outputTimeblockModels = new List<TimeblockModel>();
-            outputTimeblockModels.Add(new TimeblockModel
+            IEnumerable<TimeTable> timeTables = TimeTableService.GetAll();
+            foreach (TimeTable timeTable in timeTables)
             {
-                TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId)),
-                TimeBlockInformationModels = CreateTimeBlockInformationModels()
-            });
+                outputTimeblockModels.Add(new TimeblockModel
+                {
+                    TimeTableModel = ConvertToTimeTableModel(timeTable),
+                    TimeBlockInformationModels = CreateTimeBlockInformationModels(timeTable.TimeTableId, userId)
+                });
+            }
 
             return outputTimeblockModels;
         }
 
-        public List<TimeBlockInformationModel> CreateTimeBlockInformationModels()
+        /// <summary>
+        /// Method that creates TimeBlockInformationModels. If the userId is not specified it will just show all timeblockinformations.
+        /// </summary>
+        /// <param name="timeTableId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<TimeBlockInformationModel> CreateTimeBlockInformationModels(int timeTableId, int userId=-1)
         {
             List<TimeBlockInformationModel> outputTimeBlockInformationModels = new List<TimeBlockInformationModel>();
-            outputTimeBlockInformationModels.Add(new TimeBlockInformationModel());
+            IEnumerable<TimeTableInformation> timeTableInformations = new List<TimeTableInformation>();
+            if (userId >= 0)
+            {
+                timeTableInformations = TimeTableInformationService.GetAllByTimeTableUserId(timeTableId, userId);
+            }
+            else
+            {
+                timeTableInformations = TimeTableInformationService.GetAllByTimeTableId(timeTableId);
+            }
+
+            foreach (TimeTableInformation timeTableInformation in timeTableInformations)
+            {
+                outputTimeBlockInformationModels.Add(ConvertToTimeBlockInformationModel(timeTableInformation));
+            }
 
             return outputTimeBlockInformationModels;
-        }
-
-        public TimeBlockInformationModel ConvertToTimeBlockInformationModel(TimeTableInformation timeTableInformation)
-        {
-            return new TimeBlockInformationModel
-            {
-                Description = timeTableInformation.Description,
-                MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId)
-            };
         }
 
         public List<MediaSourceModel> CreateMediaSourceModels(int id)
@@ -76,10 +91,11 @@ namespace Eduria.Controllers
             IEnumerable<TimeTableInfoHasMediaSrc> timeTableInfoHasMediaSrcs =
                 TimeTableInfoMediaSrcService.GetAllByTimeTableInfoId(id);
             List<MediaSourceModel> mediaSourceModels = new List<MediaSourceModel>();
+
             foreach (TimeTableInfoHasMediaSrc src in timeTableInfoHasMediaSrcs)
             {
                 mediaSourceModels.Add(ConvertToMediaSourceModel(MediaSourceService.GetById(src.MediaSourceId)));
-            }
+            }            
 
             return mediaSourceModels;
         }
@@ -101,6 +117,15 @@ namespace Eduria.Controllers
                 MediaSourceId = mediaSource.MediaSourceId,
                 MediaType = (MediaType)mediaSource.MediaType,
                 Source = mediaSource.Source
+            };
+        }
+
+        public TimeBlockInformationModel ConvertToTimeBlockInformationModel(TimeTableInformation timeTableInformation)
+        {
+            return new TimeBlockInformationModel
+            {
+                Description = timeTableInformation.Description,
+                MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId)
             };
         }
     }

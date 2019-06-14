@@ -32,5 +32,10 @@ namespace Eduria.Services
         {
             return GetAll().Where(x => x.TimeTableId == timeTableId);
         }
+
+        public IEnumerable<TimeTableInformation> GetAllByTimeTableUserId(int timeTableId, int userId)
+        {
+            return GetAll().Where(x => x.TimeTableId == timeTableId && x.UserId == userId);
+        }
     }
 }
