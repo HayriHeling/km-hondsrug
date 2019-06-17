@@ -61,21 +61,22 @@
                 {
                 @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
                 {
-                 
-                    <div class="medium-1 columns grey">
-                        <label class="container">
-                            @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
-                            <span class="checkmark"></span>
-                        </label>
-                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
-                        @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
-                    </div>
-                    <div class="medium-6 columns grey">@Model.AnalyticDefaultModels[i].AnalyticDefaultName</div>
-                    <div class="medium-5 columns grey">
-                        @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
-                        {
-                        @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
-                        }
+                    <div class="medium-12 columns grey">
+                        <div class="medium-1 columns">
+                            <label class="container">
+                                @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                                <span class="checkmark"></span>
+                            </label>
+                            @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
+                            @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                        </div>
+                        <div class="medium-6 columns">@Model.AnalyticDefaultModels[i].AnalyticDefaultName</div>
+                        <div class="medium-5 columns">
+                            @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                            {
+                                @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
+                            }
+                        </div>
                     </div>
                 }
                 <div class="medium-12 columns">
