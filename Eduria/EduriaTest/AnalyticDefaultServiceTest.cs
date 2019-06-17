@@ -17,6 +17,15 @@ namespace EduriaTest
 {
     public class AnalyticServiceTest
     {
+        private DbContextOptions<EduriaContext> Options;
+
+        public AnalyticServiceTest()
+        {
+            Options = new DbContextOptionsBuilder<EduriaContext>().
+                UseInMemoryDatabase(databaseName: "Eduria_Development").
+                Options;
+        }
+
         /// <summary>
         /// Method for Mocking generic DbSets.
         /// </summary>
@@ -36,38 +45,121 @@ namespace EduriaTest
             return dbSetMock;
         }
 
-       // [Fact]
-       // public void AddDataHasDefaultTest()
-       //{
-       //     //Arrange
-       //     var options = new DbContextOptionsBuilder<EduriaContext>().
-       //         UseInMemoryDatabase(databaseName: "Eduria_Development").
-       //         Options;
-       //     var contextMock = new Mock<EduriaContext>(options);
+        public List<AnalyticData> CreateAnalyticData()
+        {
+            List<AnalyticData> analyticData = new List<AnalyticData>
+            {
+                new AnalyticData
+                {
+                    AnalyticDataId = 1,
+                    ExamCode = "101",
+                    PeriodId = 1,
+                    UserId = 1
+                },
+                new AnalyticData
+                {
+                    AnalyticDataId = 2,
+                    ExamCode = "101",
+                    PeriodId = 1,
+                    UserId = 2
+                },
+                new AnalyticData
+                {
+                    AnalyticDataId = 1,
+                    ExamCode = "101",
+                    PeriodId = 2,
+                    UserId = 1
+                }
+            };
 
-       //     //Act
-       //     var service = new AnalyticDefaultService(contextMock.Object);
-       //     var result = service.AddDataHasDefault(1, 1);
+            return analyticData;
+        }
 
-       //     DataHasDefault dataHasDefault = new DataHasDefault
-       //     {
-       //         AnalyticDataId = 1,
-       //         AnalyticDefaultId = 1
-       //     };
+        public List<User> CreateUsersData()
+        {
+            List<User> users = new List<User>
+            {
+                new User
+                {
+                    UserId = 1,
+                    Firstname = "Jan",
+                    Lastname = "Jansen"
+                },
+                new User
+                {
+                    UserId = 2,
+                    Firstname = "Henk",
+                    Lastname = "Henksen"
+                },
+                new User
+                {
+                    UserId = 3,
+                    Firstname = "Ruud",
+                    Lastname = "Ruudsen"
+                }
 
-       //     //Assert
-       //     Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
-       //     Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
-       // }
+            };
+
+            return users;
+        }
+        public List<Period> CreatePeriodData()
+        {
+            List<Period> periods = new List<Period>
+            {
+                new Period
+                {
+                    PeriodId = 1,
+                    PeriodNum = 1,
+                    SchoolYearStart = 2019,
+                    SchoolYearEnd = 2020   
+                },
+                new Period
+                {
+                    PeriodId = 1,
+                    PeriodNum = 2,
+                    SchoolYearStart = 2019,
+                    SchoolYearEnd = 2020
+                },
+                new Period
+                {
+                    PeriodId = 1,
+                    PeriodNum = 2,
+                    SchoolYearStart = 2019,
+                    SchoolYearEnd = 2020
+                }
+            };
+
+            return periods;
+        }
+
+        // [Fact]
+        // public void AddDataHasDefaultTest()
+        //{
+        //     //Arrange
+        //     var options = new DbContextOptionsBuilder<EduriaContext>().
+        //         UseInMemoryDatabase(databaseName: "Eduria_Development").
+        //         Options;
+        //     var contextMock = new Mock<EduriaContext>(options);
+
+        //     //Act
+        //     var service = new AnalyticDefaultService(contextMock.Object);
+        //     var result = service.AddDataHasDefault(1, 1);
+
+        //     DataHasDefault dataHasDefault = new DataHasDefault
+        //     {
+        //         AnalyticDataId = 1,
+        //         AnalyticDefaultId = 1
+        //     };
+
+        //     //Assert
+        //     Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
+        //     Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
+        // }
 
         [Fact]
         public void GetAllAnalyticDefaultTest()
         {
             //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-
             var fixture = new Fixture();
             var analyticDefaults = new List<AnalyticDefault>
             {
@@ -77,7 +169,7 @@ namespace EduriaTest
             }.AsQueryable();
 
             var analyticDefaultMock = CreateDbSetMock(analyticDefaults);
-            var contextMock = new Mock<EduriaContext>(options);
+            var contextMock = new Mock<EduriaContext>(Options);
             contextMock.Setup(x => x.AnalyticDefaults).Returns(analyticDefaultMock.Object);
 
             //Act
@@ -92,10 +184,6 @@ namespace EduriaTest
         public void GetAllAnalyticDataTest()
         {
             //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-
             var fixture = new Fixture();          
             var analyticDatas = new List<AnalyticData>
             {
@@ -104,7 +192,7 @@ namespace EduriaTest
             }.AsQueryable();
 
             var analyticDataMock = CreateDbSetMock(analyticDatas);
-            var contextMock = new Mock<EduriaContext>(options);
+            var contextMock = new Mock<EduriaContext>(Options);
             contextMock.Setup(x => x.AnalyticDatas).Returns(analyticDataMock.Object);
 
             //Act
@@ -119,10 +207,6 @@ namespace EduriaTest
         public void GetAllDataHasDefaultTest()
         {
             //Arrange
-            var options = new DbContextOptionsBuilder<EduriaContext>().
-                UseInMemoryDatabase(databaseName: "Eduria_Development").
-                Options;
-
             var fixture = new Fixture();
             var dataHasDefaults = new List<DataHasDefault>
             {
@@ -133,7 +217,7 @@ namespace EduriaTest
             }.AsQueryable();
 
             var analyticDataHasDefaultMock = CreateDbSetMock(dataHasDefaults);
-            var contextMock = new Mock<EduriaContext>(options);
+            var contextMock = new Mock<EduriaContext>(Options);
             contextMock.Setup(x => x.DataHasDefaults).Returns(analyticDataHasDefaultMock.Object);
 
             //Act
@@ -142,6 +226,37 @@ namespace EduriaTest
 
             //Assert
             Assert.Equal(dataHasDefaults.Count(), result.Count());
+        }
+
+        //[Fact]
+        //public void AddAnalyticDataPerUserTest()
+        //{
+        //    //Arrange
+        //    var analyticDataMock = CreateDbSetMock(CreateAnalyticData());
+        //    var contextMock = new Mock<EduriaContext>(Options);
+        //    contextMock.Setup(x => x.AnalyticDatas).Returns(analyticDataMock.Object);
+
+        //    //Act
+        //    var service = new AnalyticDefaultService(contextMock.Object);
+        //    var result = service.AddAnalyticDataPerUser(CreateUsersData(), 1);
+
+        //    //Assert
+        //}
+
+        [Fact]
+        public void GetByPeriodIdByPeriodNumAndStartYearTest()
+        {
+            //Arrange
+            var periodMock = CreateDbSetMock(CreatePeriodData());
+            var contextMock = new Mock<EduriaContext>(Options);
+            contextMock.Setup(x => x.Periods).Returns(periodMock.Object);
+
+            //Act
+            var service = new AnalyticDefaultService(contextMock.Object);
+            var result = service.GetByPeriodIdByPeriodNumAndStartYear(1, 2019);
+
+            //Assert
+            Assert.Equal(1, result);
         }
     }
 }

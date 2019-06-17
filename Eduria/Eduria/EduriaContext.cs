@@ -10,16 +10,16 @@ namespace Eduria
     {
         public EduriaContext(DbContextOptions options) : base(options) { }
         // Models
-        public DbSet<MediaSource> MediaSources { get; set; }
-        public DbSet<TimeTable> TimeTables { get; set; }
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<MediaSource> MediaSources { get; set; }
+        public virtual DbSet<TimeTable> TimeTables { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         // AnalyticLayer
         public virtual DbSet<AnalyticData> AnalyticDatas { get; set; }
         public virtual DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
         public virtual DbSet<DataHasDefault> DataHasDefaults { get; set; }
-        public DbSet<DefaultDataInput> DefaultDataInputs { get; set; }
-        public DbSet<DefaultDataScore> DefaultDataScores { get; set; }
-        public DbSet<Period> Periods { get; set; }
+        public virtual DbSet<DefaultDataInput> DefaultDataInputs { get; set; }
+        public virtual DbSet<DefaultDataScore> DefaultDataScores { get; set; }
+        public virtual DbSet<Period> Periods { get; set; }
         // ExamLayer
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
@@ -28,10 +28,10 @@ namespace Eduria
         public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
         public virtual DbSet<UserEQLog> UserEQLogs { get; set; }
         // TimeLineLayer
-        public DbSet<TimeLine> TimeLines { get; set; }
-        public DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
-        public DbSet<TimeLineHasUser> TimeLineHasUsers { get; set; }
-        public DbSet<TimeTableInfoHasMediaSrc> TimeTableInfoHasMediaSrcs { get; set; }
-        public DbSet<TimeTableInformation> TimeTableInformations { get; set; }
+        public virtual DbSet<TimeLine> TimeLines { get; set; }
+        public virtual DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
+        public virtual DbSet<TimeLineHasUser> TimeLineHasUsers { get; set; }
+        public virtual DbSet<TimeTableInfoHasMediaSrc> TimeTableInfoHasMediaSrcs { get; set; }
+        public virtual DbSet<TimeTableInformation> TimeTableInformations { get; set; }
     }
 }
