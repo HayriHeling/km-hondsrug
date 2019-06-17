@@ -10,6 +10,8 @@ namespace Eduria.Models
         public int TimeBlockInformationId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool BeforeChrist { get; set; }
+        public int Year { get; set; }
         public List<MediaSourceModel> MediaSourceModels { get; set; }
     }
 }

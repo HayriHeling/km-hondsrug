@@ -121,7 +121,10 @@ namespace Eduria.Controllers
         {
             return new TimeBlockInformationModel
             {
+                Name = timeTableInformation.Name,
                 Description = timeTableInformation.Description,
+                BeforeChrist = timeTableInformation.BeforeChrist.Equals(1),
+                Year = timeTableInformation.Year,
                 MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId)
             };
         }
