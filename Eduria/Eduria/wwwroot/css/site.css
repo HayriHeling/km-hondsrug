@@ -278,6 +278,10 @@ a {
     width: 400px;
 }
 
+.center-screen .button {
+    width:100%
+}
+
 .center-screen {
     position: absolute;
     top: 0;
