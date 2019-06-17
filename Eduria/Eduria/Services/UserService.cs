@@ -45,9 +45,9 @@ namespace Eduria.Services
             return GetAll().Where(ut => ut.UserType == userType);
         }
 
-        public IEnumerable<User> GetUserByEmail(string email)
+        public User GetUserByEmail(string email)
         {
-            return GetAll().Where(x => x.Email.ToLower() == email.ToLower());
+            return Context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
         }
     }
 }
