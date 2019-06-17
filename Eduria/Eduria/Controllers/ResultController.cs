@@ -20,12 +20,15 @@ namespace Eduria.Controllers
             ExamQuestionService = examQuestionService;
         }
 
-
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Question()
         {
             IEnumerable<Question> questions = QuestionService.GetAll();
@@ -38,9 +41,19 @@ namespace Eduria.Controllers
             return View(questionModels);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult QuestionResult(int id)
         {
-            return Content(ExamQuestionService.GetTotalTimesWrong(id).ToString());
+            DataExamResultModel model = new DataExamResultModel
+            {
+                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id)
+            };
+
+            return View(model);
         }
     }
 }

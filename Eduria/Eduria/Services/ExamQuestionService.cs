@@ -38,6 +38,11 @@ namespace Eduria.Services
             return Context.ExamQuestions.First(x => x.QuestionId == questionId && x.ExamId == examId);
         }
 
+        /// <summary>
+        /// Get a sum of the record TimesWrong per Question.
+        /// </summary>
+        /// <param name="id">The QuestionId</param>
+        /// <returns>TotalTimesWrong.</returns>
         public int GetTotalTimesWrong(int id)
         {
             var query =
