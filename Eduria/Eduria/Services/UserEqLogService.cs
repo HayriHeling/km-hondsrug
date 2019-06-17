@@ -20,7 +20,7 @@ namespace Eduria.Services
 
         public override UserEQLog GetById(int id)
         {
-            return Context.UserEQLogs.Find(id);
+            return GetAll().First(x => x.UserEQLogId == id);
         }
     }
 }

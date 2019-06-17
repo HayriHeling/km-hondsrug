@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Eduria;
 using Eduria.Controllers;
+using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using EduriaData.Models.AnalyticLayer;
@@ -74,7 +75,6 @@ namespace EduriaTest
 
             return analyticData;
         }
-
         public List<User> CreateUsersData()
         {
             List<User> users = new List<User>
@@ -131,30 +131,58 @@ namespace EduriaTest
 
             return periods;
         }
+        public List<DataHasDefault> CreateDataHasDefaultData()
+        {
+            List<DataHasDefault> dataHasDefaults = new List<DataHasDefault>
+            {
+                new DataHasDefault
+                {
+                    AnalyticDataId = 1,
+                    AnalyticDefaultId = 1
+                },
+                new DataHasDefault
+                {
+                    AnalyticDataId = 1,
+                    AnalyticDefaultId = 2
+                },
+                new DataHasDefault
+                {
+                    AnalyticDataId = 1,
+                    AnalyticDefaultId = 3
+                },
+                new DataHasDefault
+                {
+                    AnalyticDataId = 2,
+                    AnalyticDefaultId = 1
+                }
+            };
 
-        // [Fact]
-        // public void AddDataHasDefaultTest()
+            return dataHasDefaults;
+        }
+
+        //[Fact]
+        //public void AddDataHasDefaultTest()
         //{
-        //     //Arrange
-        //     var options = new DbContextOptionsBuilder<EduriaContext>().
-        //         UseInMemoryDatabase(databaseName: "Eduria_Development").
-        //         Options;
-        //     var contextMock = new Mock<EduriaContext>(options);
+        //    //Arrange
+        //    var options = new DbContextOptionsBuilder<EduriaContext>().
+        //        UseInMemoryDatabase(databaseName: "Eduria_Development").
+        //        Options;
+        //    var contextMock = new Mock<EduriaContext>(options);
 
-        //     //Act
-        //     var service = new AnalyticDefaultService(contextMock.Object);
-        //     var result = service.AddDataHasDefault(1, 1);
+        //    //Act
+        //    var service = new AnalyticDefaultService(contextMock.Object);
+        //    var result = service.AddDataHasDefault(1, 1);
 
-        //     DataHasDefault dataHasDefault = new DataHasDefault
-        //     {
-        //         AnalyticDataId = 1,
-        //         AnalyticDefaultId = 1
-        //     };
+        //    DataHasDefault dataHasDefault = new DataHasDefault
+        //    {
+        //        AnalyticDataId = 1,
+        //        AnalyticDefaultId = 1
+        //    };
 
-        //     //Assert
-        //     Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
-        //     Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
-        // }
+        //    //Assert
+        //    Assert.Equal(dataHasDefault.AnalyticDataId, result.AnalyticDataId);
+        //    Assert.Equal(dataHasDefault.AnalyticDefaultId, result.AnalyticDefaultId);
+        //}
 
         [Fact]
         public void GetAllAnalyticDefaultTest()
@@ -258,5 +286,42 @@ namespace EduriaTest
             //Assert
             Assert.Equal(1, result);
         }
+
+        //[Fact]
+        //public void GetAllDataByAnalyticDataIdTest()
+        //{
+        //    //Arrange
+        //    var analyticDataHasDefaultMock = CreateDbSetMock(CreateDataHasDefaultData());
+        //    var contextMock = new Mock<EduriaContext>(Options);
+        //    contextMock.Setup(x => x.DataHasDefaults).Returns(analyticDataHasDefaultMock.Object);
+
+        //    //Act
+        //    var service = new AnalyticDefaultService(contextMock.Object);
+        //    var result = service.GetAllDataByAnalyticDataId(1);
+
+        //    //Assert
+        //    Assert.Equal(3, result.Count());
+        //}
+
+        //[Fact]
+        //public void AddPeriodTest()
+        //{
+        //    // Arrange
+        //    PeriodModel periodModelMock = new PeriodModel
+        //    {
+        //        PeriodNum = 1,
+        //        SchoolYearStart = 2019,
+        //        SchoolYearEnd = 2020
+        //    };
+
+        //    var contextMock = new Mock<EduriaContext>(Options);
+
+        //    //Act
+        //    var service = new AnalyticDefaultService(contextMock.Object);
+        //    var result = service.AddPeriod(periodModelMock);
+
+        //    //Assert
+        //    Assert.Equal(1, result);
+        //}
     }
 }
