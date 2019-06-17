@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="wwwroot\Content\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
