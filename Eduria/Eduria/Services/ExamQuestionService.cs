@@ -37,5 +37,28 @@ namespace Eduria.Services
         {
             return Context.ExamQuestions.First(x => x.QuestionId == questionId && x.ExamId == examId);
         }
+
+        //public IEnumerable<Question> GetAllQuestionsAndTotalTimesWrong()
+        //{
+        //    var query =
+        //        from q in Context.Questions
+        //        join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+        //        join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+        //        group q by q.QuestionId into groupedQuestions
+        //        select new Question
+        //        {
+        //            QuestionId = groupedQuestions.Key,
+        //            T
+        //        }
+
+        //}
     }
 }
+
+
+//SELECT SUM(ul.TimesWrong) AS TotalTimesWrong
+//FROM Questions q
+//LEFT JOIN ExamQuestions eq ON q.QuestionId = eq.QuestionId
+//LEFT JOIN UserEQLogs ul ON eq.ExamHasQuestionId = ul.ExamHasQuestionId
+//WHERE ul.UserEQLogId IS NOT NULL
+//GROUP BY q.QuestionId
