@@ -12,10 +12,12 @@ namespace Eduria.Controllers
     public class ResultController : Controller
     {
         private QuestionService QuestionService { get; set; }
+        private ExamQuestionService ExamQuestionService { get; set; }
 
-        public ResultController(QuestionService questionService)
+        public ResultController(QuestionService questionService, ExamQuestionService examQuestionService)
         {
             QuestionService = questionService;
+            ExamQuestionService = examQuestionService;
         }
 
 
@@ -34,6 +36,11 @@ namespace Eduria.Controllers
             });
 
             return View(questionModels);
+        }
+
+        public IActionResult QuestionResult(int id)
+        {
+            return Content(ExamQuestionService.GetTotalTimesWrong(id).ToString());
         }
     }
 }
