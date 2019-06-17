@@ -62,4 +62,10 @@ namespace Eduria
         LichtGroen,
         Groen
     }
+    public enum Class
+    {
+        nvt,
+        havo,
+        vwo
+    }
 }
