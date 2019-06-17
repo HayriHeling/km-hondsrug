@@ -29,6 +29,7 @@
                 <div class="topnav" id="myTopnav">
                     <a href="/" class="active"><i class="fas fa-home"></i></a>
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
+                    <a asp-controller="Exam" asp-action="Show">Toetsen </a>
                     <a href="#">Prikbord</a>
                     <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
                     <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
@@ -59,6 +60,7 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/glider.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"

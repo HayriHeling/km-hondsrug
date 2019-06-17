@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Eduria.JsonClasses;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols;
-using System.Web;
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
