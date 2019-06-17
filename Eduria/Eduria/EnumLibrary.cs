@@ -67,4 +67,10 @@ namespace Eduria
         nChr,
         vChr
     }
+    public enum Class
+    {
+        nvt,
+        havo,
+        vwo
+    }
 }
