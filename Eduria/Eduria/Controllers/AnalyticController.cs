@@ -16,7 +16,6 @@ namespace Eduria.Controllers
     {
         private AnalyticDefaultService Service { get; set; }
         private UserService UserService { get; set; }
-        private int AnalyticDataId { get; set; }
 
         public AnalyticController(AnalyticDefaultService service, UserService userService)
         {
@@ -31,7 +30,8 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student, Teacher")]
         public IActionResult Index()
         {
-            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(analyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             return View(analyticDefaultModels);
         }
 
@@ -74,7 +74,8 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult AddMethod(int[] methodParam, string textParam)
         {
-            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(AnalyticDataId, 1, 1).AnalyticDataId, textParam);
+            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(analyticDataId, 1, 1).AnalyticDataId, textParam);
             return RedirectToAction("Index", "Analytic");
         }
 
@@ -85,8 +86,9 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student,Teacher")]
         public IActionResult Subject()
         {
-            Service.AddSubjectToHasDefaults(AnalyticDataId);
-            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Reflectie));         
+            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+            Service.AddSubjectToHasDefaults(analyticDataId);
+            return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Reflectie));         
         }
 
         /// <summary>
@@ -110,7 +112,8 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student, Teacher")]
         public IActionResult Goal()
         {
-            return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+            return View(Service.GetAnalyticDefaultAndHasDefaultModel(analyticDataId, (int)AnalyticCategory.Leerdoel));
         }
 
         /// <summary>
@@ -130,9 +133,10 @@ namespace Eduria.Controllers
                 {
                     // Check ischecked true on models met category doel
                     IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
+                    int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
 
                     // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
-                    if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+                    if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(analyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
                     {
                         if (checkedDefaults.Count() < 2)
                         {
@@ -144,13 +148,13 @@ namespace Eduria.Controllers
                     foreach (var item in checkedDefaults)
                     {
                         // Als item niet bestaat in hasdefaults, dan toevoegen.
-                        if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
+                        if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, analyticDataId) == null)
                         {
-                            Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
+                            Service.AddDataHasDefault(item.AnalyticDefaultId, analyticDataId);
 
                             if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
                             {
-                                Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                                Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, item.Text);
                             }
                         }
                     }
@@ -176,10 +180,11 @@ namespace Eduria.Controllers
                 if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels != null)
                 {
                     IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
+                    int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
 
                     foreach (var item in analyticHasDefaults)
                     {
-                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, (int)item.Score);
+                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, (int)item.Score);
                     }
                 }
             }

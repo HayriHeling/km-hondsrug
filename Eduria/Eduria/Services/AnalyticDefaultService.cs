@@ -522,5 +522,18 @@ namespace Eduria.Services
                 Context.SaveChanges();
             }
         }
+
+        public int GetAnalyticDataIdByUserId(int userId, int period, int year)
+        {
+            var query = from ad in Context.AnalyticDatas
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where ad.UserId == userId && p.PeriodNum == period && p.SchoolYearStart == year
+                        select new AnalyticData
+                        {
+                            AnalyticDataId = ad.AnalyticDataId
+                        };
+
+            return query.First().AnalyticDataId;
+        }
     }
 }
