@@ -62,4 +62,9 @@ namespace Eduria
         LichtGroen,
         Groen
     }
+    public enum ChristNotation
+    {
+        nChr,
+        vChr
+    }
 }

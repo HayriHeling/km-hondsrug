@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
@@ -123,10 +124,54 @@ namespace Eduria.Controllers
             {
                 Name = timeTableInformation.Name,
                 Description = timeTableInformation.Description,
-                BeforeChrist = timeTableInformation.BeforeChrist.Equals(1),
+                BeforeChrist = (ChristNotation)timeTableInformation.BeforeChrist,
                 Year = timeTableInformation.Year,
                 MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId)
             };
+        }
+        public TimeTableInformation ConvertToTimeTableInformation(TimeBlockInformationModel model)
+        {
+            return new TimeTableInformation()
+            {
+                TimeTableId = model.TimeTable.TimeTableId,
+                UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Name = model.Name,
+                Description = model.Description,
+                BeforeChrist = (int)model.BeforeChrist,
+                Year = model.Year
+            };
+        }
+
+        public IActionResult CreateInformation(int timetableId)
+        {
+            IEnumerable<TimeTable> tables = TimeTableService.GetAll();
+            List<TimeTableModel> tableModels = new List<TimeTableModel>();
+            foreach(TimeTable table in tables)
+            {
+                TimeTableModel tableModel = new TimeTableModel()
+                {
+                    TimeTableId = table.TimeTableId,
+                    Text = table.Text
+                };
+                tableModels.Add(tableModel);
+            }
+            ViewBag.timetables = tableModels;
+            ViewBag.timetableId = timetableId;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateInformation(TimeBlockInformationModel info)
+        {
+            try
+            {
+                TimeTableInformationService.Add(ConvertToTimeTableInformation(info));
+            }
+            catch
+            {
+                return View();
+            }
+            return View();
         }
     }
 }
