@@ -271,6 +271,7 @@
         string += "</div>"
         questionBox.append(string);
         Show(count);
+        OnChangeMediaType(count);
         var select = "#category" + count + "";
         $(select).val($("select#examCategory").children('option:selected').val()).change();
         var qType = "#qtype" + count + "";
@@ -322,8 +323,7 @@
             }
             var div = "#question" + questions[i].id + "";
             if (questions[i].id == index) {
-                $(div).show();
-                OnChangeMediaType(index);
+                $(div).show();               
             } else {
                 $(div).hide();
             }
