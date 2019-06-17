@@ -76,7 +76,7 @@
 
     @foreach (var d in Model.QuestionModels)
     {
-        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.AnswerId));
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
 
     @*@foreach (var e in Model.AnswerModels)
