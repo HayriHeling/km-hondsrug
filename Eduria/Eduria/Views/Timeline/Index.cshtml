@@ -10,7 +10,7 @@
         string modelName = timeBlockModel.TimeTableModel.Text;
         modelName = char.ToUpper(modelName[0]) + modelName.Substring(1);
         string name = "period" + modelName;
-        <section id=name>
+        <section id=@name>
             <div class="row">
                 <h1>@modelName</h1>
             </div>
@@ -20,9 +20,6 @@
                     <li>
                         <div class="right_content">
                             <h2>@timeBlockInformationModel.Name</h2>
-                            <p>
-                                @timeBlockInformationModel.Description
-                            </p>
                         </div>
                         <div class="left_content">
                             @if (timeBlockInformationModel.BeforeChrist)
