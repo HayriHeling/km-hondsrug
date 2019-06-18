@@ -55,6 +55,7 @@
     var StartTime;
     var EndTime;
     var QuestionTime;
+    var RepeatTime = 3;
 
     var selected = 0;
 
@@ -76,7 +77,7 @@
 
     @foreach (var d in Model.QuestionModels)
     {
-        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.AnswerId));
+        @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
 
     @*@foreach (var e in Model.AnswerModels)
@@ -135,11 +136,17 @@
                     NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
                 }
             } else {
-                questionArray.push(tempCurrentQuestion);
+                if (RepeatTime > tempCurrentQuestion.TimesWrong) {
+                    questionArray.push(tempCurrentQuestion);
+                }
                 if (maxScore > 0) {
                     maxScore = maxScore - 1;
                 }
-                NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                if (0 === questionArray.length) {
+                    FinishedExam(score);
+                } else {
+                    NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                }
                 $("#answer").append("<p class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</p>");
             }
             setTimeout(hideMessage, 1000);

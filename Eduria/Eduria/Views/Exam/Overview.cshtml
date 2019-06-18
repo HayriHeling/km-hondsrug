@@ -1,36 +1,123 @@
-﻿@model IEnumerable<EduriaData.Models.ExamLayer.Exam>
-@{
+﻿@{
     ViewData["Title"] = "Overview";
 }
 
 <section id="overView">
     <div class="row medium">
 
-        <div class="medium-12 columns">
-            <h2>Toetsen</h2>
-        </div>
-        <div class="medium-4 columns">
-            <strong>Naam</strong>
-        </div>
-        <div class="medium-4 columns">
-            <strong>Omschrijving</strong>
-        </div>
-        <div class="medium-4 columns">
-            <strong>Link</strong>
-        </div>
-
-        @foreach (var item in Model)
-        {
-
-            <div class="medium-4 columns">
-                <p>@item.Name</p>
-            </div>
-            <div class="medium-4 columns">
-                <p>@item.Description</p>
-            </div>
-            <div class="medium-4 columns">
-                <p><a asp-controller="Exam" asp-action="Show" asp-route-id="@item.ExamId">Start toets</a></p>
-            </div>
-        }
+        <table>
+            <tr>
+                <td><b>Toets</b></td>
+                <td><b>Omschrijving</b></td>
+                <td><b>Categorie</b></td>
+                <td>
+                    @if (ViewBag.userType == 1)
+                    {
+                        <b>Actief</b>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td><input type="text" id="searchInput1" name="searchInput" placeholder="Title Zoeken" oninput="FilterOnText(0)" /></td>
+                <td><input type="text" id="searchInput2" name="searchInput" placeholder="Omschrijving Zoeken" oninput="FilterOnText(1)" /></td>
+                <td>
+                    <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
+                        <option value="99"></option>
+                        @foreach (var item in ViewBag.ttService.GetAll())
+                        {
+                            <option value="@item.TimeTableId">@item.Text</option>
+                        }
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+            @foreach (var item in ViewBag.exams)
+            {
+                @if ((ViewBag.userType == 2 && item.IsActive == 1) || ViewBag.userType != 2)
+                {
+                    var tt = ViewBag.ttService.GetById(item.TimeTableId);
+                    <tr class="category@(tt.TimeTableId) category">
+                        <td class="examname">@item.Name</td>
+                        <td class="examsummary">@item.Description</td>
+                        <td>@tt.Text</td>
+                        @if (ViewBag.userType == 2)
+                        {
+                            <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
+                        }
+                        @if (ViewBag.userType == 1)
+                        {
+                            <td style="text-align: center;">
+                                <label class="switch">
+                                    @if (item.IsActive == 1)
+                                    {
+                                        <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))" checked>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="Active@(item.ExamId)" name="Active@(item.ExamId)" onchange="CheckboxOnChange(@(item.ExamId))">
+                                    }
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        }
+                    </tr>
+                 }
+            }
+            </table>
     </div>
 </section>
+
+<script>
+    function CheckboxOnChange(examId) {
+        var isActive;
+        var checkbox = "#Active" + examId + "";
+        if ($(checkbox).is(":checked")) {
+            isActive = 1;
+        } else {
+            isActive = 0;
+        }      
+        $.ajax({
+            type: "POST",
+            url: "/Exam/ToggleActiveExam",
+            data: { examId: examId, state: isActive }
+        }); 
+    }
+
+    //Filters existing questions on text.
+    function FilterOnText(state) {
+        var value;
+        var filter;
+        if (state == 0) {
+            value = $("#searchInput1").val();
+            filter = $(".examname");
+        }
+        else if (state == 1) {
+            value = $("#searchInput2").val();
+            filter = $(".examsummary");
+        }        
+        var values = [];
+        filter.each(function () {
+            if ($(this).text().toLowerCase().indexOf(value) >= 0) {
+                $(this).parent().show();
+            }
+            else {
+                $(this).parent().hide();
+            }
+        })
+    }
+
+    //Filters existing questions on category.
+    function FilterOnCategory(div) {       
+        var id = $('#examCategory option').eq(div.selectedIndex).val();
+        var filterOn = ".category" + id + "";
+        var filter = $(".category");
+        if (div.selectedIndex == 0) {
+            filter.show();
+        }
+        else {
+            filter.hide();
+            $(filterOn).show();
+        }
+
+    }
+</script>

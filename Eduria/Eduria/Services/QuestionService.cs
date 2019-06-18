@@ -50,9 +50,8 @@ namespace Eduria.Services
         }
         public Question GetQuestionByMediaLink(string text)
         {
-            // TODO: Fix line 54
-            //return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
-            return new Question();
+            int mediaSourceId = Context.MediaSources.FirstOrDefault(x => x.Source == text).MediaSourceId;
+            return Context.Questions.FirstOrDefault(x => x.MediaSourceId == mediaSourceId);
         }
 
     }

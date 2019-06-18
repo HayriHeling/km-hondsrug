@@ -28,7 +28,7 @@ namespace Eduria.Controllers
         /// This is the Index result action.
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Student, Teacher")]
         public IActionResult Index()
         {
             IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(AnalyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
@@ -79,16 +79,6 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Student")]
-        public IActionResult Goal()
-        {
-            return View(Service.GetCombinedAnalyticDefaultAndData(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
-        }
-
-        /// <summary>
         /// IActionResult that shows the Subject action on the view.
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
@@ -111,10 +101,90 @@ namespace Eduria.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public IActionResult Search(IFormCollection form)
+        /// <summary>
+        /// GET: Analytic/Goal
+        /// 
+        /// Shows the goal view page.
+        /// </summary>
+        /// <returns>The goal view.</returns>
+        [Authorize(Roles = "Student, Teacher")]
+        public IActionResult Goal()
         {
-            return View("Index", Service.GetAnalyticDataByYearAndPeriodAndUserId(form, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            return View(Service.GetAnalyticDefaultAndHasDefaultModel(AnalyticDataId, (int)AnalyticCategory.Leerdoel));
+        }
+
+        /// <summary>
+        /// POST: Analytic/AddGoal
+        /// 
+        /// Adds goals to the AnalyticData for the user.
+        /// </summary>
+        /// <param name="analyticDefaultAndHasDefaultModel"></param>
+        /// <returns>The goal view with updated goals.</returns>
+        [Authorize(Roles = "Student")]
+        [HttpPost]
+        public IActionResult AddGoal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
+        {
+            if (analyticDefaultAndHasDefaultModel != null)
+            {
+                if (analyticDefaultAndHasDefaultModel.AnalyticDefaultModels != null)
+                {
+                    // Check ischecked true on models met category doel
+                    IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
+
+                    // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
+                    if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(AnalyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+                    {
+                        if (checkedDefaults.Count() < 2)
+                        {
+                            ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
+                            return RedirectToAction("Goal");
+                        }
+                    }
+
+                    foreach (var item in checkedDefaults)
+                    {
+                        // Als item niet bestaat in hasdefaults, dan toevoegen.
+                        if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, AnalyticDataId) == null)
+                        {
+                            Service.AddDataHasDefault(item.AnalyticDefaultId, AnalyticDataId);
+
+                            if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                            {
+                                Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, item.Text);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Goal");
+        }
+
+        /// <summary>
+        /// POST: Analytic/AddGoalScore
+        /// 
+        /// Adds a score to the user's AnalyticDefault
+        /// </summary>
+        /// <param name="analyticDefaultAndHasDefaultModel"></param>
+        /// <returns>The goal view with updated scores.</returns>
+        [Authorize(Roles = "Teacher")]
+        [HttpPost]
+        public IActionResult AddGoalScore(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
+        {
+            if (analyticDefaultAndHasDefaultModel != null)
+            {
+                if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels != null)
+                {
+                    IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
+
+                    foreach (var item in analyticHasDefaults)
+                    {
+                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, AnalyticDataId, (int)item.Score);
+                    }
+                }
+            }
+
+            return RedirectToAction("Goal");
         }
     }
 }

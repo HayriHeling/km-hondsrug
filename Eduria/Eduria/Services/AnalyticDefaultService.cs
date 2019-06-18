@@ -134,6 +134,7 @@ namespace Eduria.Services
 
                         select new AnalyticHasDefaultModel
                         {
+                            DataHasDefaultId = dhd.DataHasDefaultId,
                             AnalyticDataId = dhd.AnalyticDataId,
                             AnalyticDefaultId = dhd.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,
@@ -219,6 +220,9 @@ namespace Eduria.Services
                         {
                             AnalyticDefaultId = ad.AnalyticDefaultId,
                             AnalyticDefaultName = ad.AnalyticDefaultName,
+                            AnalyticDefaultOption = ad.AnalyticDefaultOption,
+                            IsChecked = false,
+                            Text = ""
                         };
 
             return query.ToList();
@@ -435,6 +439,23 @@ namespace Eduria.Services
                 Context.DefaultDataScores.Add(defaultDataScore);
                 Context.SaveChanges();
             }
+        }
+
+        /// <summary>
+        /// Gets a combined AnalyticDefault and AnalyticHasDefault model to send to a view.
+        /// </summary>
+        /// <param name="id">The AnalyticData id to get the models from.</param>
+        /// <param name="category">The specific category to get a combined model from.</param>
+        /// <returns>A combined AnalyticDefault and AnalyticHasDefault model.</returns>
+        public AnalyticDefaultAndHasDefaultModel GetAnalyticDefaultAndHasDefaultModel(int id, int category)
+        {
+            AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel = new AnalyticDefaultAndHasDefaultModel
+            {
+                AnalyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category).ToList(),
+                AnalyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category).ToList()
+            };
+
+            return analyticDefaultAndHasDefaultModel;
         }
 
         /// <summary>

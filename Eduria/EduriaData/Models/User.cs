@@ -23,6 +23,7 @@ namespace EduriaData.Models
         [Required, MaxLength(200)]
         public string Password { get; set; }
         [MaxLength(200)]
+
         public string Token { get; set; }
     }
 }
