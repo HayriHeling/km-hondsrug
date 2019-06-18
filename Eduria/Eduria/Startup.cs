@@ -52,6 +52,8 @@ namespace Eduria
             services.AddScoped<MediaSourceService>();
             services.AddScoped<ConfigsService>();
             services.AddScoped<DatabaseService>();
+            services.AddScoped<TimeTableInformationService>();
+            services.AddScoped<TimeTableInfoMediaSrcService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
