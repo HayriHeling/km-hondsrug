@@ -21,7 +21,7 @@ namespace Eduria.Services
 
         public override Question GetById(int id)
         {
-            return Context.Questions.Find(id);
+            return GetAll().FirstOrDefault(x => x.QuestionId == id);
         }
 
         /// <summary>
