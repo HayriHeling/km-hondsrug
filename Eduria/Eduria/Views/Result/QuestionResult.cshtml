@@ -5,6 +5,7 @@
 }
 
 <b>@Model.Name</b>
+<p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
 
 <div class="row">
     <div class="medium-6 columns">
@@ -16,22 +17,19 @@ var ctx = document.getElementById('questionChart').getContext('2d');
 var questionChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
-        labels: ['Totaal beantwoord', 'Foutief beantwoord', 'In een keer goed beantwoord'],
+        labels: ['Goed beantwoord', 'Foutief beantwoord'],
         datasets: [{
             label: 'Rood',
-            data: [@Model.TimesAnswerd, @Model.TimesWrong, @Model.TimesGoodAtOnce],
+            data: [@Model.TimesWrong, @Model.TimesGoodAtOnce],
             backgroundColor: [
-                'rgba(54, 162, 235, 1)',
+                'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',
-                'rgba(123, 239, 178, 1)'
+
             ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(123, 239, 178, 1)'
-            ],
-            borderWidth: 3
         }]
+    },
+    options: {
+        reponsive: true
     }
 });
 </script>
