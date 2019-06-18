@@ -12,6 +12,9 @@
     <div class="medium-6 columns">
         <canvas id="examChart" width="400" height="400"></canvas>
     </div>
+    <div class="medium-6 columns">
+        <canvas id="examChartTwo" width="400" height="400"></canvas>
+    </div>
 </div>
 <script>
 var ctx = document.getElementById('examChart').getContext('2d');
@@ -36,4 +39,33 @@ var examChart = new Chart(ctx, {
         }]
     }
 });
+</script>
+<script>
+    var ctx = document.getElementById('examChartTwo').getContext('2d');
+    var examChartTwo = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Januari', 'Februari', 'Maart',
+                'April', 'Mei', 'Juni', 'Juli',
+                'Augustus', 'September', 'Oktober',
+                'November', 'December'],
+            datasets: [{
+                label: 'Aantal',
+                backgroundColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)'
+                ],
+                data: @for (int i = 0; i <= 11; i++) { @Model.TotalTimesDonePerMonth.ToArray()[0]}
+            }]
+        },
+
+
+        options: {}
+    });
 </script>

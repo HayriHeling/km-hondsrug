@@ -45,6 +45,20 @@ namespace Eduria.Services
             var query =
                 from e in Context.Exams
                 join er in Context.ExamResults on e.ExamId equals er.ExamId
+                where er.ExamId == id
+                select er.ExamId;
+
+            return query
+                .DefaultIfEmpty()
+                .Count();
+        }
+
+        public int GetTotalDoneBetweenDate(int id, int month)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                where er.StartedAt.Month == month && er.ExamId == id
                 select er.ExamId;
 
             return query

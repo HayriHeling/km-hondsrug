@@ -83,12 +83,19 @@ namespace Eduria.Controllers
         {
             Exam exam = ExamService.GetById(id);
 
+            //Adds the total per month
+            List<int> totalPerMonth = new List<int>();
+            for(int i = 1; i <= 12; i++)
+            {
+                totalPerMonth.Add(ExamService.GetTotalDoneBetweenDate(id, i));
+            }
 
             DataExamResultModel model = new DataExamResultModel
             {
                 Name = exam.Name,
                 Description = exam.Description,
-                TotalTimesDone = ExamService.GetTotalDone(id)
+                TotalTimesDone = ExamService.GetTotalDone(id),
+                TotalTimesDonePerMonth = totalPerMonth
             };
 
             return View(model);
