@@ -3,5 +3,7 @@
     ViewData["Title"] = "StudentExamResult";
 }
 
-<h2>StudentExamResult</h2>
-
+@foreach(var item in Model.UserEqLogModels)
+{
+    <p>@item.TimesWrong</p>
+}
