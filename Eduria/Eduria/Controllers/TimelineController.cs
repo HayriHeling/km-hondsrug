@@ -123,11 +123,13 @@ namespace Eduria.Controllers
         {
             return new TimeBlockInformationModel
             {
+                TimeBlockInformationId = timeTableInformation.TimeTableInformationId,
                 Name = timeTableInformation.Name,
                 Description = timeTableInformation.Description,
                 BeforeChrist = (ChristNotation)timeTableInformation.BeforeChrist,
                 Year = timeTableInformation.Year,
-                MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId)
+                MediaSourceModels = CreateMediaSourceModels(timeTableInformation.TimeTableInformationId),
+                TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableInformation.TimeTableId))               
             };
         }
         public TimeTableInformation ConvertToTimeTableInformation(TimeBlockInformationModel model)
@@ -191,6 +193,18 @@ namespace Eduria.Controllers
 
         public IActionResult EditInformation(int id)
         {
+            IEnumerable<TimeTable> tables = TimeTableService.GetAll();
+            List<TimeTableModel> tableModels = new List<TimeTableModel>();
+            foreach (TimeTable table in tables)
+            {
+                TimeTableModel tableModel = new TimeTableModel()
+                {
+                    TimeTableId = table.TimeTableId,
+                    Text = table.Text
+                };
+                tableModels.Add(tableModel);
+            }
+            ViewBag.timetables = tableModels;
             ViewBag.infoModel = ConvertToTimeBlockInformationModel(TimeTableInformationService.GetById(id));
             return View();
         }
@@ -201,13 +215,20 @@ namespace Eduria.Controllers
             try
             {
                 info.TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId));
-                TimeTableInformationService.Update(ConvertToTimeTableInformation(info));
-                return View();
+                TimeTableInformation toChange = TimeTableInformationService.GetById(info.TimeBlockInformationId);
+                TimeTableInformation changed = ConvertToTimeTableInformation(info);
+                toChange.TimeTableId = changed.TimeTableId;
+                toChange.Name = changed.Name;
+                toChange.Description = changed.Description;
+                toChange.BeforeChrist = changed.BeforeChrist;
+                toChange.Year = changed.Year;
+                TimeTableInformationService.Update(toChange);
+                return RedirectToAction("index");
             }
             catch(Exception e)
             {
                 throw e;
-            }            
+            }           
         }
 
         public IActionResult DeleteInformation(int id)
