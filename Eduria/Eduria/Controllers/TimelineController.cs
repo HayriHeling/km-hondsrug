@@ -233,15 +233,10 @@ namespace Eduria.Controllers
 
         public IActionResult DeleteInformation(int id)
         {
-            ViewBag.infoModel = ConvertToTimeBlockInformationModel(TimeTableInformationService.GetById(id));
-            return View();
-        }
-
-        public void DeleteInformationFromDatabase(int id)
-        {
             try
             {
                 TimeTableInformationService.Delete(TimeTableInformationService.GetById(id));
+                return RedirectToAction("Index");
             }
             catch(Exception e)
             {
