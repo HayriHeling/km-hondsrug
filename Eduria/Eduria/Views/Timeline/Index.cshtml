@@ -4,45 +4,60 @@
     ViewData["Title"] = "ViewTimeline";
 }
 
-<div class="timeline">
-    @foreach (TimeblockModel timeBlockModel in Model.TimeblockModels)
-    {
-        string modelName = timeBlockModel.TimeTableModel.Text;
-        modelName = char.ToUpper(modelName[0]) + modelName.Substring(1);
-        string name = "period" + modelName;
-        <section id=@name>
-            <div class="row">
-                <h1>@modelName</h1>
-            </div>
-            <ul>
-                @foreach (TimeBlockInformationModel timeBlockInformationModel in timeBlockModel.TimeBlockInformationModels)
-                {
-                    <li>
-                        <div class="right_content">
-                            <h2>@timeBlockInformationModel.Name</h2>
-                        </div>
-                        <div class="left_content">
-                            @if (timeBlockInformationModel.BeforeChrist)
-                            {
-                                NumberFormatInfo nfi = new NumberFormatInfo
-                                {
-                                    CurrencyDecimalSeparator = ",",
-                                    CurrencyGroupSeparator = ".",
-                                    CurrencySymbol = ""
-                                };
-                                string year = Convert.ToDecimal(timeBlockInformationModel.Year).ToString("C2", nfi);
-                                year = year.Substring(0, (year.Length - 3));
+        <div class="timeline">
+            @foreach (TimeblockModel timeBlockModel in Model.TimeblockModels)
+            {
+                string modelName = timeBlockModel.TimeTableModel.Text;
+                modelName = char.ToUpper(modelName[0]) + modelName.Substring(1);
+                string name = "period" + modelName;
+                <section id=@name>
+                    <div class="row">
+                        <h1>@modelName</h1>
+                    </div>
+                    <ul>
+                        @foreach (TimeBlockInformationModel timeBlockInformationModel in timeBlockModel.TimeBlockInformationModels)
+                        {
+                            <li>
+                                <div class="right_content">
+                                    <h2>@timeBlockInformationModel.Name</h2>
+                                    <!-- Trigger/Open The Modal -->
+                                    <label id="myBtn">Open</label>
 
-                                <h3>@year v.C.</h3>
-                            }
-                            else
-                            {
-                        <h3>@timeBlockInformationModel.Year</h3>
-                            }
-                        </div>
-                    </li>
-                }
-            </ul>
-        </section>
-    }
-</div>
+                                    <!-- The Modal -->
+                                    <div id="myModal" class="modal">
+
+                                        <!-- Modal content -->
+                                        <div class="modal-content">
+                                            <span class="close">&times;</span>
+                                            <p>test</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="left_content">
+                                    @if (timeBlockInformationModel.BeforeChrist)
+                                    {
+                                        NumberFormatInfo nfi = new NumberFormatInfo
+                                        {
+                                            CurrencyDecimalSeparator = ",",
+                                            CurrencyGroupSeparator = ".",
+                                            CurrencySymbol = ""
+                                        };
+                                        string year = Convert.ToDecimal(timeBlockInformationModel.Year).ToString("C2", nfi);
+                                        year = year.Substring(0, (year.Length - 3));
+
+                                        <h3>@year v.C.</h3>
+                                    }
+                                    else
+                                    {
+                                        <h3>@timeBlockInformationModel.Year</h3>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </section>
+            }
+            <script src="~/js/site.js" asp-append-version="true"></script>
+
+    </div>
+    
