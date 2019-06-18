@@ -23,7 +23,7 @@
     </div>
     <div class="medium-6 columns">
 
-        <form asp-action="Create">
+        <form asp-action="CreateInformation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -32,9 +32,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="TimeTable" class="control-label"></label>
-                @Html.DropDownListFor(x => x.TimeTable,
-                    new SelectList(ViewBag.timetables, "TimeTableId", "Text"),
-                    new { @class = "form-control" })
+                <select name="timeTableId">
+                    @foreach (TimeTableModel ttModel in ViewBag.timetables)
+                    {
+                        <option value="@ttModel.TimeTableId">@ttModel.Text</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

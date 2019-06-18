@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Eduria.Models;
 using Eduria.Services;
@@ -142,7 +143,7 @@ namespace Eduria.Controllers
             };
         }
 
-        public IActionResult CreateInformation(int timetableId)
+        public IActionResult CreateInformation(int timeTableId)
         {
             IEnumerable<TimeTable> tables = TimeTableService.GetAll();
             List<TimeTableModel> tableModels = new List<TimeTableModel>();
@@ -156,22 +157,76 @@ namespace Eduria.Controllers
                 tableModels.Add(tableModel);
             }
             ViewBag.timetables = tableModels;
-            ViewBag.timetableId = timetableId;
+            ViewBag.timetableId = timeTableId;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateInformation(TimeBlockInformationModel info)
+        public IActionResult CreateInformation(TimeBlockInformationModel info, int timeTableId)
+        {
+            IEnumerable<TimeTable> tables = TimeTableService.GetAll();
+            List<TimeTableModel> tableModels = new List<TimeTableModel>();
+            foreach (TimeTable table in tables)
+            {
+                TimeTableModel tableModel = new TimeTableModel()
+                {
+                    TimeTableId = table.TimeTableId,
+                    Text = table.Text
+                };
+                tableModels.Add(tableModel);
+            }
+            ViewBag.timetables = tableModels;
+            ViewBag.timetableId = timeTableId;
+            try
+            {
+                info.TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId));
+                TimeTableInformationService.Add(ConvertToTimeTableInformation(info));
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            return View();
+        }
+
+        public IActionResult EditInformation(int id)
+        {
+            ViewBag.infoModel = ConvertToTimeBlockInformationModel(TimeTableInformationService.GetById(id));
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult EditInformation(TimeBlockInformationModel info, int timeTableId)
         {
             try
             {
-                TimeTableInformationService.Add(ConvertToTimeTableInformation(info));
-            }
-            catch
-            {
+                info.TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId));
+                TimeTableInformationService.Update(ConvertToTimeTableInformation(info));
                 return View();
             }
+            catch(Exception e)
+            {
+                throw e;
+            }            
+        }
+
+        public IActionResult DeleteInformation(int id)
+        {
+            ViewBag.infoModel = ConvertToTimeBlockInformationModel(TimeTableInformationService.GetById(id));
             return View();
+        }
+
+        public void DeleteInformationFromDatabase(int id)
+        {
+            try
+            {
+                TimeTableInformationService.Delete(TimeTableInformationService.GetById(id));
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+
         }
     }
 }
