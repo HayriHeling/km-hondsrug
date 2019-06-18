@@ -523,7 +523,7 @@ namespace Eduria.Services
             }
         }
 
-        public int GetAnalyticDataIdByUserId(int userId, int period, int year)
+        public int GetAnalyticDataIdByUserIdAndPeriodAndYear(int userId, int period, int year)
         {
             var query = from ad in Context.AnalyticDatas
                         join p in Context.Periods on ad.PeriodId equals p.PeriodId
@@ -534,6 +534,38 @@ namespace Eduria.Services
                         };
 
             return query.First().AnalyticDataId;
+        }
+
+        public IEnumerable<AnalyticDataModel> GetAllAnalyticDatasByUserId(int userId)
+        {
+            var query = from ad in Context.AnalyticDatas
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where ad.UserId == userId
+                        orderby p.SchoolYearStart
+                        orderby p.PeriodNum
+                        select new AnalyticDataModel
+                        {
+                            AnalyticDataId = ad.AnalyticDataId,
+                            ExamCode = ad.ExamCode,
+                            PeriodNum = p.PeriodNum,
+                            PeriodStart = p.PeriodStart,
+                            PeriodEnd = p.PeriodEnd,
+                            SchoolYearStart = p.SchoolYearStart,
+                            SchoolYearEnd = p.SchoolYearEnd
+                        };
+
+            return query.ToList();
+        }
+
+        public AnalyticDataAndHasDefaultModel GetAnalyticDataIdAndHasDefaults(int analyticDataId)
+        {
+            AnalyticDataAndHasDefaultModel analyticDataAndHasDefaultModel = new AnalyticDataAndHasDefaultModel
+            {
+                AnalyticDataId = analyticDataId,
+                AnalyticHasDefaultModels = GetAllDataByAnalyticDataId(analyticDataId).ToList()
+            };
+
+            return analyticDataAndHasDefaultModel;
         }
     }
 }

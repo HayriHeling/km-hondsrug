@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Eduria.Services
 {
@@ -73,9 +77,15 @@ namespace Eduria.Services
             Context.Entry(user).State = EntityState.Modified;
             Context.SaveChanges();
         }
+
         public IEnumerable<User> GetAllUsersByUserType(int userType)
         {
             return GetAll().Where(ut => ut.UserType == userType);
+        }
+
+        public int GetLoggedInUserId(ClaimsPrincipal user)
+        {
+            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

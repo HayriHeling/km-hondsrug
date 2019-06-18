@@ -1,19 +1,27 @@
-﻿@model IEnumerable<Eduria.Models.AnalyticHasDefaultModel>
+﻿@model IEnumerable<Eduria.Models.AnalyticDataModel>
 @{
     ViewData["Title"] = "Index";
 }
 
     <div class="row xlarge">
-        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        
         <div class="medium-10 columns">
-            @foreach (var item in Model)
+            @using (Html.BeginForm("View", "Analytic", FormMethod.Post))
             {
-                <p>AnalyticDataId: @item.AnalyticDataId</p>
-                <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
-                <p>Name: @item.AnalyticDefaultName</p>
-                <p>Category: @item.CategoryId</p>
-                <p>Score: @item.Score</p>
-                <hr />
+                int year = 0;
+                @foreach (var item in Model)
+                {
+                    if (year <= item.SchoolYearStart)
+                    {
+                        <p><b>@item.SchoolYearStart</b></p>
+
+                        year = item.SchoolYearStart;
+                    }
+
+                    <p>Exam code: @item.ExamCode<br />
+                    Periode: @item.PeriodNum<br />
+                    <button name="button" value=@item.AnalyticDataId>Selecteer</button></p>
+                }
             }
         </div>
     </div>

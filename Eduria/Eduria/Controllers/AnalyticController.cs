@@ -30,39 +30,23 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student, Teacher")]
         public IActionResult Index()
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
-            IEnumerable<AnalyticHasDefaultModel> analyticDefaultModels = Service.GetAllDataByAnalyticDataId(analyticDataId, int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            return View(analyticDefaultModels);
+            return View(Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)));
         }
 
-        [Authorize(Roles = "Teacher")]
-        public IActionResult Period()
+        [HttpPost]
+        public new IActionResult View(string button)
         {
-            return View();
-        }
-        
-        public IActionResult AddPeriod(PeriodModel periodModel)
-        {
-            //First add the PeriodModel to the database.
-            Service.AddPeriod(periodModel);
-            //Then get that PeriodId by PeriodNum and SchoolYearStart.
-            int periodId = Service.GetByPeriodIdByPeriodNumAndStartYear(periodModel.PeriodNum, periodModel.SchoolYearStart);
-            //Then get all users by usertype.
-            IEnumerable<User> users = UserService.GetAllUsersByUserType((int)(UserRoles.Student));
-            //Finally adds for every user an AnalyticData.
-            Service.AddAnalyticDataPerUser(users, periodId);
-            //Redirect to the Period Action.
-            return RedirectToAction("Period");
+            return View(Service.GetAnalyticDataIdAndHasDefaults(int.Parse(button)));
         }
 
         /// <summary>
         /// This is the Method action.
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Student")]
-        public IActionResult Method()
+        [Authorize(Roles = "Student,Teacher")]
+        public IActionResult Method(int analyticDataId)
         {
-            return View(Service.GetCombinedAnalyticDefaultAndData(1, (int)AnalyticCategory.Werkwijze));
+            return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Werkwijze));
         }
 
         /// <summary>
@@ -74,7 +58,7 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult AddMethod(int[] methodParam, string textParam)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
             Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(analyticDataId, 1, 1).AnalyticDataId, textParam);
             return RedirectToAction("Index", "Analytic");
         }
@@ -84,9 +68,8 @@ namespace Eduria.Controllers
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
         [Authorize(Roles = "Student,Teacher")]
-        public IActionResult Subject()
+        public IActionResult Subject(int analyticDataId)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
             Service.AddSubjectToHasDefaults(analyticDataId);
             return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Reflectie));         
         }
@@ -110,9 +93,8 @@ namespace Eduria.Controllers
         /// </summary>
         /// <returns>The goal view.</returns>
         [Authorize(Roles = "Student, Teacher")]
-        public IActionResult Goal()
+        public IActionResult Goal(int analyticDataId)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
             return View(Service.GetAnalyticDefaultAndHasDefaultModel(analyticDataId, (int)AnalyticCategory.Leerdoel));
         }
 
@@ -133,7 +115,7 @@ namespace Eduria.Controllers
                 {
                     // Check ischecked true on models met category doel
                     IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
-                    int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+                    int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), 1, 1);
 
                     // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
                     if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(analyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
@@ -180,7 +162,7 @@ namespace Eduria.Controllers
                 if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels != null)
                 {
                     IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
-                    int analyticDataId = Service.GetAnalyticDataIdByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+                    int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
 
                     foreach (var item in analyticHasDefaults)
                     {
@@ -190,6 +172,26 @@ namespace Eduria.Controllers
             }
 
             return RedirectToAction("Goal");
+        }
+
+        [Authorize(Roles = "Teacher")]
+        public IActionResult Period()
+        {
+            return View();
+        }
+
+        public IActionResult AddPeriod(PeriodModel periodModel)
+        {
+            //First add the PeriodModel to the database.
+            Service.AddPeriod(periodModel);
+            //Then get that PeriodId by PeriodNum and SchoolYearStart.
+            int periodId = Service.GetByPeriodIdByPeriodNumAndStartYear(periodModel.PeriodNum, periodModel.SchoolYearStart);
+            //Then get all users by usertype.
+            IEnumerable<User> users = UserService.GetAllUsersByUserType((int)(UserRoles.Student));
+            //Finally adds for every user an AnalyticData.
+            Service.AddAnalyticDataPerUser(users, periodId);
+            //Redirect to the Period Action.
+            return RedirectToAction("Period");
         }
     }
 }
