@@ -12,11 +12,13 @@ namespace Eduria.Controllers
     public class ResultController : Controller
     {
         private QuestionService QuestionService { get; set; }
+        private ExamService ExamService { get; set; }
         private ExamQuestionService ExamQuestionService { get; set; }
 
-        public ResultController(QuestionService questionService, ExamQuestionService examQuestionService)
+        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService)
         {
             QuestionService = questionService;
+            ExamService = examService;
             ExamQuestionService = examQuestionService;
         }
 
@@ -41,6 +43,19 @@ namespace Eduria.Controllers
             return View(questionModels);
         }
 
+        public IActionResult Exam()
+        {
+            IEnumerable<Exam> exams = ExamService.GetAll();
+            IEnumerable<ExamModel> examModels = exams.Select(result => new ExamModel
+            {
+                ExamId = result.ExamId,
+                Name = result.Name,
+                Description = result.Description
+            });
+
+            return View(examModels);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -48,9 +63,32 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult QuestionResult(int id)
         {
+            DataQuestionResultModel model = new DataQuestionResultModel
+            {
+                Name = ExamQuestionService.GetQuestionName(id),
+                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
+                TimesAnswerd = ExamQuestionService.GetTotalAnswered(id),
+                TimesGoodAtOnce = ExamQuestionService.GetTotalGoodAtOnce(id)
+            };
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IActionResult ExamResult(int id)
+        {
+            Exam exam = ExamService.GetById(id);
+
+
             DataExamResultModel model = new DataExamResultModel
             {
-                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id)
+                Name = exam.Name,
+                Description = exam.Description,
+                TotalTimesDone = ExamService.GetTotalDone(id)
             };
 
             return View(model);

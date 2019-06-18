@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Eduria.Models
 {
-    public class DataExamResultModel
+    public class DataQuestionResultModel
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int TotalTimesDone { get; set; }
+        public int TimesWrong { get; set; }
+        public int TimesAnswerd { get; set; }
+        public int TimesGoodAtOnce { get; set; }
     }
 }

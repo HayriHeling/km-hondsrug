@@ -35,5 +35,21 @@ namespace Eduria.Services
         {
             return GetAll().FirstOrDefault(x => x.Name == name);
         }
+
+        /// <summary>
+        /// Returns a total done of an specific exam.
+        /// </summary>
+        /// <returns></returns>
+        public int GetTotalDone(int id)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                select er.ExamId;
+
+            return query
+                .DefaultIfEmpty()
+                .Count();
+        }
     }
 }
