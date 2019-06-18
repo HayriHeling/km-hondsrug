@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using EduriaData.Models.TimeLineLayer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers
@@ -15,6 +20,8 @@ namespace Eduria.Controllers
         private TimeTableInformationService TimeTableInformationService;
         private TimeTableInfoMediaSrcService TimeTableInfoMediaSrcService;
         private MediaSourceService MediaSourceService;
+
+        private static Random random = new Random();
 
         public TimelineController(TimeTableService timeTableService,
             TimeTableInformationService timeTableInformationService,
@@ -243,6 +250,118 @@ namespace Eduria.Controllers
                 throw e;
             }
 
+        }
+
+        public IActionResult Upload(int id)
+        {
+            IEnumerable InfoHasMedia = TimeTableInfoMediaSrcService.GetAllByTimeTableInfoId(id);
+            List<MediaSourceModel> media = new List<MediaSourceModel>();
+            foreach (TimeTableInfoHasMediaSrc x in InfoHasMedia)
+            {
+                MediaSource ms = MediaSourceService.GetById(x.MediaSourceId);
+                media.Add(ConvertToMediaSourceModel(ms));
+            }
+            ViewBag.media = media;
+            ViewBag.infoId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadMediaToInformationAsync(List<IFormFile> files, int mType, int infoId)
+        {
+            try
+            {
+                long size = files.Sum(f => f.Length);
+                var filePath = "lol";
+                foreach (var formFile in files)
+                {
+                    if (formFile.Length > 0)
+                    {
+                        string[] arr = formFile.FileName.Split(".");
+                        string fileName = RandomString(20);
+                        string ext = arr[arr.Length - 1];
+                        string newName = "infoMedia" + infoId + "_" + fileName + "." + ext;
+                        filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", newName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await formFile.CopyToAsync(stream);
+                        }
+                        MediaSource src = new MediaSource()
+                        {
+                            MediaType = mType,
+                            Source = newName
+                        };
+                        MediaSourceService.Add(src);
+                        TimeTableInfoHasMediaSrc infoHasMedia = new TimeTableInfoHasMediaSrc()
+                        {
+                            TimeTableInformationId = infoId,
+                            MediaSourceId = MediaSourceService.GetBySource(newName).MediaSourceId
+                        };
+                        TimeTableInfoMediaSrcService.Add(infoHasMedia);
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }          
+        }
+        [HttpPost]
+        public IActionResult SaveLink(string source, int infoId)
+        {
+            try
+            {
+                MediaSource src = new MediaSource()
+                {
+                    MediaType = (int)MediaType.Video,
+                    Source = source
+                };
+                MediaSourceService.Add(src);
+                TimeTableInfoHasMediaSrc infoHasMedia = new TimeTableInfoHasMediaSrc()
+                {
+                    TimeTableInformationId = infoId,
+                    MediaSourceId = MediaSourceService.GetBySource(source).MediaSourceId
+                };
+                TimeTableInfoMediaSrcService.Add(infoHasMedia);
+                return RedirectToAction("Index");
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+        }
+        [HttpPost]
+        public IActionResult DeleteMedia(int infoId, int mediaId)
+        {
+            try
+            {
+                List<TimeTableInfoHasMediaSrc> mediaToDelete = new List<TimeTableInfoHasMediaSrc>();
+                IEnumerable links = TimeTableInfoMediaSrcService.GetAllByTimeTableInfoId(infoId);
+                foreach (TimeTableInfoHasMediaSrc link in links)
+                {
+                    if (link.MediaSourceId == mediaId)
+                    {
+                        mediaToDelete.Add(link);
+                    }
+                }
+                for(int i = 0; i < mediaToDelete.Count; i++)
+                {
+                    TimeTableInfoMediaSrcService.Delete(mediaToDelete[i]);
+                }
+                return RedirectToAction("upload", new { id = infoId });
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

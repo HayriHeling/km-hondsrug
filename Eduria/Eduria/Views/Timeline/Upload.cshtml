@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+}
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Audio)
+    {
+        if (i == 0)
+        {
+            <h2>Audio</h2>
+        }
+        <audio controls>
+            <source src="@Url.Content(String.Format("~/Content/{0}", model.Source))" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" />
+        </form>
+
+    }
+}
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Image)
+    {
+        if (i == 0)
+        {
+            <h2>Afbeeldingen</h2>
+        }
+        <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="height: 315px;" />
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" />
+        </form>
+    }
+}
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Video)
+    {
+        if (i == 0)
+        {
+            <h2>Videos</h2>
+        }
+        string[] parsedSource = model.Source.Split("?v=");
+        string embed = parsedSource[(parsedSource.Length - 1)];
+        <iframe width="420" height="315"
+                src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" />
+        </form>
+    }
+}
+
+<h2>upload audio</h2>
+<form id="AudioFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+    <input type="number" name="mType" value="1" style="display:none;" />
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="file" name="files" accept="audio/*" multiple />
+    <input type="submit" name="submit" value="uploaden" />
+</form>
+
+<h2>upload afbeeldingen</h2>
+<form id="ImageFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+    <input type="number" name="mType" value="2" style="display:none;" />
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="file" name="files" accept="image/*" multiple />
+    <input type="submit" name="submit" value="uploaden" />
+</form>
+
+<h2>upload videos</h2>
+<form id="VideoFilesForm" method="post" asp-action="SaveLink" asp-controller="Timeline">
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="text" name="source" placeholder="youtube link" />
+    <input type="submit" name="submit" value="uploaden" />
+</form>
