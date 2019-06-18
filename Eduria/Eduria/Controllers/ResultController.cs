@@ -95,7 +95,10 @@ namespace Eduria.Controllers
                 Name = exam.Name,
                 Description = exam.Description,
                 TotalTimesDone = ExamService.GetTotalDone(id),
-                TotalTimesDonePerMonth = totalPerMonth
+                TotalTimesDonePerMonth = totalPerMonth,
+                HighestScore = ExamService.GetHighestScore(id),
+                LowestScore = ExamService.GetLowestScore(id),
+                AverageScore = ExamService.GetAverageScore(id)
             };
 
             return View(model);

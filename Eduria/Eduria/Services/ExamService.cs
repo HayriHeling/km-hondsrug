@@ -53,6 +53,12 @@ namespace Eduria.Services
                 .Count();
         }
 
+        /// <summary>
+        /// Get the Exams done in a specific month.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         public int GetTotalDoneBetweenDate(int id, int month)
         {
             var query =
@@ -62,8 +68,55 @@ namespace Eduria.Services
                 select er.ExamId;
 
             return query
-                .DefaultIfEmpty()
                 .Count();
+        }
+
+        /// <summary>
+        /// Returns the highest score of an Exam.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetHighestScore(int id)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                where er.ExamId == id
+                select er.Score;
+
+            return query
+                .DefaultIfEmpty()
+                .Max();
+        }
+
+        /// <summary>
+        /// Returns the lowest score of an Exam.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetLowestScore(int id)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                where er.ExamId == id
+                select er.Score;
+
+            return query
+                .DefaultIfEmpty()
+                .Min();
+        }
+
+        public double GetAverageScore(int id)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                where er.ExamId == id
+                select er.Score;
+
+            return query 
+                .Average();
         }
     }
 }

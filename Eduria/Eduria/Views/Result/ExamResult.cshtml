@@ -19,28 +19,46 @@
 <script>
 var ctx = document.getElementById('examChart').getContext('2d');
 var examChart = new Chart(ctx, {
-    type: 'doughnut',
+    type: 'bar',
     data: {
-        labels: ['Totaal gemaakt', 'Foutief beantwoord', 'In een keer goed beantwoord'],
+        labels: ['Hoogste', 'Laagste', 'Gemiddeld' ],
         datasets: [{
-            label: 'Rood',
-            data: [@Model.TotalTimesDone],
+            data: [@Model.HighestScore, @Model.LowestScore, @Model.AverageScore],
             backgroundColor: [
-                'rgba(54, 162, 235, 1)',
+                'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',
-                'rgba(123, 239, 178, 1)'
+                'rgba(54, 162, 235, 1)',
             ],
             borderColor: [
-                'rgba(54, 162, 235, 1)',
+                'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',
-                'rgba(123, 239, 178, 1)'
+                'rgba(54, 162, 235, 1)'
             ],
             borderWidth: 3
         }]
+    },
+    options: {
+        legend: {
+        display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    max: @Model.HighestScore + 5
+                }
+            }]
+        }
     }
 });
 </script>
 <script>
+    var monthArray = []
+    @foreach(var item in Model.TotalTimesDonePerMonth)
+    {
+        @:monthArray.push(@item);
+    }
+
     var ctx = document.getElementById('examChartTwo').getContext('2d');
     var examChartTwo = new Chart(ctx, {
         type: 'bar',
@@ -50,22 +68,51 @@ var examChart = new Chart(ctx, {
                 'Augustus', 'September', 'Oktober',
                 'November', 'December'],
             datasets: [{
-                label: 'Aantal',
+                label: 'Januari',
                 backgroundColor: [
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 99, 132, 1)',
-                    'rgba(123, 239, 178, 1)'
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
                 ],
                 borderColor: [
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 99, 132, 1)',
-                    'rgba(123, 239, 178, 1)'
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
                 ],
-                data: @for (int i = 0; i <= 11; i++) { @Model.TotalTimesDonePerMonth.ToArray()[0]}
+                data: monthArray
             }]
         },
-
-
-        options: {}
+        options: {
+        legend: {
+        display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
     });
+
+    console.log(@Model.TotalTimesDonePerMonth.ToArray()[5].ToString());
 </script>
