@@ -26,7 +26,7 @@ namespace Eduria.Models
         [Display(Name = "Identificatie code")]
         [Required(ErrorMessage = "Dit veld is verplicht.")]
         public int UserNum { get; set; }
-        [Display(Name = "Klas code")]
+        [Display(Name = "Niveau")]
         [Required(ErrorMessage = "Dit veld is verplicht.")]
         public int ClassId { get; set; }
         [Display(Name = "Wachtwoord")]

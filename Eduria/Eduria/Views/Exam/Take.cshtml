@@ -12,49 +12,70 @@
         @foreach (QuestionModel q in ViewBag.questions)
         {
             List<AnswerModel> qAnswers = new List<AnswerModel>();
-            <div id="question@(q.QuestionId)" class="questions">
-                <p>@q.Text</p>
-                @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+            string source = q.MediaSourceModel.Source;
+            string[] parsedSource = source.Split("?v=");
+            string embed = parsedSource[(parsedSource.Length - 1)];
+        <div id="question@(q.QuestionId)" class="questions">
+            <p>@q.Text</p>
+            @if (q.MediaSourceModel.MediaType == MediaType.Audio)
+            {
+                <audio controls>
+                    <source src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" type="audio/mp3">
+                    Your browser does not support the audio element.
+                </audio>
+            }
+            else if (q.MediaSourceModel.MediaType == MediaType.Image)
+            {
+                <img src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" style="height: 315px;" />
+            }
+            else if (q.MediaSourceModel.MediaType == MediaType.Video)
+            {
+                <iframe width="420" height="315"
+                        src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
+            }
+
+
+            @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+            {
+                foreach (AnswerModel a in ViewBag.answers)
                 {
-                    foreach (AnswerModel a in ViewBag.answers)
+                    if (a.QuestionId == q.QuestionId)
                     {
-                        if (a.QuestionId == q.QuestionId)
-                        {
-                            qAnswers.Add(a);
-                        }
-                    }
-                    Random rng = new Random();
-                    int n = qAnswers.Count;
-                    while (n > 1)
-                    {
-                        n--;
-                        int k = rng.Next(n + 1);
-                        AnswerModel value = qAnswers[k];
-                        qAnswers[k] = qAnswers[n];
-                        qAnswers[n] = value;
-                    }
-                    @foreach (AnswerModel a in qAnswers)
-                    {
-                        <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
+                        qAnswers.Add(a);
                     }
                 }
-                @if ((QuestionType)q.QuestionType == QuestionType.Open)
+                Random rng = new Random();
+                int n = qAnswers.Count;
+                while (n > 1)
                 {
-                    <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
+                    n--;
+                    int k = rng.Next(n + 1);
+                    AnswerModel value = qAnswers[k];
+                    qAnswers[k] = qAnswers[n];
+                    qAnswers[n] = value;
                 }
-                @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+                @foreach (AnswerModel a in qAnswers)
                 {
-                    int count = 0;
-                    <div class="cc-selector">
-                        @foreach (TimeTableModel tModel in ViewBag.timetables)
-                        {
-                            count++;
-                            <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
-                            <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
-                        }
-                    </div>
+                    <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
                 }
-            </div>
+            }
+            @if ((QuestionType)q.QuestionType == QuestionType.Open)
+            {
+                <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
+            }
+            @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+            {
+                int count = 0;
+                <div class="cc-selector">
+                    @foreach (TimeTableModel tModel in ViewBag.timetables)
+                    {
+                        count++;
+                        <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
+                        <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
+                    }
+                </div>
+            }
+        </div>
         }
         <div id="questionCount"></div>
         <input type="button" value="Vorige Vraag" onclick="PreviousQuestion()" />

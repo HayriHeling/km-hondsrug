@@ -2,9 +2,12 @@
 @{
     ViewData["Title"] = "BackupDatabase";
 }
-
-<h2>BackupDatabase</h2>
-<form>
-    <p>Je database backup is gedownload naar @Model.BackupData</p>
-    <input type="submit" asp-controller="Dashboard" class="button" asp-action="Index" value="Terug naar je dashboard" />
-</form>
+    <div id="content" class="row">
+        <div class="medium-12 columns">
+            <h2>Backup database</h2>
+            <form>
+                <p>Je database backup is gedownload naar @Model.BackupData</p>
+                <input type="submit" asp-controller="Dashboard" class="button" asp-action="Index" value="Terug naar je dashboard" />
+            </form>
+        </div>
+    </div>

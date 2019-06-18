@@ -35,12 +35,17 @@ namespace Eduria
 
         public ExamResult GetExamResultByUserAndExamId(int userId, int examId)
         {
-            return Context.ExamResults.First(x => x.UserId == userId && x.ExamId == examId);
+            return Context.ExamResults.FirstOrDefault(x => x.UserId == userId && x.ExamId == examId);
         }
 
         public ExamResult GetExamResultByUserAndStartDate(int userId, DateTime dateStarted)
         {
             return Context.ExamResults.First(x => x.UserId == userId && x.StartedAt == dateStarted);
+        }
+
+        public int GetExamResultIdByExamResult(ExamResult examResult)
+        {
+            return Context.ExamResults.Find(examResult).ExamResultId;
         }
     }
 }
