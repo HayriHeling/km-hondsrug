@@ -56,24 +56,24 @@ namespace Eduria.Services
                 .DefaultIfEmpty()
                 .Sum();
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int GetTotalAnswered(int id)
+        public int GetTotalTimesGood(int id)
         {
             var query =
                 from q in Context.Questions
                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
                 where q.QuestionId == id
-                select eq.QuestionId;
+                select q.QuestionId;
 
             return query
                 .DefaultIfEmpty()
-                .Count();
+                .Sum();
         }
 
         /// <summary>
@@ -93,25 +93,6 @@ namespace Eduria.Services
             return query
                 .First()
                 .ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public int GetTotalGoodAtOnce(int id)
-        {
-            var query =
-                from q in Context.Questions
-                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
-                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
-                where ul.TimesWrong == 0 && q.QuestionId == id
-                select q.QuestionId;
-
-            return query
-                .DefaultIfEmpty()
-                .Sum();
         }
     }
 }

@@ -67,8 +67,8 @@ namespace Eduria.Controllers
             {
                 Name = ExamQuestionService.GetQuestionName(id),
                 TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
-                TimesAnswerd = ExamQuestionService.GetTotalAnswered(id),
-                TimesGoodAtOnce = ExamQuestionService.GetTotalGoodAtOnce(id)
+                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id),
+                //TimesGoodAtOnce = ExamQuestionService.GetTotalGoodAtOnce(id)
             };
 
             return View(model);
