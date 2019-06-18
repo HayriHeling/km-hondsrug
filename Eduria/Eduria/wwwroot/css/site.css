@@ -406,7 +406,6 @@ p {
 }
 
 
-
 /* TimePeriod Slider*/
 
 .glider-contain {
@@ -928,7 +927,18 @@ input:checked + .slider:before {
     border-radius: 50%;
     background: white;
 }
-    .slider.round:before {
-        border-radius: 50%;
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+    .timeline {
+        padding: 0px;
     }
 
+    h1 {
+        margin-bottom: 30px;
+        margin-left: 45px;
+    }
+}
