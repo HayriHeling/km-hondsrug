@@ -1,45 +1,81 @@
-﻿@model EduriaData.Models.User
+@model EduriaData.Models.User
 
 @{
     ViewData["Title"] = "Login";
+    Layout = null;
 }
+    <html>
+    <head>
+        <link href="~/css/account.css" type="text/css" rel="stylesheet" />
+        <link href="~/css/site.css" type="text/css" rel="stylesheet" />
+        <link href="~/css/foundation.css" type="text/css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="row">
+            <div class="medium-12 columns">
+                <div class="center-screen">
+                    <h4>Inloggen</h4>
 
-    <div class="center-screen">
+                    <h1>@ViewBag.Message</h1>
+                    @if (string.IsNullOrEmpty(ViewBag.LLIT))
+                    {
+                        <p class="text-muted">Welkom op je eerste login</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Je was voor het laastst ingelogd op @ViewBag.LLIT</p>
+                    }
 
-        <h1>@ViewBag.Message</h1>
-        @if (string.IsNullOrEmpty(ViewBag.LLIT))
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <p>Je bent al ingelogd.</p>
+                    }
+                    else
+                    {
 
-        {
-            <p class="text-muted">Welkom op je eerste login</p>
-        }
-        else
-        {
-           <p class="text-muted">Je was voor het laastst ingelogd op @ViewBag.LLIT</p>
-        }
-        @if (User.Identity.IsAuthenticated)
-        {
-            <p>Je bent al ingelogd.</p>
-        }
-        else
-        {
-                
-                    <form asp-action="Login" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <form asp-action="Login" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="form-group">
-                    <label asp-for="UserNum" class="control-label"></label>
-                    <input asp-for="UserNum" class="form-control" />
-                    <span asp-validation-for="UserNum" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" type="password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
+                            <div class="form-group">
+                                <label asp-for="UserNum" class="control-label"></label>
+                                <input asp-for="UserNum" class="form-control" />
+                                <span asp-validation-for="UserNum" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Password" class="control-label"></label>
+                                <input asp-for="Password" class="form-control" type="password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <label id="myBtn">Wachtwoord vergeten?</label><br />
+                            <div class="form-group">
+                                <input type="submit" value="Login" class="button" />
+                            </div>
+                        </form>
 
-                        <div class="form-group">
-                            <input type="submit" value="Inloggen" class="button" />
+                        <!-- The Modal -->
+                        <div id="myModal" class="modal">
+
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <form asp-action="ForgotPassword" method="post">
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="control-label"></label>
+                                        <input asp-for="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Reset wachtwoord" class="button" />
+                                    </div>
+                                </form>
+                            </div>
+
                         </div>
-                    </form>
-        }
-    </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+        <script src="~/js/site.js"></script>
+    </body>
+</html>

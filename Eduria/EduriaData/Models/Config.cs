@@ -17,10 +17,10 @@ namespace EduriaData.Models
         public string Subject { get; set; }
         [Required, MaxLength(256)]
         public string Body { get; set; }
-        [Required, MaxLength(256)]
-        public string Host { get; set; }
         [Required]
         public int SMTPPort { get; set; }
+        [Required, MaxLength(256)]
+        public string Host { get; set; }
         [Required]
         public DateTime EntryChangedAt { get; set; }
     }

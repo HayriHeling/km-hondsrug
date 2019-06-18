@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Eduria.JsonClasses;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols;
-using System.Web;
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
@@ -18,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
@@ -31,6 +29,7 @@ namespace Eduria.Controllers
         private MediaSourceService MediaSourceService;
         private UserEQLogService UserEqLogService;
         private ExamResultService ExamResultService;
+        private UserService UserService;
 
         /// <summary>
         /// internal class for databinding the information from database to object.
@@ -115,16 +114,17 @@ namespace Eduria.Controllers
         /// <param name="examResultService"></param>
         public ExamController(ExamService examService, QuestionService questionService, AnswerService answerService,
             TimeTableService timeTableService, ExamQuestionService examQuestionService, 
-            UserEQLogService userEqLogService, ExamResultService examResultService, MediaSourceService mediaSourceService)
+            UserEQLogService userEqLogService, ExamResultService examResultService, MediaSourceService mediaSourceService, UserService userService)
         {
-            this.ExamQuestionService = examQuestionService;
-            this.ExamService = examService;
-            this.QuestionService = questionService;
-            this.TimeTableService = timeTableService;
-            this.UserEqLogService = userEqLogService;
-            this.ExamResultService = examResultService;
-            this.AnswerService = answerService;
-            this.MediaSourceService = mediaSourceService;
+            ExamQuestionService = examQuestionService;
+            ExamService = examService;
+            QuestionService = questionService;
+            TimeTableService = timeTableService;
+            UserEqLogService = userEqLogService;
+            ExamResultService = examResultService;
+            AnswerService = answerService;
+            MediaSourceService = mediaSourceService;
+            UserService = userService;
         }
 
         /// <summary>
@@ -336,11 +336,21 @@ namespace Eduria.Controllers
         /// <returns></returns>
         public IActionResult OverView()
         {
+            ViewBag.userType = UserService.GetById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).UserType;
             ViewBag.exams = ExamService.GetAll();
             ViewBag.ttService = TimeTableService;
             return View();
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Teacher")]
+        public void ToggleActiveExam(int examId, int state)
+        {
+            Exam exam = ExamService.GetById(examId);
+            exam.IsActive = state;
+            ExamService.Update(exam);
+        } 
+            
         /// <summary>
         /// Method used for sending the data from the exam to this controller
         /// </summary>
@@ -679,7 +689,7 @@ namespace Eduria.Controllers
                     string[] arr = formFile.FileName.Split(".");
                     string ext = arr[arr.Length - 1];
                     string newName = "questionMedia" + q.QuestionId + "." + ext;
-                    filePath = "Content/" + newName;
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", newName);
                     MediaSource src = MediaSourceService.GetById(q.MediaSourceId);
                     src.Source = newName;
                     MediaSourceService.Update(src);
