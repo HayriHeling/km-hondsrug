@@ -3,14 +3,63 @@
 @{
     ViewData["Title"] = "ViewTimeline";
 }
+<style>
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
 
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
 <div class="timeline">
+    @if (ViewBag.id > -1)
+    {
+        <h2>
+            Tijdlijn van @ViewBag.user.Firstname @ViewBag.user.Lastname.
+        </h2>
+    }
+    @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
+    {
+        <input type="button" value="Voeg nieuwe gebeurtenis toe" onclick="location.href='@Url.Action("CreateInformation", "Timeline", new { state = ViewBag.id })'" class="button" />
+    }
+
     @foreach (TimeblockModel timeBlockModel in Model.TimeblockModels)
     {
         string modelName = timeBlockModel.TimeTableModel.Text;
         modelName = char.ToUpper(modelName[0]) + modelName.Substring(1);
         string name = "period" + modelName;
-        <section id=name>
+        <section id=@name>
             <div class="row">
                 <h1>@modelName</h1>
             </div>
@@ -19,13 +68,80 @@
                 {
                     <li>
                         <div class="right_content">
-                            <h2>@timeBlockInformationModel.Name</h2>
-                            <p>
-                                @timeBlockInformationModel.Description
-                            </p>
+                            <h2 id="myBtn">@timeBlockInformationModel.Name</h2>
+
+                            <!-- The Modal -->
+                            <div id="myModal" class="modal">
+
+                                <!-- Modal content -->
+                                <div class="modal-content">
+                                    @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
+                                    {
+                                        <input type="button" value="Bewerken" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
+                                        <input type="button" value="Media" onclick="location.href='@Url.Action("Upload", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
+                                        <input type="button" value="Verwijderen" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
+                                    }
+                                        <span class="close">&times;</span>
+                                        <div>
+                                            @{
+                                                int audioCount = 0;
+                                                int imageCount = 0;
+                                                int videoCount = 0;
+                                            }
+
+                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
+                                            {
+                                                if (source.MediaType == MediaType.Audio)
+                                                {
+                                                    if (audioCount == 0)
+                                                    {
+                                                        audioCount++;
+                                                        <h2>Audio</h2>
+                                                    }
+                                                    <audio controls>
+                                                        <source src="@Url.Content(String.Format("~/Content/{0}", source.Source))" type="audio/mp3">
+                                                        Your browser does not support the audio element.
+                                                    </audio>
+                                                }
+                                            }
+                                        </div>
+                                        <div>
+                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
+                                            {
+                                                if (source.MediaType == MediaType.Image)
+                                                {
+                                                    if (imageCount == 0)
+                                                    {
+                                                        imageCount++;
+                                                        <h2>Afbeeldingen</h2>
+                                                    }
+                                                    <img src="@Url.Content(String.Format("~/Content/{0}", source.Source))" style="height: 160px;" />
+                                                }
+                                            }
+                                        </div>
+                                        <div>
+                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
+                                            {
+                                                if (source.MediaType == MediaType.Video)
+                                                {
+                                                    if (videoCount == 0)
+                                                    {
+                                                        videoCount++;
+                                                        <h2>Videos</h2>
+                                                    }
+                                                    string[] parsedSource = source.Source.Split("?v=");
+                                                    string embed = parsedSource[(parsedSource.Length - 1)];
+                                                    <iframe width="210" height="160"
+                                                            src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))" allowFullScreen="true"></iframe>
+                                                }
+                                            }
+                                        </div>
+                                        <p>@timeBlockInformationModel.Description</p>
+                                    </div>
+                            </div>
                         </div>
                         <div class="left_content">
-                            @if (timeBlockInformationModel.BeforeChrist)
+                            @if (timeBlockInformationModel.BeforeChrist == ChristNotation.vChr)
                             {
                                 NumberFormatInfo nfi = new NumberFormatInfo
                                 {
@@ -40,7 +156,7 @@
                             }
                             else
                             {
-                        <h3>@timeBlockInformationModel.Year</h3>
+                                <h3>@timeBlockInformationModel.Year</h3>
                             }
                         </div>
                     </li>
@@ -48,4 +164,6 @@
             </ul>
         </section>
     }
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
 </div>
