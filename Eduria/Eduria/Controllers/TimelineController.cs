@@ -35,7 +35,11 @@ namespace Eduria.Controllers
             MediaSourceService = mediaSourceService;
             UserService = userService;
         }
-
+        /// <summary>
+        /// Returns the timeline
+        /// </summary>
+        /// <param name="id"> the id of the user of the timeline. default is -1</param>
+        /// <returns></returns>
         public IActionResult Index(int id=-1)
         {
             if(id != -1 && UserService.GetById(id).UserType == (int)UserRoles.Admin)
@@ -52,7 +56,11 @@ namespace Eduria.Controllers
             ViewBag.loggedUserType = UserService.GetById(ViewBag.loggedUser).UserType;
             return View(CreateTimeLineModel(id));
         }
-
+        /// <summary>
+        /// creates timeline model
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public TimelineModel CreateTimeLineModel(int id)
         {
             return new TimelineModel
@@ -61,7 +69,11 @@ namespace Eduria.Controllers
                 TimeblockModels = CreateTimeblockModels(id)
             };
         }
-
+        /// <summary>
+        /// creates timeblock model
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<TimeblockModel> CreateTimeblockModels(int userId)
         {
             List<TimeblockModel> outputTimeblockModels = new List<TimeblockModel>();
@@ -223,6 +235,11 @@ namespace Eduria.Controllers
                 TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableInformation.TimeTableId))               
             };
         }
+        /// <summary>
+        /// Converts Timeblockinformationmodels to timetableinformation objects to use with db.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public TimeTableInformation ConvertToTimeTableInformation(TimeBlockInformationModel model)
         {
             return new TimeTableInformation()
@@ -234,7 +251,11 @@ namespace Eduria.Controllers
                 Year = model.Year
             };
         }
-
+        /// <summary>
+        /// Returns the view where the user can add information to a timeline
+        /// </summary>
+        /// <param name="state"> The state of where the information needs to be saved. 0 is default timeline while 1 is personal timeline.</param>
+        /// <returns></returns>
         public IActionResult CreateInformation(int state = 0)
         {
             IEnumerable<TimeTable> tables = TimeTableService.GetAll();
@@ -252,7 +273,13 @@ namespace Eduria.Controllers
             ViewBag.state = state;
             return View();
         }
-
+        /// <summary>
+        /// Saves the newly created information to the timeline
+        /// </summary>
+        /// <param name="info"> info model filled in by form</param>
+        /// <param name="state"> to which timeline it needs to be saved. 0 is default timeline while 1 is personal timeline</param>
+        /// <param name="timeTableId">the timetableId given because this can't be databinded</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult CreateInformation(TimeBlockInformationModel info, int state ,int timeTableId)
         {
@@ -284,7 +311,11 @@ namespace Eduria.Controllers
                 throw e;
             }
         }
-
+        /// <summary>
+        /// Returns the view where the user van edit existing information.
+        /// </summary>
+        /// <param name="id">id of the informationmodel</param>
+        /// <returns></returns>
         public IActionResult EditInformation(int id)
         {
             IEnumerable<TimeTable> tables = TimeTableService.GetAll();
@@ -302,7 +333,12 @@ namespace Eduria.Controllers
             ViewBag.infoModel = ConvertToTimeBlockInformationModel(TimeTableInformationService.GetById(id));
             return View();
         }
-
+        /// <summary>
+        /// Saves the edited information to the database.
+        /// </summary>
+        /// <param name="info">infomodel filled in by the form</param>
+        /// <param name="timeTableId">the timetableId given because this can't be databinded</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult EditInformation(TimeBlockInformationModel info, int timeTableId)
         {
@@ -324,7 +360,11 @@ namespace Eduria.Controllers
                 throw e;
             }           
         }
-
+        /// <summary>
+        /// Deletes the information of given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult DeleteInformation(int id)
         {
             try
@@ -339,7 +379,11 @@ namespace Eduria.Controllers
             }
 
         }
-
+        /// <summary>
+        /// shows the view where the user can upload files to information.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult Upload(int id)
         {
             IEnumerable InfoHasMedia = TimeTableInfoMediaSrcService.GetAllByTimeTableInfoId(id);
@@ -353,7 +397,13 @@ namespace Eduria.Controllers
             ViewBag.infoId = id;
             return View();
         }
-
+        /// <summary>
+        /// Uploads media to the database.
+        /// </summary>
+        /// <param name="files">list of files being uploaded</param>
+        /// <param name="mType">mediatype of given files</param>
+        /// <param name="infoId"> id of the information the media is for</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> UploadMediaToInformationAsync(List<IFormFile> files, int mType, int infoId)
         {
@@ -396,6 +446,12 @@ namespace Eduria.Controllers
                 throw e;
             }          
         }
+        /// <summary>
+        /// Saves the youtube link to the database
+        /// </summary>
+        /// <param name="source">the given youtube link</param>
+        /// <param name="infoId">the id of the information model the link is for</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult SaveLink(string source, int infoId)
         {
@@ -421,6 +477,12 @@ namespace Eduria.Controllers
                 throw e;
             }
         }
+        /// <summary>
+        /// Deletes reference to the media of given id
+        /// </summary>
+        /// <param name="infoId">the id of the information the media is from</param>
+        /// <param name="mediaId">the id of the mediasource</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult DeleteMedia(int infoId, int mediaId)
         {
@@ -447,7 +509,11 @@ namespace Eduria.Controllers
                 throw e;
             }
         }
-
+        /// <summary>
+        /// generates a random string 
+        /// </summary>
+        /// <param name="length">the length of the string</param>
+        /// <returns></returns>
         public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
