@@ -82,14 +82,14 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IActionResult QuestionResult(int id)
+        public IActionResult QuestionResult(int id, int examId)
         {
             DataQuestionResultModel model = new DataQuestionResultModel
             {
                 Name = ExamQuestionService.GetQuestionName(id),
-                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
-                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id),
-                TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id)
+                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id, examId),
+                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id, examId),
+                TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id, examId)
             };
 
             return View(model);
@@ -111,7 +111,7 @@ namespace Eduria.Controllers
                 totalPerMonth.Add(ExamService.GetTotalDoneBetweenDate(id, i));
             }
 
-            IEnumerable<Question> questions = QuestionService.GetAll();
+            IEnumerable<Question> questions = ExamQuestionService.GetQuestionsByExamId(id);
             IEnumerable<QuestionModel> questionModels = questions.Select(result => new QuestionModel
             {
                 QuestionId = result.QuestionId,
