@@ -13,6 +13,8 @@ namespace Eduria
         public virtual DbSet<MediaSource> MediaSources { get; set; }
         public virtual DbSet<TimeTable> TimeTables { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Config> Configs { get; set; }
+
         // AnalyticLayer
         public virtual DbSet<AnalyticData> AnalyticDatas { get; set; }
         public virtual DbSet<AnalyticDefault> AnalyticDefaults { get; set; }
