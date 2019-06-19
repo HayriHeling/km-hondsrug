@@ -16,13 +16,16 @@ namespace Eduria.Controllers
         private ExamService ExamService { get; set; }
         private ExamQuestionService ExamQuestionService { get; set; }
         private UserService UserService { get; set; }
-
-        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService)
+        private MediaSourceService MediaSourceService { get; set; }
+        private TimeTableService TimeTableService { get; set; }
+        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService, MediaSourceService mediaSourceService, TimeTableService timeTableService)
         {
             QuestionService = questionService;
             ExamService = examService;
             ExamQuestionService = examQuestionService;
             UserService = userService;
+            MediaSourceService = mediaSourceService;
+            TimeTableService = timeTableService;
         }
 
         public IActionResult Index()
@@ -32,7 +35,10 @@ namespace Eduria.Controllers
             {
                 UserId = result.UserId,
                 FirstName = result.Firstname,
-                LastName = result.Lastname
+                LastName = result.Lastname,
+                UserNum = result.UserNum,
+                ClassId = result.ClassId,
+                UserType = (UserRoles)result.UserType
             });
 
             IEnumerable<Exam> exams = ExamService.GetAll();
@@ -42,10 +48,27 @@ namespace Eduria.Controllers
                 Name = result.Name,
                 Description = result.Description
             });
-
-            var tuple = Tuple.Create(userModels, examModels);
+            IEnumerable<Question> questions = QuestionService.GetAll();
+            IEnumerable<QuestionModel> questionModels = questions.Select(result => new QuestionModel
+            {
+                QuestionId = result.QuestionId,
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(result.MediaSourceId)),
+                QuestionType = result.QuestionType,
+                Text = result.Text,
+                TimeTableModel = ConvertToModel(TimeTableService.GetById(result.TimeTableId))
+            });
+            var tuple = Tuple.Create(userModels, examModels, questionModels);
 
             return View(tuple);
+        }
+        public TimeTableModel ConvertToModel(TimeTable timeTable)
+        {
+            return new TimeTableModel
+            {
+                TimeTableId = timeTable.TimeTableId,
+                Text = timeTable.Text,
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId))
+            };
         }
 
         /// <summary>
