@@ -52,7 +52,10 @@
     var tempCurrentQuestion;
     var count = 0;
     var score = 0;
-    var maxScore = 0;
+    var maxScore = @Model.Score;
+    if (@Model.Score < 0) {
+        maxScore = 0;
+    }
     var pointsPerQuestion = 5;
     var outputJson = [];
     var ExamId = @Model.ExamId;
@@ -60,12 +63,15 @@
     var EndTime;
     var QuestionTime;
     var RepeatTime = 3;
+    var ExamResultId = @Model.ExamResultId;
 
     var selected = 0;
 
     // Function that creates an question object from the inputs
     function createTempQuestion(id, text, answerId) {
-        maxScore = maxScore + pointsPerQuestion;
+        if (@Model.Score < 0) {
+            maxScore = maxScore + pointsPerQuestion;
+        }
         return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
 
@@ -216,7 +222,11 @@
 
     // Function that sends the Json Array to the controller.
     function SendJson(isPaused) {
-        StartTime = StartTime.toJSON();
+        if (ExamResultId < 0) {
+            StartTime = StartTime.toJSON();
+        } else {
+            StartTime = null;
+        }
         if (isPaused) {
             EndTime = null;
         } else {
@@ -226,7 +236,7 @@
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime },
+            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime, examResultId: ExamResultId },
             success: function(data){
                 alert(data.Result);
             },

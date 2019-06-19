@@ -11,6 +11,7 @@ namespace Eduria.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int ExamResultId { get; set; }
+        public int Score { get; set; }
         public TimeTableModel TimeTable { get; set; }
         public List<QuestionModel> QuestionModels;
         public List<AnswerModel> AnswerModels;

@@ -363,11 +363,24 @@ namespace Eduria.Controllers
         /// <param name="userId"></param>
         /// <param name="score"></param>
         /// <returns></returns>
-        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
+        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime, int examResultId)
         {
-            ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
-            int examResultId = ExamResultService.GetExamResultByUserAndStartDate(userId, starttime).ExamResultId;
-            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, examResultId, userId);
+            int examResultIdOutput = 0;
+            if (examResultId < 0)
+            {
+                ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
+                int tempExamResultId = ExamResultService.GetExamResultByUserAndStartDate(userId, starttime).ExamResultId;
+            }
+            else
+            {
+                ExamResult examResult = ExamResultService.GetById(examResultId);
+                examResult.FinishedAt = endtime;
+                examResult.Score = score;
+                ExamResultService.Update(examResult);
+                examResultIdOutput = examResultId;
+            }
+            
+            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, examResultIdOutput, userId);
             return View(null);
         }
 
@@ -512,7 +525,8 @@ namespace Eduria.Controllers
                 ExamId = examResult.ExamId,
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
-                ExamResultId = examResultId
+                ExamResultId = examResultId, 
+                Score = examResult.Score
             };
         }
 
@@ -526,7 +540,7 @@ namespace Eduria.Controllers
             List<Question> allQuestions = QuestionService.GetAll().ToList();
             Exam exam = ExamService.GetById(id);
             //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
-            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);          
+            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);
             return new ExamModel()
             {
                 AnswerModels = null,
@@ -534,7 +548,8 @@ namespace Eduria.Controllers
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
-                QuestionModels = questionModels
+                QuestionModels = questionModels,
+                Score = -1
             };
         }
 
