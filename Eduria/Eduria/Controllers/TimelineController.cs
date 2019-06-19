@@ -47,8 +47,9 @@ namespace Eduria.Controllers
             {
                 id = UserService.GetAllUsersByUserType((int)UserRoles.Admin).First().UserId;
             }
-            ViewBag.user = UserService.GetById(id);
+            ViewBag.user = UserService.GetById(id);            
             ViewBag.loggedUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            ViewBag.loggedUserType = UserService.GetById(ViewBag.loggedUser).UserType;
             return View(CreateTimeLineModel(id));
         }
 

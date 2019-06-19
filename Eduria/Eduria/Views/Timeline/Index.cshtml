@@ -49,7 +49,7 @@
             Tijdlijn van @ViewBag.user.Firstname @ViewBag.user.Lastname.
         </h2>
     }
-    @if (ViewBag.user.UserId == ViewBag.loggedUser)
+    @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
     {
         <input type="button" value="Voeg nieuwe gebeurtenis toe" onclick="location.href='@Url.Action("CreateInformation", "Timeline", new { state = ViewBag.id })'" class="button" />
     }
@@ -75,7 +75,7 @@
 
                                 <!-- Modal content -->
                                 <div class="modal-content">
-                                    @if (ViewBag.user.UserId == ViewBag.loggedUser)
+                                    @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
                                     {
                                         <input type="button" value="Bewerken" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
                                         <input type="button" value="Media" onclick="location.href='@Url.Action("Upload", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
