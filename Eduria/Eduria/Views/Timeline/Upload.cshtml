@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Upload";
 }
+    <input type="button" value="Terug" onclick="location.href='@Url.Action("Index", "Timeline")'" class="button" />
 @for (int i = 0; i < ViewBag.media.Count; i++)
 {
     MediaSourceModel model = ViewBag.media[i];
@@ -18,7 +19,7 @@
         <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
             <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
             <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-            <input type="submit" name="submit" value="Verwijderen" />
+            <input type="submit" name="submit" value="Verwijderen" class="button"/>
         </form>
 
     }
@@ -36,7 +37,7 @@
         <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
             <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
             <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-            <input type="submit" name="submit" value="Verwijderen" />
+            <input type="submit" name="submit" value="Verwijderen" class="button"/>
         </form>
     }
 }
@@ -56,7 +57,7 @@
         <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
             <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
             <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-            <input type="submit" name="submit" value="Verwijderen" />
+            <input type="submit" name="submit" value="Verwijderen" class="button"/>
         </form>
     }
 }
@@ -66,7 +67,7 @@
     <input type="number" name="mType" value="1" style="display:none;" />
     <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
     <input type="file" name="files" accept="audio/*" multiple />
-    <input type="submit" name="submit" value="uploaden" />
+    <input type="submit" name="submit" value="audio uploaden" class="button"/>
 </form>
 
 <h2>upload afbeeldingen</h2>
@@ -74,12 +75,12 @@
     <input type="number" name="mType" value="2" style="display:none;" />
     <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
     <input type="file" name="files" accept="image/*" multiple />
-    <input type="submit" name="submit" value="uploaden" />
+    <input type="submit" name="submit" value="afbeeldingen uploaden" class="button"/>
 </form>
 
 <h2>upload videos</h2>
 <form id="VideoFilesForm" method="post" asp-action="SaveLink" asp-controller="Timeline">
     <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
     <input type="text" name="source" placeholder="youtube link" />
-    <input type="submit" name="submit" value="uploaden" />
+    <input type="submit" name="submit" value="video uploaden" class="button"/>
 </form>
