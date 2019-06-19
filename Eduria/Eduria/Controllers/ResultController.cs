@@ -82,14 +82,14 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IActionResult QuestionResult(int id, int examId)
+        public IActionResult QuestionResult(int id)
         {
             DataQuestionResultModel model = new DataQuestionResultModel
             {
                 Name = ExamQuestionService.GetQuestionName(id),
-                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id, examId),
-                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id, examId),
-                TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id, examId)
+                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
+                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id),
+                TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id)
             };
 
             return View(model);
