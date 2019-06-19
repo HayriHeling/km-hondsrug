@@ -53,7 +53,7 @@ namespace Eduria.Services
                 select ul.TimesWrong;
                  
             return query
-                .DefaultIfEmpty()
+                .DefaultIfEmpty(0)
                 .Sum();
         }
 
@@ -86,7 +86,7 @@ namespace Eduria.Services
                 select ul.CorrectAnswered;
 
             return query
-                .DefaultIfEmpty()
+                .DefaultIfEmpty(0)
                 .Sum();
         }
 
