@@ -477,7 +477,8 @@ namespace Eduria.Controllers
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
-                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
+                ExamResultId = -1
             };
         }
 
@@ -510,7 +511,8 @@ namespace Eduria.Controllers
                 Description = exam.Description,
                 ExamId = examResult.ExamId,
                 Name = exam.Name,
-                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
+                ExamResultId = examResultId
             };
         }
 
