@@ -1,7 +1,36 @@
-﻿@{
+﻿@model Tuple<IEnumerable<UserModel>, IEnumerable<ExamModel>>
+@{
     ViewData["Title"] = "Index";
 }
 
-<a asp-controller="Result" asp-action="Question">Overzicht van alle vragen</a>
-<a asp-controller="Result" asp-action="Exam">Overzicht van alle toetsen</a>
+<h2>Algemeen</h2>
+
+<div class="row">
+    <div class="medium-6 columns">
+        
+    </div>
+    <div class="medium-6 columns">
+        
+    </div>
+</div>
+<div class="row">
+    <div class="medium-6 columns">
+        <h3>Aantal: @Model.Item1.Count()</h3>
+        <p><b>Overzicht van alle leerlingen.</b></p>
+        @foreach (var item in Model.Item1)
+        {
+            <p><a asp-controller="" asp-action="" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></p>
+        }
+    </div>
+    <div class="medium-6 columns">
+        <h3>Aantal: @Model.Item2.Count()</h3>
+        <p><b>Overzicht van alle toetsen.</b></p>
+        @foreach (var item in Model.Item2)
+        {
+            <p><a asp-controller="Result" asp-action="ExamResult" asp-route-id="@item.ExamId">@item.Name  | @item.Description</a></p>
+        }
+    </div>
+</div>
+
+
 

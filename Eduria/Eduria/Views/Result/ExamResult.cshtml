@@ -1,17 +1,26 @@
-﻿@model DataExamResultModel
+﻿@model Tuple<IEnumerable<QuestionModel>, DataExamResultModel>
 
 @{
     ViewData["Title"] = "ExamResult";
 }
-
-<h2>ExamResult</h2>
-
-<b>@Model.Name | @Model.Description</b>
+    <div class="row">
+        <h2>ExamResult</h2> 
+    </div>
 
 <div class="row">
     <div class="medium-6 columns">
+        <p><b>@Model.Item2.Name | @Model.Item2.Description</b></p>
         <canvas id="examChart" width="400" height="400"></canvas>
     </div>
+    <div class="medium-6 columns">
+        <p><b>De vragen van: @Model.Item2.Name</b></p>
+        @foreach(var item in Model.Item1)
+        {
+            <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></p>
+        }
+    </div>
+</div>
+<div class="row">
     <div class="medium-6 columns">
         <canvas id="examChartTwo" width="400" height="400"></canvas>
     </div>
@@ -23,7 +32,7 @@ var examChart = new Chart(ctx, {
     data: {
         labels: ['Hoogste', 'Laagste', 'Gemiddeld' ],
         datasets: [{
-            data: [@Model.HighestScore, @Model.LowestScore, @Model.AverageScore],
+            data: [@Model.Item2.HighestScore, @Model.Item2.LowestScore, @Model.Item2.AverageScore],
             backgroundColor: [
                 'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',
@@ -45,7 +54,6 @@ var examChart = new Chart(ctx, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    max: @Model.HighestScore + 5
                 }
             }]
         }
@@ -54,7 +62,7 @@ var examChart = new Chart(ctx, {
 </script>
 <script>
     var monthArray = []
-    @foreach(var item in Model.TotalTimesDonePerMonth)
+    @foreach(var item in Model.Item2.TotalTimesDonePerMonth)
     {
         @:monthArray.push(@item);
     }
@@ -113,6 +121,4 @@ var examChart = new Chart(ctx, {
         }
     }
     });
-
-    console.log(@Model.TotalTimesDonePerMonth.ToArray()[5].ToString());
 </script>

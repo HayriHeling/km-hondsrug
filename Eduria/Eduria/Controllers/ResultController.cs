@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
+using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,17 +15,37 @@ namespace Eduria.Controllers
         private QuestionService QuestionService { get; set; }
         private ExamService ExamService { get; set; }
         private ExamQuestionService ExamQuestionService { get; set; }
+        private UserService UserService { get; set; }
 
-        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService)
+        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService)
         {
             QuestionService = questionService;
             ExamService = examService;
             ExamQuestionService = examQuestionService;
+            UserService = userService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<User> users = UserService.GetAll();
+            IEnumerable<UserModel> userModels = users.Select(result => new UserModel
+            {
+                UserId = result.UserId,
+                FirstName = result.Firstname,
+                LastName = result.Lastname
+            });
+
+            IEnumerable<Exam> exams = ExamService.GetAll();
+            IEnumerable<ExamModel> examModels = exams.Select(result => new ExamModel
+            {
+                ExamId = result.ExamId,
+                Name = result.Name,
+                Description = result.Description
+            });
+
+            var tuple = Tuple.Create(userModels, examModels);
+
+            return View(tuple);
         }
 
         /// <summary>
@@ -90,6 +111,13 @@ namespace Eduria.Controllers
                 totalPerMonth.Add(ExamService.GetTotalDoneBetweenDate(id, i));
             }
 
+            IEnumerable<Question> questions = QuestionService.GetAll();
+            IEnumerable<QuestionModel> questionModels = questions.Select(result => new QuestionModel
+            {
+                QuestionId = result.QuestionId,
+                Text = result.Text
+            });
+
             DataExamResultModel model = new DataExamResultModel
             {
                 Name = exam.Name,
@@ -101,7 +129,9 @@ namespace Eduria.Controllers
                 AverageScore = ExamService.GetAverageScore(id)
             };
 
-            return View(model);
+            var tuple = Tuple.Create(questionModels, model);
+
+            return View(tuple);
         }
     }
 }
