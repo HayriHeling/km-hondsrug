@@ -37,6 +37,7 @@
                     </div>
                     <div class="medium-offset-10 medium-4 columns">
                         <input id="SubmitDash" type="submit" asp-controller="Dashboard" class="button" asp-action="Index" value="Terug naar je dashboard" disabled="disabled"/>
+                        <input id="SubmitPause" type="button" value="Pauzeer" onclick="Pause()" class="button"/>
                         <input id="ExamButton" type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
                     </div>
                 </form>
@@ -190,7 +191,7 @@
         DeSelectRadioButton(selected);
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         EndTime = new Date();
-        SendJson();
+        SendJson(false);
         $("#ExamButton").attr("disabled", true);
         $("#SubmitDash").attr("disabled", false);
     }
@@ -214,9 +215,13 @@
     }
 
     // Function that sends the Json Array to the controller.
-    function SendJson() {
+    function SendJson(isPaused) {
         StartTime = StartTime.toJSON();
-        EndTime = EndTime.toJSON();
+        if (isPaused) {
+            EndTime = null;
+        } else {
+            EndTime = EndTime.toJSON();
+        }
         console.log(outputJson);
         $.ajax({
             type: "POST",
@@ -229,5 +234,9 @@
             traditional: true
         });
         }
+
+    function Pause() {
+        SendJson(true);
+    }
 
 </script>

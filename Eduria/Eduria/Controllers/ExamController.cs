@@ -131,14 +131,18 @@ namespace Eduria.Controllers
         /// Method that creates a view for an exammodel.
         /// </summary>
         /// <param name="id">Id of the exammodel</param>
+        /// <param name="examResult"></param>
         /// <returns>View of the exammodel</returns>
-        public IActionResult Show(int id = 1)
+        public IActionResult Show(int id = 1, int examResult = -1)
         {
             //return View(GetExamDataById(id));
             _examId = id;
             _dateTime = DateTime.Now;
-
-            return View(GetExamModelByExamId(id));
+            if (examResult < 0)
+            {
+                return View(GetExamModelByExamId(id));
+            }
+            return View(ResumeExamModel(examResult));
         }
         /// <summary>
         /// Get the exam of given id and changes database data into models to use in the view. 
@@ -472,6 +476,39 @@ namespace Eduria.Controllers
                 TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(exam.TimeTableId)),
                 Description = exam.Description,
                 ExamId = id,
+                Name = exam.Name,
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
+            };
+        }
+
+        public ExamModel ResumeExamModel(int examResultId)
+        {
+            ExamResult examResult = ExamResultService.GetById(examResultId);
+            IEnumerable<ExamQuestion> ExamQuestions = ExamQuestionService.GetAllQuestionIdsAsList(examResult.ExamId).ToList();
+            IEnumerable<UserEQLog> tempEqLogs = UserEqLogService.GetAllByResultId(examResultId);
+
+            List<ExamQuestion> examQuestionsOutput = ExamQuestions.ToList();
+
+            foreach (ExamQuestion question in ExamQuestions)
+            {
+                foreach (UserEQLog log in tempEqLogs)
+                {
+                    
+                    if (question.ExamHasQuestionId == log.ExamHasQuestionId)
+                    {
+                        examQuestionsOutput.Remove(question);
+                    }
+                }
+            }
+
+            IEnumerable<Question> tempQuestions = QuestionService.GetQuestionsByExamQuestionList(examQuestionsOutput);
+            Exam exam = ExamService.GetById(examResult.ExamId);
+            return new ExamModel
+            {
+                AnswerModels = null, //CreateAnswerModels(tempAnswers.ToList()),
+                TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(exam.TimeTableId)),
+                Description = exam.Description,
+                ExamId = examResult.ExamId,
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
             };
