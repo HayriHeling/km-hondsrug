@@ -38,10 +38,17 @@ namespace Eduria.Controllers
 
         public IActionResult Index(int id=-1)
         {
+            if(id != -1 && UserService.GetById(id).UserType == (int)UserRoles.Admin)
+            {
+                return RedirectToAction("Index");
+            }
+            ViewBag.id = id;
             if(id == -1)
             {
                 id = UserService.GetAllUsersByUserType((int)UserRoles.Admin).First().UserId;
             }
+            ViewBag.user = UserService.GetById(id);
+            ViewBag.loggedUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return View(CreateTimeLineModel(id));
         }
 
@@ -259,7 +266,7 @@ namespace Eduria.Controllers
                 info.TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId));
                 TimeTableInformation dbInfo = ConvertToTimeTableInformation(info);
                 
-                if (state == 1)
+                if (state > -1)
                 {
                     dbInfo.UserId = userId;
                 }
@@ -269,7 +276,7 @@ namespace Eduria.Controllers
                 }
                 
                 TimeTableInformationService.Add(dbInfo);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = state });
             }
             catch(Exception e)
             {
@@ -309,7 +316,7 @@ namespace Eduria.Controllers
                 toChange.BeforeChrist = changed.BeforeChrist;
                 toChange.Year = changed.Year;
                 TimeTableInformationService.Update(toChange);
-                return RedirectToAction("index");
+                return RedirectToAction("index", new { id = toChange.UserId });
             }
             catch(Exception e)
             {
@@ -321,8 +328,9 @@ namespace Eduria.Controllers
         {
             try
             {
+                int userId = TimeTableInformationService.GetById(id).UserId;
                 TimeTableInformationService.Delete(TimeTableInformationService.GetById(id));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = userId });
             }
             catch(Exception e)
             {
@@ -376,10 +384,11 @@ namespace Eduria.Controllers
                             TimeTableInformationId = infoId,
                             MediaSourceId = MediaSourceService.GetBySource(newName).MediaSourceId
                         };
-                        TimeTableInfoMediaSrcService.Add(infoHasMedia);
+                        TimeTableInfoMediaSrcService.Add(infoHasMedia);                       
                     }
                 }
-                return RedirectToAction("Index");
+                int userId = TimeTableInformationService.GetById(infoId).UserId;
+                return RedirectToAction("Index", new { id = userId});
             }
             catch(Exception e)
             {
@@ -403,7 +412,8 @@ namespace Eduria.Controllers
                     MediaSourceId = MediaSourceService.GetBySource(source).MediaSourceId
                 };
                 TimeTableInfoMediaSrcService.Add(infoHasMedia);
-                return RedirectToAction("Index");
+                int userId = TimeTableInformationService.GetById(infoId).UserId;
+                return RedirectToAction("Index", new { id = userId });
             }
             catch(Exception e)
             {
@@ -428,7 +438,8 @@ namespace Eduria.Controllers
                 {
                     TimeTableInfoMediaSrcService.Delete(mediaToDelete[i]);
                 }
-                return RedirectToAction("upload", new { id = infoId });
+                int userId = TimeTableInformationService.GetById(infoId).UserId;
+                return RedirectToAction("upload", new { id = userId });
             }
             catch(Exception e)
             {
