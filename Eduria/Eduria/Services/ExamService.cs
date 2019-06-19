@@ -108,7 +108,7 @@ namespace Eduria.Services
         }
 
         /// <summary>
-        /// 
+        /// Get the average score from an ExamResult
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -148,6 +148,29 @@ namespace Eduria.Services
                 .GroupBy(x => x.Firstname)
                 .Select(x => x.First())
                 .ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<Exam> GetExamsByUserId(int id)
+        {
+            var query =
+               from e in Context.Exams
+               join er in Context.ExamResults on e.ExamId equals er.ExamId
+               join ul in Context.UserEQLogs on er.ExamResultId equals ul.ExamResultId
+               join u in Context.Users on ul.UserId equals u.UserId
+               where u.UserId == id
+               select new Exam
+               {
+                   ExamId = e.ExamId,
+                   Name = e.Name,
+                   Description = e.Description
+               };
+
+            return query;
         }
     }
 }
