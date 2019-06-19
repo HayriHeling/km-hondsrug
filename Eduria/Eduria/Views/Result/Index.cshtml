@@ -27,7 +27,7 @@
         <p><b>Overzicht van alle toetsen.</b></p>
         @foreach (var item in Model.Item2)
         {
-            <p><a asp-controller="Result" asp-action="ExamResult" asp-route-id="@item.ExamId">@item.Name  | @item.Description</a></p>
+            <p><a asp-controller="Result" asp-action="ExamResult" asp-route-id="@item.ExamId">@item.Name | @item.Description</a></p>
         }
     </div>
 </div>

@@ -129,7 +129,15 @@ namespace Eduria.Controllers
                 AverageScore = ExamService.GetAverageScore(id)
             };
 
-            var tuple = Tuple.Create(questionModels, model);
+            IEnumerable<User> users = ExamService.GetUsersByExamId(id);
+            IEnumerable<UserModel> userModels = users.Select(result => new UserModel
+            {
+                UserId = result.UserId,
+                FirstName = result.Firstname,
+                LastName = result.Lastname
+            });
+
+            var tuple = Tuple.Create(questionModels, model, userModels);
 
             return View(tuple);
         }

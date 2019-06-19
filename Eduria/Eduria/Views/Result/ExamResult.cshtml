@@ -1,4 +1,4 @@
-﻿@model Tuple<IEnumerable<QuestionModel>, DataExamResultModel>
+﻿@model Tuple<IEnumerable<QuestionModel>, DataExamResultModel, IEnumerable<UserModel>>
 
 @{
     ViewData["Title"] = "ExamResult";
@@ -23,6 +23,13 @@
 <div class="row">
     <div class="medium-6 columns">
         <canvas id="examChartTwo" width="400" height="400"></canvas>
+    </div>
+    <div class="medium-6 columns">
+        <p><b>De leerlingen die de toets @Model.Item2.Name gemaakt hebben:</b></p>
+        @foreach (var item in Model.Item3)
+        {
+            <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></p>
+        }
     </div>
 </div>
 <script>

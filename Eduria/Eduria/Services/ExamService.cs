@@ -107,6 +107,11 @@ namespace Eduria.Services
                 .Min();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public double GetAverageScore(int id)
         {
             var query =
@@ -117,6 +122,32 @@ namespace Eduria.Services
 
             return query 
                 .Average();
+        }
+
+        /// <summary>
+        /// Return an list with Users and group them to Firstname
+        /// </summary>
+        /// <param name="id">ExamId</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetUsersByExamId(int id)
+        {
+            var query =
+                from e in Context.Exams
+                join er in Context.ExamResults on e.ExamId equals er.ExamId
+                join ul in Context.UserEQLogs on er.ExamResultId equals ul.ExamResultId
+                join u in Context.Users on ul.UserId equals u.UserId
+                where e.ExamId == id
+                select new User
+                {
+                    UserId = u.UserId,
+                    Firstname = u.Firstname,
+                    Lastname = u.Lastname
+                };
+
+            return query
+                .GroupBy(x => x.Firstname)
+                .Select(x => x.First())
+                .ToList();
         }
     }
 }
