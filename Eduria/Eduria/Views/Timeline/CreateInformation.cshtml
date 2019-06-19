@@ -25,6 +25,7 @@
 
         <form asp-action="CreateInformation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="number" name="state" value="@ViewBag.state" style="display:none;" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" type="text" class="form-control" />

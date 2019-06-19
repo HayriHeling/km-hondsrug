@@ -27,10 +27,8 @@ namespace Eduria
         public virtual DbSet<ExamResult> ExamResults { get; set; }
         public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
         public virtual DbSet<UserEQLog> UserEQLogs { get; set; }
+        public virtual DbSet<Config> Configs { get; set; }
         // TimeLineLayer
-        public virtual DbSet<TimeLine> TimeLines { get; set; }
-        public virtual DbSet<TimeLineHasTimeTable> TimeLineHasTimeTables { get; set; }
-        public virtual DbSet<TimeLineHasUser> TimeLineHasUsers { get; set; }
         public virtual DbSet<TimeTableInfoHasMediaSrc> TimeTableInfoHasMediaSrcs { get; set; }
         public virtual DbSet<TimeTableInformation> TimeTableInformations { get; set; }
     }

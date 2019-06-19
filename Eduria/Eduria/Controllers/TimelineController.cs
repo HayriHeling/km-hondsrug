@@ -20,22 +20,28 @@ namespace Eduria.Controllers
         private TimeTableInformationService TimeTableInformationService;
         private TimeTableInfoMediaSrcService TimeTableInfoMediaSrcService;
         private MediaSourceService MediaSourceService;
+        private UserService UserService;
 
         private static Random random = new Random();
 
         public TimelineController(TimeTableService timeTableService,
             TimeTableInformationService timeTableInformationService,
             TimeTableInfoMediaSrcService timeTableInfoMediaSrcService,
-            MediaSourceService mediaSourceService)
+            MediaSourceService mediaSourceService, UserService userService)
         {
             TimeTableService = timeTableService;
             TimeTableInformationService = timeTableInformationService;
             TimeTableInfoMediaSrcService = timeTableInfoMediaSrcService;
             MediaSourceService = mediaSourceService;
+            UserService = userService;
         }
 
-        public IActionResult Index(int id=1)
+        public IActionResult Index(int id=-1)
         {
+            if(id == -1)
+            {
+                id = UserService.GetAllUsersByUserType((int)UserRoles.Admin).First().UserId;
+            }
             return View(CreateTimeLineModel(id));
         }
 
@@ -213,8 +219,7 @@ namespace Eduria.Controllers
         {
             return new TimeTableInformation()
             {
-                TimeTableId = model.TimeTable.TimeTableId,
-                UserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                TimeTableId = model.TimeTable.TimeTableId,                
                 Name = model.Name,
                 Description = model.Description,
                 BeforeChrist = (int)model.BeforeChrist,
@@ -222,7 +227,7 @@ namespace Eduria.Controllers
             };
         }
 
-        public IActionResult CreateInformation(int timeTableId)
+        public IActionResult CreateInformation(int state = 0)
         {
             IEnumerable<TimeTable> tables = TimeTableService.GetAll();
             List<TimeTableModel> tableModels = new List<TimeTableModel>();
@@ -236,36 +241,40 @@ namespace Eduria.Controllers
                 tableModels.Add(tableModel);
             }
             ViewBag.timetables = tableModels;
-            ViewBag.timetableId = timeTableId;
+            ViewBag.state = state;
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateInformation(TimeBlockInformationModel info, int timeTableId)
+        public IActionResult CreateInformation(TimeBlockInformationModel info, int state ,int timeTableId)
         {
-            IEnumerable<TimeTable> tables = TimeTableService.GetAll();
-            List<TimeTableModel> tableModels = new List<TimeTableModel>();
-            foreach (TimeTable table in tables)
-            {
-                TimeTableModel tableModel = new TimeTableModel()
-                {
-                    TimeTableId = table.TimeTableId,
-                    Text = table.Text
-                };
-                tableModels.Add(tableModel);
-            }
-            ViewBag.timetables = tableModels;
-            ViewBag.timetableId = timeTableId;
             try
             {
+                int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                if (userId == (int)UserRoles.Student)
+                {
+                    return RedirectToAction("Index");
+                }
+
                 info.TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(timeTableId));
-                TimeTableInformationService.Add(ConvertToTimeTableInformation(info));
+                TimeTableInformation dbInfo = ConvertToTimeTableInformation(info);
+                
+                if (state == 1)
+                {
+                    dbInfo.UserId = userId;
+                }
+                else
+                {
+                    dbInfo.UserId = UserService.GetAllUsersByUserType((int)UserRoles.Admin).First().UserId;
+                }
+                
+                TimeTableInformationService.Add(dbInfo);
+                return RedirectToAction("Index");
             }
             catch(Exception e)
             {
                 throw e;
             }
-            return View();
         }
 
         public IActionResult EditInformation(int id)
