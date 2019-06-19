@@ -4,12 +4,11 @@
     ViewData["Title"] = "Data per vraag";
 }
 
-<b>@Model.Name</b>
-<p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
+<b>Vraag: </b>'@Model.Name'
 
 <div class="row">
     <div class="medium-6 columns">
-        <canvas id="questionChart" width="400" height="400"></canvas>
+        <canvas id="questionChart" width="400" height="400"></canvas><p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
     </div>
 </div>
 <script>

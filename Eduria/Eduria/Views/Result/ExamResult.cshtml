@@ -13,13 +13,13 @@
         <canvas id="examChart" width="400" height="400"></canvas>
     </div>
     <div class="medium-6 columns">
-        <p><b>De vragen van: @Model.Item2.Name</b></p>
+        <p><b>Alle vragen van '@Model.Item2.Name'</b></p>
         @foreach(var item in Model.Item1)
         {
             <form method="post" asp-controller="Result" asp-action="QuestionResult">
                 <input type="number" name="id" value="@item.QuestionId" style="display:none;"/>
                 <input type="number" name="examId" value="@ViewBag.examId" style="display:none;"/>
-                <input type="submit" name="submit" value="@item.Text" />
+                <input type="submit" name="submit" value="@item.Text" class="button"/>
             </form>
             //<p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></p>
         }
@@ -30,7 +30,7 @@
         <canvas id="examChartTwo" width="400" height="400"></canvas>
     </div>
     <div class="medium-6 columns">
-        <p><b>De leerlingen die de toets @Model.Item2.Name gemaakt hebben:</b></p>
+        <p><b>De leerlingen die de toets '@Model.Item2.Name' gemaakt hebben:</b></p>
         @foreach (var item in Model.Item3)
         {
             <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></p>
