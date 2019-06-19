@@ -28,16 +28,20 @@ namespace Eduria.Controllers
             List<UserModel> lecturerList = new List<UserModel>();
             foreach(User lecturer in lecturers)
             {
-                UserModel model = new UserModel()
-                {
-                    UserId = lecturer.UserId,
-                    FirstName = lecturer.Firstname,
-                    LastName = lecturer.Lastname
-                };
-                lecturerList.Add(model);
+                lecturerList.Add(ConvertToUserModel(lecturer));
             }
             ViewBag.lecturers = lecturerList;
             return View();
+        }
+
+        public UserModel ConvertToUserModel(User user)
+        {
+            return new UserModel
+            {
+                UserId = user.UserId,
+                FirstName = user.Firstname,
+                LastName = user.Lastname
+            };
         }
     }
 }
