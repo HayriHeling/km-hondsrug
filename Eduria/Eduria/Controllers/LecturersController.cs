@@ -18,7 +18,10 @@ namespace Eduria.Controllers
         {
             Service = service;
         }
-
+        /// <summary>
+        /// returns the index page with an overview of all lecturers
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             IEnumerable lecturers = Service.GetAllUsersByUserType((int)UserRoles.Docent);
