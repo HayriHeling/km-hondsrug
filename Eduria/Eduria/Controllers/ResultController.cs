@@ -103,6 +103,7 @@ namespace Eduria.Controllers
         public IActionResult ExamResult(int id)
         {
             Exam exam = ExamService.GetById(id);
+            ViewBag.examId = id;
 
             //Adds the total per month
             List<int> totalPerMonth = new List<int>();

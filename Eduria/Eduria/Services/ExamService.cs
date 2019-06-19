@@ -120,7 +120,7 @@ namespace Eduria.Services
                 where er.ExamId == id
                 select er.Score;
 
-            return query 
+            return query.DefaultIfEmpty(0) 
                 .Average();
         }
 

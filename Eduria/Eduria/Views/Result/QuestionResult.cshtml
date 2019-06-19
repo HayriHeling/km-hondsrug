@@ -20,7 +20,7 @@ var questionChart = new Chart(ctx, {
         labels: ['Goed beantwoord', 'Foutief beantwoord'],
         datasets: [{
             label: 'Rood',
-            data: [@Model.TimesWrong, @Model.TimesGoodAtOnce],
+            data: [@Model.TimesGoodAtOnce, @Model.TimesWrong],
             backgroundColor: [
                 'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',

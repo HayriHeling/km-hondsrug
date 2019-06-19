@@ -16,7 +16,12 @@
         <p><b>De vragen van: @Model.Item2.Name</b></p>
         @foreach(var item in Model.Item1)
         {
-            <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></p>
+            <form method="post" asp-controller="Result" asp-action="QuestionResult">
+                <input type="number" name="id" value="@item.QuestionId" style="display:none;"/>
+                <input type="number" name="examId" value="@ViewBag.examId" style="display:none;"/>
+                <input type="submit" name="submit" value="@item.Text" />
+            </form>
+            //<p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></p>
         }
     </div>
 </div>

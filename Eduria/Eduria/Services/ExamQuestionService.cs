@@ -83,7 +83,7 @@ namespace Eduria.Services
                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
                 where q.QuestionId == id
-                select q.QuestionId;
+                select ul.CorrectAnswered;
 
             return query
                 .DefaultIfEmpty()
@@ -97,7 +97,7 @@ namespace Eduria.Services
                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
                 where q.QuestionId == questionId && eq.ExamId == examId
-                select q.QuestionId;
+                select ul.CorrectAnswered;
 
             return query
                 .DefaultIfEmpty()
