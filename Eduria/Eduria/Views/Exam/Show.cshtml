@@ -83,11 +83,6 @@
         @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
 
-    @*@foreach (var e in Model.AnswerModels)
-    {
-        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
-    }*@
-
     // This function is deprecated at the moment. It checks if the currently selected id is the same as the
     // correct answer in the tempanswerarray.
     function CheckAnswer(tempAnswerArray, clickedId) {
@@ -188,7 +183,6 @@
     function SetupQuestion(question, answerArray, id) {
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
-        // currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
     }
 
     // Function that contains all logic for when the exam is finished.
