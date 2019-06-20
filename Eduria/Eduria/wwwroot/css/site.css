@@ -580,6 +580,14 @@ p {
 #periodPrehistorie, #periodOudheid, #periodVroege, #periodHoge, #periodRenaissance, #periodVerlichting, #periodGouden, #periodIndustrialisatie, #periodOorlogen, #periodTv {
     display: block;
     overflow: auto;
+    padding: 100px;
+}
+.timeline h1 {
+    color:#c7c7c7 ;
+}
+
+#periodOudheid, #periodHoge, #periodGouden, #periodIndustrialisatie, #periodTv {
+    background-color: #efecec;
 }
 
 .timeline:before {
@@ -587,7 +595,6 @@ p {
     position: absolute;
     height: 100%;
     left: 50%;
-    margin-top: -100px;
     width: 4px;
     background: #dad7d7;
     z-index: 1;
@@ -597,7 +604,6 @@ p {
     position: relative;
     width: 100%;
     background-color: #f5f4f4;
-    padding: 100px;
 }
 
 
