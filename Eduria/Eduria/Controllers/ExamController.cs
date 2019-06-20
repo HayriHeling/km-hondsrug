@@ -387,9 +387,14 @@ namespace Eduria.Controllers
             }
             
             ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examIdInt, examResultIdOutput, userIdInt);
-            //return View(null);
+            
         }
 
+        /// <summary>
+        /// Method to convert an javascript to json datetime object to a .net DateTime object
+        /// </summary>
+        /// <param name="jsonDate"></param>
+        /// <returns></returns>
         private DateTime ConvertToDateTime(string jsonDate)
         {
             DateTime outputDateTime = DateTime.Now;
@@ -455,6 +460,13 @@ namespace Eduria.Controllers
             }
         }
 
+        /// <summary>
+        /// Method that checks if an UserEQLog entry already exists, and handles according to the answer.
+        /// </summary>
+        /// <param name="userEqLogModel"></param>
+        /// <param name="questionId"></param>
+        /// <param name="examId"></param>
+        /// <param name="examResultId"></param>
         public void AddOrUpdateUserEqLog(UserEQLogModel userEqLogModel, int questionId, int examId, int examResultId)
         {
             int examQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(questionId, examId)
@@ -520,6 +532,11 @@ namespace Eduria.Controllers
             };
         }
 
+        /// <summary>
+        /// Method that resumes an already partly made exam. It uses an examResultId to get the correct data.
+        /// </summary>
+        /// <param name="examResultId"></param>
+        /// <returns></returns>
         public ExamModel ResumeExamModel(int examResultId)
         {
             ExamResult examResult = ExamResultService.GetById(examResultId);
