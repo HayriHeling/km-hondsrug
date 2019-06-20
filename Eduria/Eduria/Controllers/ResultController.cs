@@ -226,5 +226,38 @@ namespace Eduria.Controllers
 
             return View(examResultModels);
         }
+        public IActionResult StudentExamResult(int userId, int examResultId)
+        {
+            List<QuestionModel> QuestionsRight = new List<QuestionModel>();
+            List<QuestionModel> QuestionsWrong = new List<QuestionModel>();
+
+            IEnumerable<ExamResult> examResults = ExamResultService.GetExamResultByUserId(userId);
+            IEnumerable<ExamResultModel> examResultModels = examResults.Select(result => new ExamResultModel
+            {
+                ExamId = result.ExamId,
+                ExamResultId = result.ExamResultId,
+                StartedAt = result.StartedAt,
+                FinishedAt = result.FinishedAt,
+                Score = result.Score,
+                UserId = result.UserId
+            });
+            IEnumerable<UserEQLog> examLogs = UserEQLogService.GetAllByResultId(examResultId);
+            foreach(UserEQLog examLog in examLogs)
+            {
+                Question question = QuestionService.GetById(ExamQuestionService.GetQuestionIdByExamQuestionId(examLog.ExamHasQuestionId));
+                QuestionModel questionModel = ConvertToQuestionModel(question);
+                if (examLog.CorrectAnswered == 1)
+                {
+                    QuestionsRight.Add(questionModel);
+                }
+                else
+                {
+                    QuestionsWrong.Add(questionModel);
+                }
+            }
+            ViewBag.QuestionsRight = QuestionsRight;
+            ViewBag.QuestionsWrong = QuestionsWrong;
+            return View();
+        }
     }
 }

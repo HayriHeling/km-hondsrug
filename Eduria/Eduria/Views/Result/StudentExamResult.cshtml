@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "StudentExamResult";
+}
+
+<h2>StudentExamResult</h2>
+<div class="row">
+    <div class="medium-6 columns">
+        <canvas id="examChart" width="400" height="400"></canvas>
+    </div>
+    <div class="medium-6 columns">
+        <table>
+            <tr>
+                <th style="color: rgb(76, 255, 0);">Vragen Goed</th>
+            </tr>
+            @foreach(QuestionModel question in ViewBag.QuestionsRight)
+            {
+                <tr>
+                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
+                </tr>
+            }
+        </table>
+        <table>
+            <tr>
+                <th style="color: rgba(255, 99, 132, 1);">Vragen Fout</th>
+            </tr>
+            @foreach(QuestionModel question in ViewBag.QuestionsWrong)
+            {
+                <tr>
+                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<script>
+var ctx = document.getElementById('examChart').getContext('2d');
+var examChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Goed', 'Fout'],
+        datasets: [{label: "Vragen",
+            data: [@ViewBag.QuestionsRight.Count, @ViewBag.QuestionsWrong.Count],
+            backgroundColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+            ],
+            borderColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        legend: {
+        display: true
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                }
+            }]
+        }
+    }
+});
+</script>

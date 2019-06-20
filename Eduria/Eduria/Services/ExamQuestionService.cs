@@ -146,5 +146,10 @@ namespace Eduria.Services
                 .Select(x => x.First())
                 .ToList();
         }
+
+        public int GetQuestionIdByExamQuestionId(int id)
+        {
+            return Context.ExamQuestions.First(x => x.ExamHasQuestionId == id).QuestionId;
+        }
     }
 }
