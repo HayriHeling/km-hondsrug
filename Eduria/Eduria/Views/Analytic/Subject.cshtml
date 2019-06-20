@@ -9,6 +9,11 @@
 <div class="row xlarge">
     <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
     <div class="medium-10 columns">
+        @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
+        {
+            <input type="submit" value="Terug" />
+        }
+
         <h2>Toetsanalyse | Onderwerpen</h2>
         <p>
             Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed

@@ -6,6 +6,11 @@
 <div class="row xlarge">
 
     <div class="medium-10 columns">
+        @using (Html.BeginForm("Index", "Analytic", FormMethod.Get))
+        {
+            <input type="submit" value="Terug" />
+        }
+
         <h2>Reflectie</h2>
         @using (Html.BeginForm("Subject", "Analytic", FormMethod.Post))
         {

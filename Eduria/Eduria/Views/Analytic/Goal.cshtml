@@ -7,6 +7,11 @@
 <h2>Goals</h2>
 @ViewBag.Message
 
+@using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
+{
+    <input type="submit" value="Terug" />
+}
+
 <!-- Shows all the user's existing goals -->
 <table>
     @using (Html.BeginForm("AddGoalScore", "Analytic", FormMethod.Post))

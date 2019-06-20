@@ -33,6 +33,25 @@ namespace Eduria.Controllers
             return View(Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)));
         }
 
+        [HttpGet]
+        public IActionResult Show()
+        {
+            AnalyticDataModel analyticData = new AnalyticDataModel
+            {
+                PeriodNum = (int)HttpContext.Session.GetInt32("Period"),
+                SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
+            };
+
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(Service.GetAnalyticDataIdAndHasDefaults(analyticDataId));
+        }
+
         [HttpPost]
         public IActionResult Show(IList<AnalyticDataModel> analyticDataModels)
         {
