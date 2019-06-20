@@ -7,5 +7,6 @@ namespace Eduria.Models
 {
     public class DataStudentResultModel
     {
+
     }
 }

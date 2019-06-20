@@ -47,5 +47,10 @@ namespace Eduria
         {
             return Context.ExamResults.Find(examResult).ExamResultId;
         }
+
+        public IEnumerable<ExamResult> GetExamResultByUserId(int userId)
+        {
+            return Context.ExamResults.Where(x => x.UserId == userId);
+        }
     }
 }

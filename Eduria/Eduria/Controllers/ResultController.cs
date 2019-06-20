@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
@@ -16,13 +17,16 @@ namespace Eduria.Controllers
         private ExamService ExamService { get; set; }
         private ExamQuestionService ExamQuestionService { get; set; }
         private UserService UserService { get; set; }
+        private ExamResultService ExamResultService { get; set; }
 
-        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService)
+        public ResultController(QuestionService questionService, ExamService examService, 
+            ExamQuestionService examQuestionService, UserService userService, ExamResultService examResultService)
         {
             QuestionService = questionService;
             ExamService = examService;
             ExamQuestionService = examQuestionService;
             UserService = userService;
+            ExamResultService = examResultService;
         }
 
         public IActionResult Index()
@@ -140,6 +144,22 @@ namespace Eduria.Controllers
             var tuple = Tuple.Create(questionModels, model, userModels);
 
             return View(tuple);
+        }
+
+        public IActionResult StudentResult()
+        {
+            IEnumerable<ExamResult> examResults = ExamResultService.GetExamResultByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            IEnumerable<ExamResultModel> examResultModels = examResults.Select(result => new ExamResultModel
+            {
+                ExamId = result.ExamId,
+                ExamResultId = result.ExamResultId,
+                StartedAt = result.StartedAt,
+                FinishedAt = result.FinishedAt,
+                Score = result.Score,
+                UserId = result.UserId
+            });
+
+            return View(examResultModels);
         }
     }
 }

@@ -1,7 +1,26 @@
-﻿
+﻿@model IEnumerable<ExamResultModel>
 @{
     ViewData["Title"] = "StudentResult";
 }
 
 <h2>StudentResult</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Table Header</th>
+            <th>Table Header</th>
+            <th>Table Header</th>
+            <th>Table Header</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(ExamResultModel item in Model)
+        {
+            <tr>
+                <td>@item.ExamResultId</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
