@@ -31,8 +31,7 @@
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a asp-controller="Exam" asp-action="Show">Toetsen </a>
-                        <a asp-controller="Prikbord" asp-action="Index">Prikbord </a>
+                        <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
                         <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
