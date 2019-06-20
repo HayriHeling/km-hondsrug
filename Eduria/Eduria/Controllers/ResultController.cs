@@ -17,16 +17,18 @@ namespace Eduria.Controllers
         private ExamService ExamService { get; set; }
         private ExamQuestionService ExamQuestionService { get; set; }
         private UserService UserService { get; set; }
-        private ExamResultService ExamResultService { get; set; }
-
-        public ResultController(QuestionService questionService, ExamService examService, 
-            ExamQuestionService examQuestionService, UserService userService, ExamResultService examResultService)
+        private MediaSourceService MediaSourceService { get; set; }
+        private TimeTableService TimeTableService { get; set; }
+        private UserEQLogService UserEQLogService { get; set; }
+        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService, MediaSourceService mediaSourceService, TimeTableService timeTableService, UserEQLogService userEQLogService)
         {
             QuestionService = questionService;
             ExamService = examService;
             ExamQuestionService = examQuestionService;
             UserService = userService;
-            ExamResultService = examResultService;
+            MediaSourceService = mediaSourceService;
+            TimeTableService = timeTableService;
+            UserEQLogService = userEQLogService;
         }
 
         public IActionResult Index()
@@ -36,7 +38,10 @@ namespace Eduria.Controllers
             {
                 UserId = result.UserId,
                 FirstName = result.Firstname,
-                LastName = result.Lastname
+                LastName = result.Lastname,
+                UserNum = result.UserNum,
+                ClassId = result.ClassId,
+                UserType = (UserRoles)result.UserType
             });
 
             IEnumerable<Exam> exams = ExamService.GetAll();
@@ -46,10 +51,50 @@ namespace Eduria.Controllers
                 Name = result.Name,
                 Description = result.Description
             });
-
-            var tuple = Tuple.Create(userModels, examModels);
+            IEnumerable<Question> questions = QuestionService.GetAll();
+            IEnumerable<QuestionModel> questionModels = questions.Select(result => new QuestionModel
+            {
+                QuestionId = result.QuestionId,
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(result.MediaSourceId)),
+                QuestionType = result.QuestionType,
+                Text = result.Text,
+                TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(result.TimeTableId))
+            });
+            IEnumerable<UserEQLog> logs = UserEQLogService.GetAll();
+            IEnumerable<UserEQLogModel> logModels = logs.Select(result => new UserEQLogModel
+            {
+                UserEQLogId = result.UserEQLogId,
+                ExamHasQuestionId = result.ExamHasQuestionId,
+                ExamResultId = result.ExamResultId,
+                QuestionModel = ConvertToQuestionModel(QuestionService.GetById(ExamQuestionService.GetById(result.ExamHasQuestionId).QuestionId)),
+                UserId = result.UserId,
+                TimesWrong = result.TimesWrong,
+                AnsweredOn = result.AnsweredOn,
+                CorrectAnswered = result.CorrectAnswered
+            });
+            var tuple = Tuple.Create(userModels, examModels, questionModels, logModels);
 
             return View(tuple);
+        }
+        public QuestionModel ConvertToQuestionModel(Question question)
+        {
+            return new QuestionModel
+            {
+                QuestionId = question.QuestionId,
+                Text = question.Text,
+                QuestionType = question.QuestionType,
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(question.MediaSourceId)),
+                TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(question.TimeTableId))
+            };
+        }
+        public TimeTableModel ConvertToTimeTableModel(TimeTable timeTable)
+        {
+            return new TimeTableModel
+            {
+                TimeTableId = timeTable.TimeTableId,
+                Text = timeTable.Text,
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId))
+            };
         }
 
         /// <summary>
@@ -86,15 +131,29 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IActionResult QuestionResult(int id)
+        public IActionResult QuestionResult(int id, int examId = -1)
         {
-            DataQuestionResultModel model = new DataQuestionResultModel
+            DataQuestionResultModel model;
+            if (examId == -1)
             {
-                Name = ExamQuestionService.GetQuestionName(id),
-                TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
-                TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id),
-                TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id)
-            };
+                model = new DataQuestionResultModel
+                {
+                    Name = QuestionService.GetById(id).Text,
+                    TimesWrong = ExamQuestionService.GetTotalTimesWrong(id),
+                    TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id),
+                    TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id)
+                };
+            }
+            else
+            {
+                model = new DataQuestionResultModel
+                {
+                    Name = ExamQuestionService.GetQuestionName(id),
+                    TimesWrong = ExamQuestionService.GetTotalTimesWrong(id, examId),
+                    TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id, examId),
+                    TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id, examId)
+                };
+            }
 
             return View(model);
         }
@@ -107,6 +166,7 @@ namespace Eduria.Controllers
         public IActionResult ExamResult(int id)
         {
             Exam exam = ExamService.GetById(id);
+            ViewBag.examId = id;
 
             //Adds the total per month
             List<int> totalPerMonth = new List<int>();

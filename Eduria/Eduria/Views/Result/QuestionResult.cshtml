@@ -4,12 +4,11 @@
     ViewData["Title"] = "Data per vraag";
 }
 
-<b>@Model.Name</b>
-<p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
+<b>Vraag: </b>'@Model.Name' 
 
 <div class="row">
     <div class="medium-6 columns">
-        <canvas id="questionChart" width="400" height="400"></canvas>
+        <canvas id="questionChart" width="400" height="400"></canvas><p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
     </div>
 </div>
 <script>
@@ -20,7 +19,7 @@ var questionChart = new Chart(ctx, {
         labels: ['Goed beantwoord', 'Foutief beantwoord'],
         datasets: [{
             label: 'Rood',
-            data: [@Model.TimesWrong, @Model.TimesGoodAtOnce],
+            data: [@Model.TimesGoodAtOnce, @Model.TimesWrong],
             backgroundColor: [
                 'rgba(123, 239, 178, 1)',
                 'rgba(255, 99, 132, 1)',
