@@ -281,7 +281,7 @@ namespace Eduria.Services
         /// <param name="text">The text that the user filled in on the form.</param>
         public void AddInputToAnalyticDefault(int analyticDefaultId, int analyticDataId, string text)
         {
-            if (analyticDefaultId != 0 && analyticDataId != 0)
+            if (analyticDefaultId != 0 && analyticDataId != 0 && !String.IsNullOrEmpty(text))
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
@@ -451,6 +451,7 @@ namespace Eduria.Services
         {
             AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel = new AnalyticDefaultAndHasDefaultModel
             {
+                AnalyticData = GetAnalyticDataById(id),
                 AnalyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category).ToList(),
                 AnalyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category).ToList()
             };
@@ -533,7 +534,14 @@ namespace Eduria.Services
                             AnalyticDataId = ad.AnalyticDataId
                         };
 
-            return query.First().AnalyticDataId;
+            if (query.Any())
+            {
+                return query.First().AnalyticDataId;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         public IEnumerable<AnalyticDataModel> GetAllAnalyticDatasByUserId(int userId)
@@ -559,13 +567,33 @@ namespace Eduria.Services
 
         public AnalyticDataAndHasDefaultModel GetAnalyticDataIdAndHasDefaults(int analyticDataId)
         {
+            AnalyticDataModel analyticData = GetAnalyticDataById(analyticDataId);
             AnalyticDataAndHasDefaultModel analyticDataAndHasDefaultModel = new AnalyticDataAndHasDefaultModel
             {
-                AnalyticDataId = analyticDataId,
+                AnalyticData = GetAnalyticDataById(analyticDataId),
                 AnalyticHasDefaultModels = GetAllDataByAnalyticDataId(analyticDataId).ToList()
             };
 
             return analyticDataAndHasDefaultModel;
+        }
+
+        public AnalyticDataModel GetAnalyticDataById(int analyticDataId)
+        {
+            IQueryable<AnalyticDataModel> query = from ad in Context.AnalyticDatas
+                                                  join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                                                  where ad.AnalyticDataId == analyticDataId
+                                                  select new AnalyticDataModel
+                                                  {
+                                                      AnalyticDataId = ad.AnalyticDataId,
+                                                      ExamCode = ad.ExamCode,
+                                                      PeriodNum = p.PeriodNum,
+                                                      PeriodStart = p.PeriodStart,
+                                                      PeriodEnd = p.PeriodEnd,
+                                                      SchoolYearStart = p.SchoolYearStart,
+                                                      SchoolYearEnd = p.SchoolYearEnd
+                                                  };
+
+            return query.First();
         }
     }
 }

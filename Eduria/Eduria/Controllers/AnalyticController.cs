@@ -34,9 +34,39 @@ namespace Eduria.Controllers
         }
 
         [HttpPost]
-        public new IActionResult View(string button)
+        public IActionResult Show(IList<AnalyticDataModel> analyticDataModels)
         {
-            return View(Service.GetAnalyticDataIdAndHasDefaults(int.Parse(button)));
+            AnalyticDataModel analyticData = analyticDataModels.First();
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            HttpContext.Session.SetInt32("Period", analyticData.PeriodNum);
+            HttpContext.Session.SetInt32("SchoolYear", analyticData.SchoolYearStart);
+
+            return View(Service.GetAnalyticDataIdAndHasDefaults(analyticDataId));
+        }
+
+        [HttpGet]
+        public IActionResult Method()
+        {
+            AnalyticDataModel analyticData = new AnalyticDataModel
+            {
+                PeriodNum = (int)HttpContext.Session.GetInt32("Period"),
+                SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
+            };
+
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Werkwijze));
         }
 
         /// <summary>
@@ -44,8 +74,16 @@ namespace Eduria.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Student,Teacher")]
-        public IActionResult Method(int analyticDataId)
+        [HttpPost]
+        public IActionResult Method(AnalyticDataModel analyticData)
         {
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
             return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Werkwijze));
         }
 
@@ -58,9 +96,40 @@ namespace Eduria.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult AddMethod(int[] methodParam, string textParam)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
-            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(analyticDataId, 1, 1).AnalyticDataId, textParam);
-            return RedirectToAction("Index", "Analytic");
+            AnalyticDataModel analyticData = new AnalyticDataModel
+            {
+                PeriodNum = (int)HttpContext.Session.GetInt32("Period"),
+                SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
+            };
+
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart).AnalyticDataId, textParam);
+            return RedirectToAction("Method");
+        }
+
+        [HttpGet]
+        public IActionResult Subject()
+        {
+            AnalyticDataModel analyticData = new AnalyticDataModel
+            {
+                PeriodNum = (int)HttpContext.Session.GetInt32("Period"),
+                SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
+            };
+
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Reflectie));
         }
 
         /// <summary>
@@ -68,8 +137,16 @@ namespace Eduria.Controllers
         /// </summary>
         /// <returns>Based on data return the right view.</returns>
         [Authorize(Roles = "Student,Teacher")]
-        public IActionResult Subject(int analyticDataId)
+        [HttpPost]
+        public IActionResult Subject(AnalyticDataModel analyticData)
         {
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
             Service.AddSubjectToHasDefaults(analyticDataId);
             return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Reflectie));         
         }
@@ -80,21 +157,48 @@ namespace Eduria.Controllers
         /// <param name="form">IFormCollection that has all the data.</param>
         /// <returns>Redirects the user to the index page.</returns>
         [Authorize(Roles = "Student")]
+        [HttpPost]
         public IActionResult AddScore(IFormCollection form)
         {
             Service.AddDefaultDataScore(form);
-            return RedirectToAction("Index");
+            return RedirectToAction("Subject");
+        }
+
+        [HttpGet]
+        public IActionResult Goal()
+        {
+            AnalyticDataModel analyticData = new AnalyticDataModel
+            {
+                PeriodNum = (int)HttpContext.Session.GetInt32("Period"),
+                SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
+            };
+
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(Service.GetAnalyticDefaultAndHasDefaultModel(analyticDataId, (int)AnalyticCategory.Leerdoel));
         }
 
         /// <summary>
-        /// GET: Analytic/Goal
+        /// POST: Analytic/Goal
         /// 
         /// Shows the goal view page.
         /// </summary>
         /// <returns>The goal view.</returns>
         [Authorize(Roles = "Student, Teacher")]
-        public IActionResult Goal(int analyticDataId)
+        [HttpPost]
+        public IActionResult Goal(AnalyticDataModel analyticData)
         {
+            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+            if (analyticDataId == -1) {
+                return RedirectToAction("Index");
+            }
+
             return View(Service.GetAnalyticDefaultAndHasDefaultModel(analyticDataId, (int)AnalyticCategory.Leerdoel));
         }
 
@@ -109,35 +213,35 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult AddGoal(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
-            if (analyticDefaultAndHasDefaultModel != null)
+            AnalyticDataModel analyticData = analyticDefaultAndHasDefaultModel.AnalyticData;
+
+            if (analyticDefaultAndHasDefaultModel.AnalyticDefaultModels != null)
             {
-                if (analyticDefaultAndHasDefaultModel.AnalyticDefaultModels != null)
+                // Check ischecked true on models met category doel
+                IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
+
+                int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+
+                // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
+                if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(analyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
                 {
-                    // Check ischecked true on models met category doel
-                    IEnumerable<AnalyticDefaultModel> checkedDefaults = analyticDefaultAndHasDefaultModel.AnalyticDefaultModels.Where(x => x.IsChecked == true);
-                    int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), 1, 1);
-
-                    // Check if aantal bestaande > 2, als dat niet geval is, dan check if aangevinkte > 2
-                    if (Service.GetAllDefaultsByAnalyticDataIdAndCategoryName(analyticDataId, (int)AnalyticCategory.Leerdoel).Count() == 0)
+                    if (checkedDefaults.Count() < 2)
                     {
-                        if (checkedDefaults.Count() < 2)
-                        {
-                            ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
-                            return RedirectToAction("Goal");
-                        }
+                        ViewBag.Message = "Je moet minstens twee leerdoelen kiezen.";
+                        return RedirectToAction("Goal");
                     }
+                }
 
-                    foreach (var item in checkedDefaults)
+                foreach (var item in checkedDefaults)
+                {
+                    // Als item niet bestaat in hasdefaults, dan toevoegen.
+                    if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, analyticDataId) == null)
                     {
-                        // Als item niet bestaat in hasdefaults, dan toevoegen.
-                        if (Service.GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(item.AnalyticDefaultId, analyticDataId) == null)
-                        {
-                            Service.AddDataHasDefault(item.AnalyticDefaultId, analyticDataId);
+                        Service.AddDataHasDefault(item.AnalyticDefaultId, analyticDataId);
 
-                            if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
-                            {
-                                Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, item.Text);
-                            }
+                        if (item.AnalyticDefaultOption == (int)DefaultOption.Input || item.AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                        {
+                            Service.AddInputToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, item.Text);
                         }
                     }
                 }
@@ -157,17 +261,20 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult AddGoalScore(AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel)
         {
-            if (analyticDefaultAndHasDefaultModel != null)
+            if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Any())
             {
-                if (analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels != null)
-                {
-                    IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
-                    int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value), 1, 1);
+                IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
 
-                    foreach (var item in analyticHasDefaults)
-                    {
-                        Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, (int)item.Score);
-                    }
+                int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), (int)HttpContext.Session.GetInt32("Period"), (int)HttpContext.Session.GetInt32("SchoolYear"));
+
+                if (analyticDataId == -1)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                foreach (var item in analyticHasDefaults)
+                {
+                    Service.AddScoreToAnalyticDefault(item.AnalyticDefaultId, analyticDataId, (int)item.Score);
                 }
             }
 

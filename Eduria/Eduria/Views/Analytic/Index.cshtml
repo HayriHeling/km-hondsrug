@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Eduria.Models.AnalyticDataModel>
+﻿@model IList<Eduria.Models.AnalyticDataModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,21 +6,27 @@
     <div class="row xlarge">
         
         <div class="medium-10 columns">
-            @using (Html.BeginForm("View", "Analytic", FormMethod.Post))
+            @{int year = 0;}
+            @for (int i = 0; i < Model.Count(); i++)
             {
-                int year = 0;
-                @foreach (var item in Model)
+                @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
                 {
-                    if (year <= item.SchoolYearStart)
-                    {
-                        <p><b>@item.SchoolYearStart</b></p>
+                    @Html.HiddenFor(m => Model[i].PeriodNum)
+                    @Html.HiddenFor(m => Model[i].SchoolYearStart)
 
-                        year = item.SchoolYearStart;
+                    if (year <= Model[i].SchoolYearStart)
+                    {
+                        <p><b>@Model[i].SchoolYearStart</b></p>
+
+                        year = Model[i].SchoolYearStart;
                     }
 
-                    <p>Exam code: @item.ExamCode<br />
-                    Periode: @item.PeriodNum<br />
-                    <button name="button" value=@item.AnalyticDataId>Selecteer</button></p>
+                    <p>
+                        Exam code: @Model[i].ExamCode<br />
+                        Periode: @Model[i].PeriodNum<br />
+                        <input type="hidden" name="Index" value=@i />
+                        <button value=@i>Selecteer</button>
+                    </p>
                 }
             }
         </div>

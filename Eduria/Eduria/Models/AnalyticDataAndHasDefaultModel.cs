@@ -7,7 +7,7 @@ namespace Eduria.Models
 {
     public class AnalyticDataAndHasDefaultModel
     {
-        public int AnalyticDataId { get; set; }
+        public AnalyticDataModel AnalyticData { get; set; }
         public List<AnalyticHasDefaultModel> AnalyticHasDefaultModels { get; set; }
     }
 }

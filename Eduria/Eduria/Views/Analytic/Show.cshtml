@@ -9,7 +9,8 @@
         <h2>Reflectie</h2>
         @using (Html.BeginForm("Subject", "Analytic", FormMethod.Post))
         {
-            @Html.HiddenFor(m => m.AnalyticDataId)
+            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
             @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Reflectie))
             {
                 <p>@item.AnalyticDefaultName</p>
@@ -30,7 +31,8 @@
         <h2>Werkwijze</h2>
         @using (Html.BeginForm("Method", "Analytic", FormMethod.Post))
         {
-            @Html.HiddenFor(m => m.AnalyticDataId)
+            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
             @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Werkwijze))
             {
                 <p>@item.AnalyticDefaultName</p>
@@ -51,7 +53,8 @@
         <h2>Leerdoelen</h2>
         @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
         {
-            @Html.HiddenFor(m => m.AnalyticDataId)
+            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
             @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Leerdoel))
             {
                 <p>@item.AnalyticDefaultName</p>
