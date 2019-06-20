@@ -8,17 +8,26 @@
 <table>
     <thead>
         <tr>
-            <th>Table Header</th>
-            <th>Table Header</th>
-            <th>Table Header</th>
-            <th>Table Header</th>
+            <th>Toets</th>
+            <th>Omschrijving</th>
+            <th>Score</th>
+            <th>Bekijken</th>
         </tr>
     </thead>
     <tbody>
         @foreach(DataStudentResultModel item in Model)
         {
             <tr>
-                <td>@item.ExamResultId</td>
+                <td>@item.ExamName</td>
+                <td>@item.ExamDescription</td>
+                <td>@item.Score</td>
+                <td>
+                    <form method="post" asp-controller="Result" asp-action="StudentExamResult">
+                        <input type="number" name="id" value="@item.ExamResultId" style="display:none;" />
+                        <input type="number" name="examId" value="@item.UserId" style="display:none;" />
+                        <input type="submit" name="submit" value="Bekijken" class="button" />
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

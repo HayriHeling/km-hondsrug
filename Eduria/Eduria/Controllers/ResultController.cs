@@ -213,18 +213,7 @@ namespace Eduria.Controllers
 
         public IActionResult StudentResult()
         {
-            IEnumerable<ExamResult> examResults = ExamResultService.GetExamResultByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            IEnumerable<ExamResultModel> examResultModels = examResults.Select(result => new ExamResultModel
-            {
-                ExamId = result.ExamId,
-                ExamResultId = result.ExamResultId,
-                StartedAt = result.StartedAt,
-                FinishedAt = result.FinishedAt,
-                Score = result.Score,
-                UserId = result.UserId
-            });
-
-            return View(examResultModels);
+            return View(ExamResultService.GetExamResultByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
         }
     }
 }
