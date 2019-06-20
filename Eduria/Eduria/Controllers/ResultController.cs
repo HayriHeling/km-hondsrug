@@ -20,7 +20,11 @@ namespace Eduria.Controllers
         private MediaSourceService MediaSourceService { get; set; }
         private TimeTableService TimeTableService { get; set; }
         private UserEQLogService UserEQLogService { get; set; }
-        public ResultController(QuestionService questionService, ExamService examService, ExamQuestionService examQuestionService, UserService userService, MediaSourceService mediaSourceService, TimeTableService timeTableService, UserEQLogService userEQLogService)
+        private ExamResultService ExamResultService { get; set; }
+
+        public ResultController(QuestionService questionService, ExamService examService, 
+            ExamQuestionService examQuestionService, UserService userService, MediaSourceService mediaSourceService, 
+            TimeTableService timeTableService, UserEQLogService userEQLogService, ExamResultService examResultSerivce)
         {
             QuestionService = questionService;
             ExamService = examService;
@@ -29,6 +33,7 @@ namespace Eduria.Controllers
             MediaSourceService = mediaSourceService;
             TimeTableService = timeTableService;
             UserEQLogService = userEQLogService;
+            ExamResultService = examResultSerivce;
         }
 
         public IActionResult Index()
