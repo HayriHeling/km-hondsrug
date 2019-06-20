@@ -624,6 +624,10 @@ p {
     padding: 45px 30px;
 }
 
+.timeline .row {
+    padding-top: 50px;
+}
+
 .timeline ul li .right_content h2 {
     color: #29abe2;
     padding: 0px 2px 2px 0px;
