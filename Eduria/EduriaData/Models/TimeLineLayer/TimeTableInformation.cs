@@ -17,9 +17,9 @@ namespace EduriaData.Models.TimeLineLayer
         public string Name { get; set; }
         [MaxLength(256)]
         public string Description { get; set; }
-        [MaxLength(256)]
-        public string AudioSource { get; set; }
-        [MaxLength(256)]
-        public string VideoSource { get; set; }
+        [Required]
+        public int BeforeChrist { get; set; }
+        [Required]
+        public int Year { get; set; }
     }
 }

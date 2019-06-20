@@ -430,6 +430,10 @@ p {
     margin-bottom: .3em;
 }
 
+/* Content */
+#content {
+    padding: 50px 0;
+}
 /* Exam */
 #exam {
     padding: 30px 0;
@@ -453,7 +457,6 @@ p {
 #exam p {
     color: #afacac;
 }
-
 
 
 /* TimePeriod Slider*/
@@ -623,8 +626,9 @@ p {
 
 /* Timeline */
 
-#periodPrehistorie {
-    min-height: 900px;
+#periodPrehistorie, #periodOudheid, #periodVroege, #periodHoge, #periodRenaissance, #periodVerlichting, #periodGouden, #periodIndustrialisatie, #periodOorlogen, #periodTv {
+    display: block;
+    overflow: auto;
 }
 
 .timeline:before {
@@ -632,6 +636,7 @@ p {
     position: absolute;
     height: 100%;
     left: 50%;
+    margin-top: -100px;
     width: 4px;
     background: #dad7d7;
     z-index: 1;
@@ -661,7 +666,8 @@ p {
 
 .timeline ul li .right_content h2 {
     color: #29abe2;
-    padding: 0px 2px 18px 0px;
+    padding: 0px 2px 2px 0px;
+    text-align: center;
 }
 
 .timeline ul li:nth-child(odd) {
@@ -678,7 +684,7 @@ p {
 
 .right_content {
     background-color: #fff;
-    padding: 30px;
+    padding: 20px;
 }
 
 .left_content {
@@ -711,32 +717,32 @@ p {
 
 .timeline ul li:nth-child(odd) .left_content {
     position: absolute;
-    top: 12px;
-    right: 25px;
+    top: 25px;
+    right: 40px;
     margin: 0;
-    padding: 8px 16px;
+    padding: 0 18px;
     background-color: #29abe2;
     border-radius: 2px;
 }
 
 .timeline ul li:nth-child(odd) .left_content h3 {
     color: #fff;
-    padding-top: 4px;
+    padding-top: 6px;
     font-size: 12px;
 }
 
 .timeline ul li:nth-child(even) .left_content h3 {
     color: #fff;
-    padding-top: 4px;
+    padding-top: 6px;
     font-size: 12px;
 }
 
 .timeline ul li:nth-child(even) .left_content {
 position: absolute;
-top: 12px;
-left: 20px;
+top: 25px;
+left: 40px;
 margin: 0;
-padding: 8px 16px;
+padding: 0 18px;
 background-color: #29abe2;
 border-radius: 2px;
 }
@@ -974,7 +980,18 @@ input:checked + .slider:before {
     border-radius: 50%;
     background: white;
 }
+
 .slider.round:before {
     border-radius: 50%;
 }
 
+@media screen and (max-width: 768px) {
+    .timeline {
+        padding: 0px;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        margin-left: 45px;
+    }
+}

@@ -299,7 +299,7 @@ namespace Eduria.Controllers
                         GivenAnswerId = AnsweredId,
                         GivenAnswerText = AnsweredText
                     });
-                    UserEQLog userEqLog = new UserEQLog()
+                    UserEQLogModel userEqLogModel = new UserEQLogModel
                     {
                         ExamHasQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(q.id, exam.id).ExamHasQuestionId,
                         ExamResultId = resultId,
@@ -308,7 +308,7 @@ namespace Eduria.Controllers
                         AnsweredOn = Convert.ToDateTime(exam.dateEnded),
                         CorrectAnswered = q.correctAnswered
                     };
-                    UserEqLogService.Add(userEqLog);
+                    AddOrUpdateUserEqLog(userEqLogModel, q.id, exam.id, resultId);
 
                 }
                 examResult.Score = ((100/questionAmount) * correctAmount);
@@ -362,7 +362,8 @@ namespace Eduria.Controllers
         public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
         {
             ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
-            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, userId);
+            int examResultId = ExamResultService.GetExamResultByUserAndStartDate(userId, starttime).ExamResultId;
+            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, examResultId, userId);
             return View(null);
         }
 
@@ -394,19 +395,46 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="userEqLogJsons">A list of UserEqLogJson objects</param>
         /// <param name="examId"></param>
+        /// <param name="examResultId"></param>
         /// <param name="userId"></param>
-        public void ImportQuestionsToDatabase(List<UserEqLogJson> userEqLogJsons, int examId, int userId)
+        public void ImportQuestionsToDatabase(List<UserEqLogJson> userEqLogJsons, int examId, int examResultId, int userId = 1)
         {
             foreach (UserEqLogJson userEqLogJson in userEqLogJsons)
             {
-                UserEQLog userEqLog = new UserEQLog()
+                UserEQLogModel userEqLogModel = new UserEQLogModel
                 {
-                    AnsweredOn = userEqLogJson.AnsweredOn,
+                    AnsweredOn = userEqLogJson.AnsweredOn, 
                     CorrectAnswered = userEqLogJson.CorrectAnswered,
                     ExamHasQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(userEqLogJson.QuestionId, examId).ExamHasQuestionId,
-                    ExamResultId = ExamResultService.GetExamResultByUserAndExamId(userId: 1, examId).ExamResultId,
+                    ExamResultId = examResultId,
                     TimesWrong = userEqLogJson.TimesWrong,
                     UserId = userId
+                };
+                AddOrUpdateUserEqLog(userEqLogModel, userEqLogJson.QuestionId, examId, examResultId);
+            }
+        }
+
+        public void AddOrUpdateUserEqLog(UserEQLogModel userEqLogModel, int questionId, int examId, int examResultId)
+        {
+            int examQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(questionId, examId)
+                .ExamHasQuestionId;
+            UserEQLog userEqLog = UserEqLogService.GetByResultUserQuestionId(examResultId, userEqLogModel.UserId, examQuestionId);
+            if (userEqLog != null)
+            {
+                userEqLog.TimesWrong = userEqLogModel.TimesWrong;
+                userEqLog.CorrectAnswered = userEqLogModel.CorrectAnswered;
+                UserEqLogService.Update(userEqLog);
+            }
+            else
+            {
+                userEqLog = new UserEQLog()
+                {
+                    AnsweredOn = userEqLogModel.AnsweredOn,
+                    CorrectAnswered = userEqLogModel.CorrectAnswered,
+                    ExamHasQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(questionId, examId).ExamHasQuestionId,
+                    ExamResultId = examResultId,
+                    TimesWrong = userEqLogModel.TimesWrong,
+                    UserId = userEqLogModel.UserId
                 };
                 UserEqLogService.Add(userEqLog);
             }
@@ -417,14 +445,15 @@ namespace Eduria.Controllers
         /// </summary>
         public void ImportExamResultToDatabase(int examId, int userId, int score, DateTime start, DateTime end)
         {
-            ExamResultService.Add(new ExamResult()
+            ExamResult examResult = new ExamResult()
             {
                 ExamId = examId,
                 StartedAt = start,
                 FinishedAt = end,
                 UserId = userId,
                 Score = score
-            });
+            };
+            ExamResultService.Add(examResult);
         }
 
         /// <summary>
@@ -660,7 +689,7 @@ namespace Eduria.Controllers
                     string[] arr = formFile.FileName.Split(".");
                     string ext = arr[arr.Length - 1];
                     string newName = "questionMedia" + q.QuestionId + "." + ext;
-                    filePath = "Content/" + newName;
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", newName);
                     MediaSource src = MediaSourceService.GetById(q.MediaSourceId);
                     src.Source = newName;
                     MediaSourceService.Update(src);

@@ -7,7 +7,9 @@
     <div id="noneToday">
         <div class="row large">
             <div class="medium-12 columns">
-                <div id="answer" height="20"></div>
+                <div id="answer">
+                    <p id="AnswerNotification"></p>
+                </div>
                 <h2>Toets tijdvakken</h2>
                 <p id="Question">Klik op start om te beginnen</p>
                 <form>
@@ -33,8 +35,9 @@
                         <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
                         <label class="timeperiod tv" for="10"></label>
                     </div>
-                    <div class="medium-offset-10 medium-2 columns">
-                        <input type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                    <div class="medium-offset-10 medium-4 columns">
+                        <input id="SubmitDash" type="submit" asp-controller="Dashboard" class="button" asp-action="Index" value="Terug naar je dashboard" disabled="disabled"/>
+                        <input id="ExamButton" type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
                     </div>
                 </form>
             </div>
@@ -55,6 +58,7 @@
     var StartTime;
     var EndTime;
     var QuestionTime;
+    var RepeatTime = 3;
 
     var selected = 0;
 
@@ -78,11 +82,6 @@
     {
         @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
-
-    @*@foreach (var e in Model.AnswerModels)
-    {
-        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
-    }*@
 
     // This function is deprecated at the moment. It checks if the currently selected id is the same as the
     // correct answer in the tempanswerarray.
@@ -124,6 +123,7 @@
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();
+            $("#ExamButton").val("Volgende");
         } else {
             $("#answer").fadeIn();
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
@@ -135,11 +135,17 @@
                     NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
                 }
             } else {
-                questionArray.push(tempCurrentQuestion);
+                if (RepeatTime > tempCurrentQuestion.TimesWrong) {
+                    questionArray.push(tempCurrentQuestion);
+                }
                 if (maxScore > 0) {
                     maxScore = maxScore - 1;
                 }
-                NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                if (0 === questionArray.length) {
+                    FinishedExam(score);
+                } else {
+                    NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
+                }
                 $("#answer").append("<p class='error wrong'>Helaas, deze vraag heb je verkeerd beantwoord!</p>");
             }
             setTimeout(hideMessage, 1000);
@@ -147,6 +153,7 @@
         }
         count++;
     }
+
 
     // Function that hides the status message with a fade.
     function hideMessage() {
@@ -167,13 +174,15 @@
     // Function that loads the next question.
     function NextQuestion(question, answerArray, id) {
         SetupQuestion(question, answerArray, id);
+        if (QuestionModelArray.length < 1) {
+            $("#ExamButton").val("Afronden");
+        }
     }
 
     // Function that sets the new question up for answering.
     function SetupQuestion(question, answerArray, id) {
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
-        //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
     }
 
     // Function that contains all logic for when the exam is finished.
@@ -182,6 +191,8 @@
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         EndTime = new Date();
         SendJson();
+        $("#ExamButton").attr("disabled", true);
+        $("#SubmitDash").attr("disabled", false);
     }
 
     // Function is deprecated.
@@ -217,6 +228,6 @@
             dataType: "json",
             traditional: true
         });
-    }
+        }
 
 </script>

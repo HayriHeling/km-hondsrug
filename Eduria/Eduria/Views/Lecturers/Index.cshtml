@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Achternaam</th>
+            <th>Voornaam</th>
+            <th>Tijdlijn</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(UserModel lecturer in ViewBag.lecturers)
+        {
+            <tr>
+                <td>@lecturer.LastName</td>
+                <td>@lecturer.FirstName</td>
+                <td><input type="button" value="Tijdlijn" onclick="location.href='@Url.Action("Index", "Timeline", new { id = lecturer.UserId })'"/></td>
+            </tr>
+        }
+    </tbody>
+</table>

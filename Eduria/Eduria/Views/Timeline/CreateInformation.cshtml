@@ -1,0 +1,70 @@
+﻿@model Eduria.Models.TimeBlockInformationModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+@{
+    @if (ViewBag.success == 0)
+    {
+        <p style="color:red;">@ViewBag.msg</p>
+    }
+    else if (ViewBag.success == 1)
+    {
+        <p style="color:green;">@ViewBag.msg</p>
+    }
+}
+
+<section id="addUser" class="row">
+    <div class="medium-6 columns">
+        <h4>Informatie toevoegen</h4>
+        <p>Voeg hier nieuwe informatie toe aan de tijdlijn</p>
+    </div>
+    <div class="medium-6 columns">
+
+        <form asp-action="CreateInformation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="number" name="state" value="@ViewBag.state" style="display:none;" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" type="text" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeTable" class="control-label"></label>
+                <select name="timeTableId">
+                    @foreach (TimeTableModel ttModel in ViewBag.timetables)
+                    {
+                        <option value="@ttModel.TimeTableId">@ttModel.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                @Html.TextAreaFor(model => model.Description, 5, 1, new {@class="form-control" })
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BeforeChrist" class="control-label"></label>
+                @Html.DropDownListFor(x => x.BeforeChrist,
+                    new SelectList((Enum.GetValues(typeof(ChristNotation)))),
+                    new { @class = "form-control" })
+                <span asp-validation-for="BeforeChrist" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Voeg Toe" class="button" />
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

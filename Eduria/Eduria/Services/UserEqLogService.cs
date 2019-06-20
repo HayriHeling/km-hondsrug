@@ -20,12 +20,17 @@ namespace Eduria.Services
 
         public override UserEQLog GetById(int id)
         {
-            return Context.UserEQLogs.Find(id);
+            return GetAll().First(x => x.UserEQLogId == id);
         }
 
         public IEnumerable<UserEQLog> GetAllByResultId(int id)
         {
             return Context.UserEQLogs.Where(x => x.ExamResultId == id);
+        }
+
+        public UserEQLog GetByResultUserQuestionId(int resultId, int userId, int examQuestionId)
+        {
+            return Context.UserEQLogs.FirstOrDefault(x => x.ExamResultId == resultId && x.UserId == userId && x.ExamHasQuestionId == examQuestionId);
         }
     }
 }
