@@ -57,7 +57,7 @@ namespace Eduria.Controllers
 
             if (LoggedInUser == null)
             {
-                ViewBag.Message = "Verkeerde username/password combinatie, probeer het nog eens.";
+                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
                 return View();
             }
 
@@ -66,7 +66,7 @@ namespace Eduria.Controllers
 
             if (!hash.Verify(user.Password))
             {
-                ViewBag.Message = "Verkeerde username/password combinatie, probeer het nog eens.";
+                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
                 return View();
             }
 

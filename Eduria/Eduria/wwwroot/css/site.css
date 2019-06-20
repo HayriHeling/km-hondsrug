@@ -36,6 +36,43 @@ h4 {
 }
 
 
+#myBtn {
+    font-style: italic;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#myBtn:hover {
+    color: #29abe2;
+}
+
+/* Alerts */
+.alert {
+    color: #fff;
+    padding: 10px;
+    font-size: 12px;
+}
+.alert.red {
+    background-color: #ed1c24;
+}
+.alert.green {
+    background-color: #74b027;
+}
+
+.alert a {
+    color: #fff;
+    text-decoration: underline;
+}
+.alert a:visited {
+    color: #fff;
+    text-decoration:underline;
+}
+
+.alert a:hover {
+    color: #ed1c24;
+    color: #ed1c24;
+    text-decoration: underline;
+}
 
 .medium {
     max-width: 80%;
@@ -62,6 +99,9 @@ footer {
     padding: 10px 0;
     color: #808080;
     font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 /* Dashboard */
@@ -118,14 +158,19 @@ a {
     width: 35px;
     margin: 0 10px;
 }
+.search {
+    padding-top: 10px;
+}
 
 .myAccount {
     font-size: 12px;
+    line-height: 55px;
 }
 
 .myAccount i {
     color: #808080;
     font-size: 16px;
+    padding-left: 20px;
 }
 
 /* Responsive menu */
@@ -233,6 +278,10 @@ a {
     width: 400px;
 }
 
+.center-screen .button {
+    width:100%
+}
+
 .center-screen {
     position: absolute;
     top: 0;
@@ -241,7 +290,7 @@ a {
     right: 0;
     margin: auto;
     width: 400px;
-    height: 400px;
+    height: 450px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.8);
 }
@@ -827,8 +876,8 @@ input:checked + .slider:before {
 .grey {
     background-color: #f7f7f7;
     padding-top: 10px;
-    height: 45px;
-    margin-bottom: 20px;
+    height: 60px;
+    margin-bottom: 5px;
 }
 
 /* Checkboxes*/
