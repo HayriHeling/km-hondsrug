@@ -44,7 +44,7 @@ namespace Eduria.Controllers
         {
             if(id != -1 && UserService.GetById(id).UserType == (int)UserRoles.Admin)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {id = -1});
             }
             ViewBag.id = id;
             if(id == -1)
