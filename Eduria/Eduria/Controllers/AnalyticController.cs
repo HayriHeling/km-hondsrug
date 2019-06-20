@@ -28,9 +28,26 @@ namespace Eduria.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Student, Teacher")]
+        [HttpGet]
         public IActionResult Index()
         {
-            return View(Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)));
+            AnalyticDataAndUsersModel analyticDataAndUsers = new AnalyticDataAndUsersModel
+            {
+                AnalyticDataModels = Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)).ToList(),
+                UserModels = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList()
+            };
+            return View(analyticDataAndUsers);
+        }
+
+        [HttpPost]
+        public IActionResult Index(int userId)
+        {
+            AnalyticDataAndUsersModel analyticDataAndUsers = new AnalyticDataAndUsersModel
+            {
+                AnalyticDataModels = Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)).ToList(),
+                UserModels = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList()
+            };
+            return View(analyticDataAndUsers);
         }
 
         [HttpGet]

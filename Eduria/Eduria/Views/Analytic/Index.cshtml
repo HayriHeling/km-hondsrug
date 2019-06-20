@@ -1,4 +1,4 @@
-﻿@model IList<Eduria.Models.AnalyticDataModel>
+﻿@model AnalyticDataAndUsersModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,24 +6,46 @@
     <div class="row xlarge">
         
         <div class="medium-10 columns">
+            @if (User.IsInRole("Teacher"))
+            {
+                @using (Html.BeginForm("Index", "Analytic", FormMethod.Post))
+                {
+                    //<select id=""
+                    for (int j=0; j < Model.UserModels.Count; j++)
+                    {
+
+                    }
+
+                    Html.DropDownListFor(m => m.UserModels., new List<SelectListItem> {
+                        new SelectListItem
+                        {
+                            Text = Model.UserModels[j].UserId.ToString() + " " + Model.UserModels[j].Firstname + " " + Model.UserModels[j].Lastname,
+                            Value = Model.UserModels[j].UserId.ToString()
+                        }
+                    });
+
+                    <input type="submit" value="Selecteer" />
+                }
+            }
+
             @{int year = 0;}
-            @for (int i = 0; i < Model.Count(); i++)
+            @for (int i = 0; i < Model.AnalyticDataModels.Count(); i++)
             {
                 @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
                 {
-                    @Html.HiddenFor(m => Model[i].PeriodNum)
-                    @Html.HiddenFor(m => Model[i].SchoolYearStart)
+                    @Html.HiddenFor(m => Model.AnalyticDataModels[i].PeriodNum)
+                    @Html.HiddenFor(m => Model.AnalyticDataModels[i].SchoolYearStart)
 
-                    if (year <= Model[i].SchoolYearStart)
+                    if (year <= Model.AnalyticDataModels[i].SchoolYearStart)
                     {
-                        <p><b>@Model[i].SchoolYearStart</b></p>
+                        <p><b>@Model.AnalyticDataModels[i].SchoolYearStart</b></p>
 
-                        year = Model[i].SchoolYearStart;
+                        year = Model.AnalyticDataModels[i].SchoolYearStart;
                     }
 
                     <p>
-                        Exam code: @Model[i].ExamCode<br />
-                        Periode: @Model[i].PeriodNum<br />
+                        Exam code: @Model.AnalyticDataModels[i].ExamCode<br />
+                        Periode: @Model.AnalyticDataModels[i].PeriodNum<br />
                         <input type="hidden" name="Index" value=@i />
                         <button value=@i>Selecteer</button>
                     </p>
