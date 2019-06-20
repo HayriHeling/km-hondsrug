@@ -60,7 +60,21 @@
                     <p>@item.Score</p>
                 </td>
                 <td class="medium-2 columns">
-                    <p><a asp-controller="Student" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">Open data</a></p>
+                    <p>
+                        @if (item.FinishedAt == DateTime.MinValue)
+                        {
+                            var parms = new Dictionary<string, string>
+                            {
+                                {"examResult", item.ExamResultId.ToString()}
+                            };
+                            <a asp-controller="Exam" asp-action="Show" asp-all-route-data="parms">Resume</a>
+
+                        }
+                        else
+                        {
+                            <a asp-controller="Student" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">Open data</a>
+                        }
+                    </p>
                 </td>
             </tr>
         }
