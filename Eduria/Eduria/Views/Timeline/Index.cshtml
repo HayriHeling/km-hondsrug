@@ -42,17 +42,22 @@
             cursor: pointer;
         }
 </style>
+
 <div class="timeline">
-    @if (ViewBag.id > -1)
-    {
-        <h2>
-            Tijdlijn van @ViewBag.user.Firstname @ViewBag.user.Lastname.
-        </h2>
-    }
-    @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
-    {
-        <input type="button" value="Voeg nieuwe gebeurtenis toe" onclick="location.href='@Url.Action("CreateInformation", "Timeline", new { state = ViewBag.id })'" class="button" />
-    }
+    <div class="row">
+        @if (ViewBag.id > -1)
+        {
+            <h2>
+                Tijdlijn van @ViewBag.user.Firstname @ViewBag.user.Lastname.
+            </h2>
+        }
+        @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
+        {
+            <div>
+                <input type="button" value="&plus; Gebeurtenis " onclick="location.href='@Url.Action("CreateInformation", "Timeline", new { state = ViewBag.id })'" class="button" />
+            </div>
+        }
+    </div>
 
     @foreach (TimeblockModel timeBlockModel in Model.TimeblockModels)
     {
@@ -77,9 +82,9 @@
                                 <div class="modal-content">
                                     @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
                                     {
-                                        <input type="button" value="Bewerken" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
+                                        <input type="button" value="&#9998;" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
                                         <input type="button" value="Media" onclick="location.href='@Url.Action("Upload", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
-                                        <input type="button" value="Verwijderen" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
+                                        <input type="button" value="&#10006;" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button" />
                                     }
                                         <span class="close">&times;</span>
                                         <div>
