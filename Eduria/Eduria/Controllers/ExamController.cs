@@ -363,25 +363,49 @@ namespace Eduria.Controllers
         /// <param name="userId"></param>
         /// <param name="score"></param>
         /// <returns></returns>
-        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime, int examResultId)
+        public void SendResults(string jsoninput, string examId, string userId, string score, string starttime, string endtime, string examResultId)
         {
             int examResultIdOutput = 0;
-            if (examResultId < 0)
+            int examIdInt = Int32.Parse(examId);
+            int userIdInt = Int32.Parse(userId);
+            int scoreInt = Int32.Parse(score);
+            DateTime startTime = ConvertToDateTime(starttime);
+            DateTime endTime = ConvertToDateTime(endtime);
+            int examResultIdInt = Int32.Parse(examResultId);
+            if (examResultIdInt < 0)
             {
-                ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
-                int tempExamResultId = ExamResultService.GetExamResultByUserAndStartDate(userId, starttime).ExamResultId;
+                ImportExamResultToDatabase(examIdInt, userIdInt, scoreInt, startTime, endTime);
+                examResultIdOutput = ExamResultService.GetExamResultByUserAndStartDate(userIdInt, startTime).ExamResultId;
             }
             else
             {
-                ExamResult examResult = ExamResultService.GetById(examResultId);
-                examResult.FinishedAt = endtime;
-                examResult.Score = score;
+                ExamResult examResult = ExamResultService.GetById(examResultIdInt);
+                examResult.FinishedAt = endTime;
+                examResult.Score = scoreInt;
                 ExamResultService.Update(examResult);
-                examResultIdOutput = examResultId;
+                examResultIdOutput = examResultIdInt;
             }
             
-            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, examResultIdOutput, userId);
-            return View(null);
+            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examIdInt, examResultIdOutput, userIdInt);
+            //return View(null);
+        }
+
+        private DateTime ConvertToDateTime(string jsonDate)
+        {
+            DateTime outputDateTime = DateTime.Now;
+            if (jsonDate == "null")
+            {
+                outputDateTime = DateTime.MinValue;
+            }
+            else
+            {
+                jsonDate = jsonDate.Replace("T", " ");
+                jsonDate = jsonDate.Replace("Z", " ");
+                jsonDate = jsonDate.Replace("\"", "");
+                outputDateTime = DateTime.Parse(jsonDate);
+            }
+
+            return outputDateTime;
         }
 
         /// <summary>
@@ -491,7 +515,8 @@ namespace Eduria.Controllers
                 ExamId = id,
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
-                ExamResultId = -1
+                ExamResultId = -1,
+                Score = -1
             };
         }
 
@@ -508,7 +533,7 @@ namespace Eduria.Controllers
                 foreach (UserEQLog log in tempEqLogs)
                 {
                     
-                    if (question.ExamHasQuestionId == log.ExamHasQuestionId)
+                    if (question.ExamHasQuestionId == log.ExamHasQuestionId && log.CorrectAnswered.Equals(1))
                     {
                         examQuestionsOutput.Remove(question);
                     }
