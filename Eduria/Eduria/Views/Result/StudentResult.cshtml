@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<DataStudentResultModel>
 @{
-    ViewData["Title"] = "StudentResult";
+    ViewData["Title"] = "Toetsresultaten";
 }
 
-<h2>StudentResult</h2>
+    <h2>Toetsresultaten </h2>
 
 <table>
     <thead>
@@ -11,6 +11,8 @@
             <th>Toets</th>
             <th>Omschrijving</th>
             <th>Score</th>
+            <th>Begonnen</th>
+            <th>Afgerond</th>
             <th>Bekijken</th>
         </tr>
     </thead>
@@ -21,6 +23,8 @@
                 <td>@item.ExamName</td>
                 <td>@item.ExamDescription</td>
                 <td>@item.Score</td>
+                <td>@item.StartedAt</td>
+                <td>@item.FinishedAt</td>
                 <td>
                     <form method="post" asp-controller="Result" asp-action="StudentExamResult">
                         <input type="number" name="id" value="@item.ExamResultId" style="display:none;" />
