@@ -1,0 +1,15 @@
+﻿@model IEnumerable<ExamModel>
+
+@{
+    ViewData["Title"] = "Toetsenoverzicht";
+}
+
+<h2>Overzicht van alle toetsen.</h2>
+
+@foreach (var exam in Model)
+{
+    <p>
+        <a asp-controller="Result" asp-action="ExamResult" asp-route-id="@exam.ExamId">@exam.Name | @exam.Description</a>
+    </p>
+}
+

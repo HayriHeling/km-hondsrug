@@ -303,12 +303,17 @@ namespace Eduria.Controllers
                         GivenAnswerId = AnsweredId,
                         GivenAnswerText = AnsweredText
                     });
+                    int wrong = 0;
+                    if(q.correctAnswered == 0)
+                    {
+                        wrong = 1;
+                    }
                     UserEQLogModel userEqLogModel = new UserEQLogModel
                     {
                         ExamHasQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(q.id, exam.id).ExamHasQuestionId,
                         ExamResultId = resultId,
                         UserId = examResult.UserId,
-                        TimesWrong = 0,
+                        TimesWrong = wrong,
                         AnsweredOn = Convert.ToDateTime(exam.dateEnded),
                         CorrectAnswered = q.correctAnswered
                     };
