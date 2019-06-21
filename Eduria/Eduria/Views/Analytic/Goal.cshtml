@@ -1,17 +1,90 @@
-﻿@model Tuple<IEnumerable<AnalyticHasDefaultModel>, IEnumerable<AnalyticDefaultModel>>
+﻿@using Eduria.Models
+@model AnalyticDefaultAndHasDefaultModel
 @{
     ViewData["Title"] = "Goals";
 }
+<section id="analytic">
+    <div class="row medium">
+        <div class="medium-12 columns">
+            <h2>Doel vaststellen</h2>
+        </div>
+            @ViewBag.Message
 
-<h2>Goals</h2>
-@foreach (var item in Model.Item1)
-{
-    <p>@item.AnalyticDataId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
+            <!-- Shows all the user's existing goals -->
+                @using (Html.BeginForm("AddGoalScore", "Analytic", FormMethod.Post))
+                {
+                @for (int i = 0; i < Model.AnalyticHasDefaultModels.Count; i++)
+                {
+                    <div class="medium-1 columns goal">@{(i + 1).ToString();}</div>
+                    <div class="medium-6 columns goal">@Model.AnalyticHasDefaultModels[i].AnalyticDefaultName</div>
+                    <div class="medium-2 columns goal">@Model.AnalyticHasDefaultModels[i].Input</div>
+                    <div class="medium-3 columns goal">
+                        <!-- Creates score input if user is teacher -->
+                        @{var scoreEnum = Enum.GetValues(typeof(DefaultScore));}
+                        @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
+                        {
+                            @for (int j = 0; j < scoreEnum.Length; j++)
+                            {
+                                <label class="container">
+                                @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int) scoreEnum.GetValue(j), new { @checked = false })
+                                <span class="radiobtn"></span>
+                                </label>
 
-@foreach (var item in Model.Item2)
-{
-    <p>@item.AnalyticDefaultId</p>
-    <p>@item.AnalyticDefaultName</p>
-}
+                                @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].DataHasDefaultId)
+                                @Html.HiddenFor(m => m.AnalyticHasDefaultModels[i].AnalyticDefaultId)
+                            }
+                        }
+                        else
+                        {
+                            @Model.AnalyticHasDefaultModels[i].Score
+                        }
+                    </div>
+                }
+                @if (User.IsInRole("Teacher"))
+                {
+                 <div class="medium-12 columns">
+                   <input type="submit" value="Toevoegen" class="button" />
+                   <input type="reset" value="Formulier leegmaken" class="button" />
+                </div>
+                }
+                }
+            <div class="medium-12 columns">
+            <p>
+                Je gaat je zelf doelen stellen voor de komende periode. Klik hieronder minstens twee doelen aan die
+                de volgende periode gaat oefenen
+            </p>
+            </div>
+            <!-- Dynamically creates a form to add goals to AnalyticData -->
+            @if (User.IsInRole("Student"))
+            {
+                @using (Html.BeginForm("AddGoal", "Analytic", FormMethod.Post))
+                {
+                @for (int i = 0; i < Model.AnalyticDefaultModels.Count; i++)
+                {
+                    <div class="medium-12 columns grey">
+                        <div class="medium-1 columns">
+                            <label class="container">
+                                @Html.CheckBoxFor(m => m.AnalyticDefaultModels[i].IsChecked, new { @checked = Model.AnalyticDefaultModels[i].IsChecked })
+                                <span class="checkmark"></span>
+                            </label>
+                            @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultId)
+                            @Html.HiddenFor(m => m.AnalyticDefaultModels[i].AnalyticDefaultOption)
+                        </div>
+                        <div class="medium-6 columns">@Model.AnalyticDefaultModels[i].AnalyticDefaultName</div>
+                        <div class="medium-5 columns">
+                            @if (Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.Input || Model.AnalyticDefaultModels[i].AnalyticDefaultOption == (int)DefaultOption.InputScore)
+                            {
+                                @Html.TextBoxFor(m => Model.AnalyticDefaultModels[i].Text)
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="medium-12 columns">
+                    <input type="submit" value="Toevoegen" class="button" />
+                </div>
+                }
+            }
+
+        </div>
+</section>
+

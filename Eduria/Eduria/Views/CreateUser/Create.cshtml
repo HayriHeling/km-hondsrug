@@ -5,10 +5,14 @@
 }
 
 
-@{ 
-    if(ViewBag.success == 1)
+@{
+    @if (ViewBag.success == 0)
     {
-        <p style="color:green;">Nieuwe gebruiker is toegevoegd!</p>
+        <p style="color:red;">@ViewBag.msg</p>
+    }
+    else if (ViewBag.success == 1)
+    {
+        <p style="color:green;">@ViewBag.msg</p>
     }
 }
 
@@ -26,13 +30,13 @@
                 <input asp-for="FirstName" type="text" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-           
+
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-        
+
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -53,7 +57,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="ClassId" class="control-label"></label>
-                <input asp-for="ClassId" class="form-control" />
+                @Html.DropDownListFor(x => x.ClassId,
+                    new SelectList(Enum.GetValues(typeof(Class))),
+                    new { @class = "form-control" })
                 <span asp-validation-for="ClassId" class="text-danger"></span>
             </div>
             <div class="form-group">

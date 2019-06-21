@@ -3,30 +3,41 @@
 @{
     ViewData["Title"] = "Werkwijze";
 }
+<section id="analytic">
+<div class="row medium">
+    <div class="medium-2 columns">
+        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+    </div>
+    <div class="medium-10 columns">
+        @if (Model.Item1.Count() != 0)
+        {
+            @foreach (var item in Model.Item1)
+            {
+                <p>@item.AnalyticDefaultId</p>
+                <p>@item.AnalyticDefaultName : @item.Input</p>
+                <p>@item.Score</p>
+            }
+        }
+        else
+        {
+            @foreach (var item in Model.Item2)
+            {
+                <label class="container">
+                    <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
+                    <span class="checkmark"></span>
+                    @item.AnalyticDefaultName
+                </label>
+                }
 
-@if (Model.Item1.Count() != 0)
-{
-    @foreach (var item in Model.Item1)
-    {
-        <p>@item.AnalyticDefaultId</p>
-        <p>@item.AnalyticDefaultName : @item.Input</p>
-        <p>@item.Score</p>
-    }
-}
-else
-{
-    @foreach (var item in Model.Item2)
-    {
-        <p><input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />@item.AnalyticDefaultName</p>
-    }
+                <hr />
+                <button type="submit" onclick="submitMethodArray()" class="button">Toevoegen</button>
 
-    <hr />
-    <button type="submit" onclick="submitMethodArray()">Toevoegen</button>
+            }
 
-}
-
-<div id="inputMethod"></div>
-
+            <div id="inputMethod"></div>
+        </div>
+</div>
+</section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
     var methodArray = [];

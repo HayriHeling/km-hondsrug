@@ -17,10 +17,11 @@ namespace Eduria.Controllers
     public class LoginController : Controller
     {
         private UserService Service { get; set; }
-
-        public LoginController(UserService service)
+        private ConfigsService _configService { get; set; }
+        public LoginController(UserService service, ConfigsService configService)
         {
             Service = service;
+            _configService = configService;
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Eduria.Controllers
 
             if (LoggedInUser == null)
             {
-                ViewBag.Message = "Verkeerde username/password combinatie, probeer het nog eens.";
+                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
                 return View();
             }
 
@@ -65,13 +66,15 @@ namespace Eduria.Controllers
 
             if (!hash.Verify(user.Password))
             {
-                ViewBag.Message = "Verkeerde username/password combinatie, probeer het nog eens.";
+                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
                 return View();
             }
 
             // Signs a user in with an identity containing a name and a role.
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, LoggedInUser.Firstname + " " + LoggedInUser.Lastname));
+            //Add an NameIdentifier that represents the UserId in the database.
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, LoggedInUser.UserId.ToString()));
             if (LoggedInUser.UserType == 0)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -133,6 +136,34 @@ namespace Eduria.Controllers
             Task login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login");
+        }
+
+        public ActionResult ForgotPassword(string Email)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                string token = Guid.NewGuid().ToString();
+
+                if (token != null)
+                {
+                    //Create URL with above token  
+                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                    Service.SetUserToken(Email, token);
+
+                    //Call send email methods.  
+                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
+                    return Content("Er is een mail met een link naar " + Email + " verzonden.");
+
+                }
+                else
+                {
+                    // If user does not exist or is not confirmed.  
+                    return View("Password");
+
+                }
+            }
+            return View("Password");
         }
     }
 }

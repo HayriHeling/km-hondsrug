@@ -6,6 +6,8 @@ namespace EduriaData.Models
     {
         [Key]
         public int UserId { get; set; }
+        [Required]
+        public int MediaSourceId { get; set; }
         [Required, MaxLength(45)]
         public string Firstname { get; set; }
         [Required, MaxLength(45)]
@@ -18,9 +20,10 @@ namespace EduriaData.Models
         public int UserType { get; set; }
         [Required]
         public int ClassId { get; set; }
-        [Required, MaxLength(20)]
+        [Required, MaxLength(200)]
         public string Password { get; set; }
         [MaxLength(200)]
+
         public string Token { get; set; }
     }
 }
