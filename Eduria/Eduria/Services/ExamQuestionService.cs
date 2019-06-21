@@ -70,6 +70,19 @@ namespace Eduria.Services
                 .DefaultIfEmpty()
                 .Sum();
         }
+        public int GetTotalTimesWrongPerUser(int questionId, int userId)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == questionId && ul.UserId == userId
+                select ul.TimesWrong;
+
+            return query
+                .DefaultIfEmpty()
+                .Sum();
+        }
 
         /// <summary>
         /// Get the total times good.
@@ -97,6 +110,20 @@ namespace Eduria.Services
                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
                 where q.QuestionId == questionId && eq.ExamId == examId
+                select ul.CorrectAnswered;
+
+            return query
+                .DefaultIfEmpty()
+                .Sum();
+        }
+
+        public int GetTotalTimesGoodPerUser(int questionId, int userId)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == questionId && ul.UserId == userId
                 select ul.CorrectAnswered;
 
             return query

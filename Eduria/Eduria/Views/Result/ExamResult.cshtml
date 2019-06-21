@@ -19,7 +19,7 @@
             <form method="post" asp-controller="Result" asp-action="QuestionResult">
                 <input type="number" name="id" value="@item.QuestionId" style="display:none;"/>
                 <input type="number" name="examId" value="@ViewBag.examId" style="display:none;"/>
-                <input type="submit" name="submit" value="@item.Text" class="button"/>
+                <input type="submit" name="submit" value="@item.Text"/>
             </form>
         }
     </div>

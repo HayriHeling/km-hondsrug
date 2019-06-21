@@ -35,9 +35,15 @@
             </tr>
             @foreach (QuestionModel question in ViewBag.QuestionsRight)
             {
-                <tr>
-                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
-                </tr>
+        <tr>
+            <td>
+                <form method="post" asp-controller="Result" asp-action="QuestionResult">
+                    <input type="number" name="id" value="@question.QuestionId" style="display:none;" />
+                    <input type="number" name="userId" value="@ViewBag.Result.UserId" style="display:none;" />
+                    <input type="submit" name="submit" value="@question.Text"/>
+                </form>
+            </td>
+        </tr>
             }
         </table>
         <table>
@@ -47,7 +53,13 @@
             @foreach (QuestionModel question in ViewBag.QuestionsWrong)
             {
                 <tr>
-                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
+                    <td>
+                        <form method="post" asp-controller="Result" asp-action="QuestionResult">
+                            <input type="number" name="id" value="@question.QuestionId" style="display:none;" />
+                            <input type="number" name="userId" value="@ViewBag.Result.UserId" style="display:none;" />
+                            <input type="submit" name="submit" value="@question.Text"/>
+                        </form>
+                    </td>
                 </tr>
             }
         </table>

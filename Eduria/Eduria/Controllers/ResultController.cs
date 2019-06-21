@@ -164,10 +164,30 @@ namespace Eduria.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IActionResult QuestionResult(int id, int examId = -1)
+        public IActionResult QuestionResult(int id, int examId = -1, int userId = -1)
         {
             DataQuestionResultModel model;
-            if (examId == -1)
+            if(examId != -1 && userId == -1)
+            {
+                model = new DataQuestionResultModel
+                {
+                    Name = ExamQuestionService.GetQuestionName(id),
+                    TimesWrong = ExamQuestionService.GetTotalTimesWrong(id, examId),
+                    TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id, examId) + ExamQuestionService.GetTotalTimesGood(id, examId),
+                    TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id, examId)
+                };
+            }
+            else if(examId == -1 && userId != -1)
+            {
+                model = new DataQuestionResultModel
+                {
+                    Name = ExamQuestionService.GetQuestionName(id),
+                    TimesWrong = ExamQuestionService.GetTotalTimesWrongPerUser(id, userId),
+                    TimesAnswerd = ExamQuestionService.GetTotalTimesWrongPerUser(id, userId) + ExamQuestionService.GetTotalTimesGoodPerUser(id, userId),
+                    TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGoodPerUser(id, userId)
+                };
+            }
+            else
             {
                 model = new DataQuestionResultModel
                 {
@@ -177,17 +197,6 @@ namespace Eduria.Controllers
                     TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id)
                 };
             }
-            else
-            {
-                model = new DataQuestionResultModel
-                {
-                    Name = ExamQuestionService.GetQuestionName(id),
-                    TimesWrong = ExamQuestionService.GetTotalTimesWrong(id, examId),
-                    TimesAnswerd = ExamQuestionService.GetTotalTimesWrong(id) + ExamQuestionService.GetTotalTimesGood(id, examId),
-                    TimesGoodAtOnce = ExamQuestionService.GetTotalTimesGood(id, examId)
-                };
-            }
-
             return View(model);
         }
 
