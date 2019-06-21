@@ -131,14 +131,18 @@ namespace Eduria.Controllers
         /// Method that creates a view for an exammodel.
         /// </summary>
         /// <param name="id">Id of the exammodel</param>
+        /// <param name="examResult"></param>
         /// <returns>View of the exammodel</returns>
-        public IActionResult Show(int id = 1)
+        public IActionResult Show(int id = 1, int examResult = -1)
         {
             //return View(GetExamDataById(id));
             _examId = id;
             _dateTime = DateTime.Now;
-
-            return View(GetExamModelByExamId(id));
+            if (examResult < 0)
+            {
+                return View(GetExamModelByExamId(id));
+            }
+            return View(ResumeExamModel(examResult));
         }
         /// <summary>
         /// Get the exam of given id and changes database data into models to use in the view. 
@@ -354,8 +358,8 @@ namespace Eduria.Controllers
             Exam exam = ExamService.GetById(examId);
             exam.IsActive = state;
             ExamService.Update(exam);
-        } 
-            
+        }
+
         /// <summary>
         /// Method used for sending the data from the exam to this controller
         /// </summary>
@@ -363,13 +367,56 @@ namespace Eduria.Controllers
         /// <param name="examId"></param>
         /// <param name="userId"></param>
         /// <param name="score"></param>
+        /// <param name="examResultId"></param>
         /// <returns></returns>
-        public IActionResult SendResults(string jsoninput, int examId, int userId, int score, DateTime starttime, DateTime endtime)
+        public void SendResults(string jsoninput, string examId, string userId, string score, string starttime, string endtime, string examResultId)
         {
-            ImportExamResultToDatabase(examId, userId, score, starttime, endtime);
-            int examResultId = ExamResultService.GetExamResultByUserAndStartDate(userId, starttime).ExamResultId;
-            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examId, examResultId, userId);
-            return View(null);
+            int examResultIdOutput = 0;
+            int examIdInt = Int32.Parse(examId);
+            int userIdInt = Int32.Parse(userId);
+            int scoreInt = Int32.Parse(score);
+            DateTime startTime = ConvertToDateTime(starttime);
+            DateTime endTime = ConvertToDateTime(endtime);
+            int examResultIdInt = Int32.Parse(examResultId);
+            if (examResultIdInt < 0)
+            {
+                ImportExamResultToDatabase(examIdInt, userIdInt, scoreInt, startTime, endTime);
+                examResultIdOutput = ExamResultService.GetExamResultByUserAndStartDate(userIdInt, startTime).ExamResultId;
+            }
+            else
+            {
+                ExamResult examResult = ExamResultService.GetById(examResultIdInt);
+                examResult.FinishedAt = endTime;
+                examResult.Score = scoreInt;
+                ExamResultService.Update(examResult);
+                examResultIdOutput = examResultIdInt;
+            }
+            
+            ImportQuestionsToDatabase(CreatEqLogJsonsFromJson(jsoninput), examIdInt, examResultIdOutput, userIdInt);
+            
+        }
+
+        /// <summary>
+        /// Method to convert an javascript to json datetime object to a .net DateTime object
+        /// </summary>
+        /// <param name="jsonDate"></param>
+        /// <returns></returns>
+        private DateTime ConvertToDateTime(string jsonDate)
+        {
+            DateTime outputDateTime;
+            if (jsonDate == "null")
+            {
+                outputDateTime = DateTime.MinValue;
+            }
+            else
+            {
+                jsonDate = jsonDate.Replace("T", " ");
+                jsonDate = jsonDate.Replace("Z", " ");
+                jsonDate = jsonDate.Replace("\"", "");
+                outputDateTime = DateTime.Parse(jsonDate);
+            }
+
+            return outputDateTime;
         }
 
         /// <summary>
@@ -419,6 +466,13 @@ namespace Eduria.Controllers
             }
         }
 
+        /// <summary>
+        /// Method that checks if an UserEQLog entry already exists, and handles according to the answer.
+        /// </summary>
+        /// <param name="userEqLogModel"></param>
+        /// <param name="questionId"></param>
+        /// <param name="examId"></param>
+        /// <param name="examResultId"></param>
         public void AddOrUpdateUserEqLog(UserEQLogModel userEqLogModel, int questionId, int examId, int examResultId)
         {
             int examQuestionId = ExamQuestionService.GetExamQuestionByQuestionIdExamId(questionId, examId)
@@ -478,7 +532,49 @@ namespace Eduria.Controllers
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
-                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList())
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
+                ExamResultId = -1,
+                Score = -1
+            };
+        }
+
+        /// <summary>
+        /// Method that resumes an already partly made exam. It uses an examResultId to get the correct data.
+        /// </summary>
+        /// <param name="examResultId"></param>
+        /// <returns></returns>
+        public ExamModel ResumeExamModel(int examResultId)
+        {
+            ExamResult examResult = ExamResultService.GetById(examResultId);
+            IEnumerable<ExamQuestion> examQuestions = ExamQuestionService.GetAllQuestionIdsAsList(examResult.ExamId).ToList();
+            IEnumerable<UserEQLog> tempEqLogs = UserEqLogService.GetAllByResultId(examResultId);
+
+            List<ExamQuestion> examQuestionsOutput = examQuestions.ToList();
+
+            foreach (ExamQuestion question in examQuestions)
+            {
+                foreach (UserEQLog log in tempEqLogs)
+                {
+                    
+                    if (question.ExamHasQuestionId == log.ExamHasQuestionId && log.CorrectAnswered.Equals(1))
+                    {
+                        examQuestionsOutput.Remove(question);
+                    }
+                }
+            }
+
+            IEnumerable<Question> tempQuestions = QuestionService.GetQuestionsByExamQuestionList(examQuestionsOutput);
+            Exam exam = ExamService.GetById(examResult.ExamId);
+            return new ExamModel
+            {
+                AnswerModels = null, //CreateAnswerModels(tempAnswers.ToList()),
+                TimeTable = ConvertToTimeTableModel(TimeTableService.GetById(exam.TimeTableId)),
+                Description = exam.Description,
+                ExamId = examResult.ExamId,
+                Name = exam.Name,
+                QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
+                ExamResultId = examResultId, 
+                Score = examResult.Score
             };
         }
 
@@ -491,8 +587,7 @@ namespace Eduria.Controllers
         {
             List<Question> allQuestions = QuestionService.GetAll().ToList();
             Exam exam = ExamService.GetById(id);
-            //List<AnswerModel> answerModels = CreateAnswerModels(allAnswers);
-            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);          
+            List<QuestionModel> questionModels = CreateQuestionModelsList(allQuestions);
             return new ExamModel()
             {
                 AnswerModels = null,
@@ -500,7 +595,8 @@ namespace Eduria.Controllers
                 Description = exam.Description,
                 ExamId = id,
                 Name = exam.Name,
-                QuestionModels = questionModels
+                QuestionModels = questionModels,
+                Score = -1
             };
         }
 

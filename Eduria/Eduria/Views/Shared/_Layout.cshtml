@@ -31,13 +31,19 @@
                 <div class="topnav" id="myTopnav">
                     <a href="/" class="active"><i class="fas fa-home"></i></a>
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
-                    <a asp-controller="Exam" asp-action="Show">Toetsen </a>
-                    <a href="#">Prikbord</a>
-                    <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
-                    <a asp-controller="Result" asp-action="Index">Data</a>
-                    <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
-                        <i class="fa fa-bars"></i>
-                    </a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
+                        <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+                        <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Exam" asp-action="Show">Info </a>
+                    }
+
                 </div>
             </div>
 
@@ -47,7 +53,15 @@
             <div class="medium-3 columns myAccount">
                 <p>
                     <i class="fas fa-envelope"></i>
-                    <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Login">Inloggen </a>  <i class="fas fa-cog"></i>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a> <i class="fas fa-cog"></i>
+                    }
+                    else
+                    {
+                        <a asp-controller="Login" asp-action="Login">Inloggen </a> <i class="fas fa-cog"></i>
+                    }
+
                 </p>
             </div>
         </div>    

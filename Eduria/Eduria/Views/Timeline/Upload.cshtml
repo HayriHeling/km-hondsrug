@@ -1,0 +1,154 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+}
+<input type="button" value="Terug" onclick="location.href='@Url.Action("Index", "Timeline")'" class="button" />
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Audio)
+    {
+        if (i == 0)
+        {
+            <h2>Audio</h2>
+        }
+        <audio controls>
+            <source src="@Url.Content(String.Format("~/Content/{0}", model.Source))" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" class="button" />
+        </form>
+
+    }
+}
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Image)
+    {
+        if (i == 0)
+        {
+            <h2>Afbeeldingen</h2>
+        }
+        <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="height: 315px;" />
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" class="button" />
+        </form>
+    }
+}
+@for (int i = 0; i < ViewBag.media.Count; i++)
+{
+    MediaSourceModel model = ViewBag.media[i];
+    if (model.MediaType == MediaType.Video)
+    {
+        if (i == 0)
+        {
+            <h2>Videos</h2>
+        }
+        string[] parsedSource = model.Source.Split("?v=");
+        string embed = parsedSource[(parsedSource.Length - 1)];
+        <iframe width="420" height="315"
+                src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
+        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+            <input type="submit" name="submit" value="Verwijderen" class="button" />
+        </form>
+    }
+}
+
+<p>
+    <input type='button' class='audiobuttons' onclick='startRecording()' value='start recording audio'>
+    <input type='button' class='audiobuttons' onclick='stopRecording()' value='stop recording audio'>
+</p>
+<div id='audio'></div>
+<h2>upload audio</h2>
+<form id="AudioFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+    <input type="number" name="mType" value="1" style="display:none;" />
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="file" name="files" accept="audio/*" multiple />
+    <input type="submit" name="submit" value="audio uploaden" class="button" />
+</form>
+
+<h2>upload afbeeldingen</h2>
+<form id="ImageFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+    <input type="number" name="mType" value="2" style="display:none;" />
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="file" name="files" accept="image/*" multiple />
+    <input type="submit" name="submit" value="afbeeldingen uploaden" class="button" />
+</form>
+
+<h2>upload videos</h2>
+<form id="VideoFilesForm" method="post" asp-action="SaveLink" asp-controller="Timeline">
+    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+    <input type="text" name="source" placeholder="youtube link" />
+    <input type="submit" name="submit" value="video uploaden" class="button" />
+</form>
+
+<script>
+    //function to start recording
+    function startRecording() {
+        if (recorder.state == 'inactive') {
+            chunks = [];
+            recorder.start(500);
+        }
+    }
+    //function to stop recording
+    function stopRecording() {
+        if (recorder.state == 'recording') {
+            recorder.stop();
+            const blob = new Blob(chunks, { type: 'audio/mp3' });
+            // convert blob to URL so it can be assigned to a audio src attribute
+            createAudioElement(URL.createObjectURL(blob));
+        }
+    }
+
+    // appends an audio element to playback and download recording
+    function createAudioElement(blobUrl) {
+        var div = "#audio";
+        var audiobuttons = ".audiobuttons";
+        $(div).empty();
+        const downloadEl = document.createElement('a');
+        downloadEl.style = 'display: block';
+        downloadEl.innerHTML = 'download';
+        downloadEl.download = 'audio.mp3';
+        downloadEl.href = blobUrl;
+        const audioEl = document.createElement('audio');
+        audioEl.controls = true;
+        const sourceEl = document.createElement('source');
+        sourceEl.src = blobUrl;
+        sourceEl.type = 'audio/webm';
+        const remove = "<button onclick='removeAudioElement()'>Verwijder</button>"
+        audioEl.appendChild(sourceEl);
+        $(div).append(audioEl);
+        $(div).append(remove);
+        $(div).append(downloadEl);
+        $(audiobuttons).hide();
+    }
+    //Removes created audio element of index q.
+    function removeAudioElement() {
+        var div = "#audio";
+        var audiobuttons = ".audiobuttons";
+        $(div).empty();
+        $(audiobuttons).show();
+    }
+
+    var recorder;
+    // store streaming data chunks in array
+    var chunks = [];
+    // request permission to access audio stream
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        // create media recorder instance to initialize recording
+        recorder = new MediaRecorder(stream);
+        // function to be called when data is received
+        recorder.ondataavailable = e => {
+          // add stream data to chunks
+          chunks.push(e.data);
+        };
+    }).catch(console.error);
+</script>

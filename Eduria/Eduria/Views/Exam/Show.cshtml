@@ -7,7 +7,9 @@
     <div id="noneToday">
         <div class="row large">
             <div class="medium-12 columns">
-                <div id="answer" height="20"></div>
+                <div id="answer">
+                    <p id="AnswerNotification"></p>
+                </div>
                 <h2>Toets tijdvakken</h2>
                 <p id="Question">Klik op start om te beginnen</p>
                 <form>
@@ -33,8 +35,9 @@
                         <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
                         <label class="timeperiod tv" for="10"></label>
                     </div>
-                    <div class="medium-offset-10 medium-2 columns">
-                        <input type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button" />
+                    <div class="medium-offset-10 medium-4 columns">
+                        <input id="SubmitPause" type="button" value="Pauzeer" onclick="Pause()" class="button" disabled="disabled"/>
+                        <input id="ExamButton" type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button"/>
                     </div>
                 </form>
             </div>
@@ -48,7 +51,10 @@
     var tempCurrentQuestion;
     var count = 0;
     var score = 0;
-    var maxScore = 0;
+    var maxScore = @Model.Score;
+    if (@Model.Score < 0) {
+        maxScore = 0;
+    }
     var pointsPerQuestion = 5;
     var outputJson = [];
     var ExamId = @Model.ExamId;
@@ -56,12 +62,16 @@
     var EndTime;
     var QuestionTime;
     var RepeatTime = 3;
+    var ExamResultId = @Model.ExamResultId;
 
     var selected = 0;
+    console.log("Model score is: " + @Model.Score);
 
     // Function that creates an question object from the inputs
     function createTempQuestion(id, text, answerId) {
-        maxScore = maxScore + pointsPerQuestion;
+        if (@Model.Score < 0) {
+            maxScore = maxScore + pointsPerQuestion;
+        }
         return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
 
@@ -79,11 +89,6 @@
     {
         @:QuestionModelArray.push(createTempQuestion(@d.QuestionId, "@d.Text", @d.TimeTableModel.TimeTableId));
     }
-
-    @*@foreach (var e in Model.AnswerModels)
-    {
-        @:AnswerModelArray.push(createTempAnswer(@e.AnswerId, @e.QuestionId, "@e.Text", "@e.CorrectAnswer"));
-    }*@
 
     // This function is deprecated at the moment. It checks if the currently selected id is the same as the
     // correct answer in the tempanswerarray.
@@ -122,10 +127,14 @@
 
     // All logic for the exams is put in here.
     function ExamLogic(questionArray, answerArray, id) {
+        console.log(maxScore);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();
+            $("#ExamButton").val("Volgende");
+            $("#SubmitPause").attr("disabled", false);
         } else {
+            
             $("#answer").fadeIn();
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
                 $("#answer").append("<p class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</p>");
@@ -155,6 +164,7 @@
         count++;
     }
 
+
     // Function that hides the status message with a fade.
     function hideMessage() {
         $("#answer").fadeOut(1000);
@@ -180,7 +190,6 @@
     function SetupQuestion(question, answerArray, id) {
         tempCurrentQuestion = question;
         document.getElementById("Question").innerHTML = question.Text;
-        //5currentAnswersArray = GetAnswersByQuestionId(answerArray, question.QuestionId);
     }
 
     // Function that contains all logic for when the exam is finished.
@@ -188,7 +197,8 @@
         DeSelectRadioButton(selected);
         document.getElementById("Question").innerHTML = "Dat was het examen! Je had " + numCorrect + " vragen goed! Dat zorgt voor een score van: " + maxScore;
         EndTime = new Date();
-        SendJson();
+        SendJson(false);
+        $("#ExamButton").attr("disabled", true);
     }
 
     // Function is deprecated.
@@ -210,20 +220,32 @@
     }
 
     // Function that sends the Json Array to the controller.
-    function SendJson() {
-        StartTime = StartTime.toJSON();
-        EndTime = EndTime.toJSON();
-        console.log(outputJson);
+    function SendJson(isPaused) {
+        if (ExamResultId < 0) {
+            StartTime = StartTime.toJSON();
+        } else {
+            StartTime = null;
+        }
+        if (isPaused) {
+            EndTime = null;
+        } else {
+            EndTime = EndTime.toJSON();
+        }
+        console.log(maxScore);
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson), examId : ExamId, userId : 1, score : maxScore, starttime : StartTime, endtime: EndTime },
-            success: function(data){
-                alert(data.Result);
+            data: { jsoninput : JSON.stringify(outputJson), examId : JSON.stringify(ExamId), userId : JSON.stringify(1), score : JSON.stringify(maxScore), starttime : JSON.stringify(StartTime), endtime: JSON.stringify(EndTime), examResultId: JSON.stringify(ExamResultId) },
+            success: function() {
+                window.location.href = "/Student/TestResults/";
             },
-            dataType: "json",
+            dataType: "text",
             traditional: true
         });
+        }
+
+    function Pause() {
+        SendJson(true);
     }
 
 </script>
