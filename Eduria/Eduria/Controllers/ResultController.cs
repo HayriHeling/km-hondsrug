@@ -297,7 +297,7 @@ namespace Eduria.Controllers
                 CorrectAnswered = result.CorrectAnswered
             });
 
-            var tuple = Tuple.Create(ExamResultService.GetExamResultByUserId(userId), questionModels, logModels);
+            var tuple = Tuple.Create(ExamResultService.GetDataStudentResultByUserId(userId), questionModels, logModels);
 
             return View(tuple);
         }

@@ -48,8 +48,11 @@ namespace Eduria
         {
             return Context.ExamResults.Find(examResult).ExamResultId;
         }
-
-        public IEnumerable<DataStudentResultModel> GetExamResultByUserId(int userId)
+        public IEnumerable<ExamResult> GetExamResultByUserId(int userId)
+        {
+            return GetAll().Where(x => x.UserId == userId);
+        }
+        public IEnumerable<DataStudentResultModel> GetDataStudentResultByUserId(int userId)
         {
             var query =
                 from er in Context.ExamResults
