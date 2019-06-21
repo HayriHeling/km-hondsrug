@@ -31,8 +31,8 @@
     <div class="medium-6 columns">
         <p><b>De leerlingen die de toets '@Model.Item2.Name' gemaakt hebben:</b></p>
         @foreach (var item in Model.Item3)
-        {
-            <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></p>
+        {            
+            <p><a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@ViewBag.examResultService.GetExamResultByUserAndExamId(item.UserId, ViewBag.examId).ExamResultId">@item.FirstName @item.LastName</a></p>
         }
     </div>
 </div>

@@ -200,7 +200,7 @@ namespace Eduria.Controllers
         {
             Exam exam = ExamService.GetById(id);
             ViewBag.examId = id;
-
+            ViewBag.examResultService = ExamResultService;
             //Adds the total per month
             List<int> totalPerMonth = new List<int>();
             for(int i = 1; i <= 12; i++)
