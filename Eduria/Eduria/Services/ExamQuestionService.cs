@@ -164,5 +164,10 @@ namespace Eduria.Services
 
             return query;
         }
+
+        public int GetQuestionIdByExamQuestionId(int id)
+        {
+            return Context.ExamQuestions.First(x => x.ExamHasQuestionId == id).QuestionId;
+        }
     }
 }

@@ -117,6 +117,34 @@ namespace Eduria.Controllers
                 MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId))
             };
         }
+        public UserModel ConvertToUserModel(User user)
+        {
+            return new UserModel
+            {
+                FirstName = user.Firstname,
+                LastName = user.Lastname
+            };
+        }
+        public ExamModel ConvertToExamModel(Exam exam)
+        {
+            return new ExamModel
+            {
+                Name = exam.Name,
+                Description = exam.Description
+            };
+        }
+        public ExamResultModel ConvertToExamResultModel(ExamResult er)
+        {
+            return new ExamResultModel
+            {
+                ExamResultId = er.ExamResultId,
+                ExamId = er.ExamId,
+                UserId = er.UserId,
+                StartedAt = er.StartedAt,
+                FinishedAt = er.FinishedAt,
+                Score = er.Score
+            };
+        }
 
         /// <summary>
         /// 
@@ -272,6 +300,53 @@ namespace Eduria.Controllers
             var tuple = Tuple.Create(ExamResultService.GetExamResultByUserId(userId), questionModels, logModels);
 
             return View(tuple);
+        }
+        public IActionResult StudentExamResult(int id)
+        {
+            List<QuestionModel> QuestionsRight = new List<QuestionModel>();
+            List<QuestionModel> QuestionsWrong = new List<QuestionModel>();
+            List<string> dates = new List<string>();
+            List<int> scores = new List<int>();
+
+            ExamResultModel resultModel = ConvertToExamResultModel(ExamResultService.GetById(id));
+            UserModel user = ConvertToUserModel(UserService.GetById(resultModel.UserId));
+
+            IEnumerable<ExamResult> examResults = ExamResultService.GetExamResultByUserId(resultModel.UserId);
+            IEnumerable<ExamResultModel> examResultModels = examResults.Select(result => new ExamResultModel
+            {
+                ExamId = result.ExamId,
+                ExamResultId = result.ExamResultId,
+                StartedAt = result.StartedAt,
+                FinishedAt = result.FinishedAt,
+                Score = result.Score,
+                UserId = result.UserId
+            });          
+            foreach(ExamResultModel result in examResultModels)
+            {
+                dates.Add(result.FinishedAt.ToString());
+                scores.Add(result.Score);
+            }
+            IEnumerable<UserEQLog> examLogs = UserEQLogService.GetAllByResultId(id);
+            foreach(UserEQLog examLog in examLogs)
+            {
+                Question question = QuestionService.GetById(ExamQuestionService.GetQuestionIdByExamQuestionId(examLog.ExamHasQuestionId));
+                QuestionModel questionModel = ConvertToQuestionModel(question);
+                if (examLog.CorrectAnswered == 1)
+                {
+                    QuestionsRight.Add(questionModel);
+                }
+                else
+                {
+                    QuestionsWrong.Add(questionModel);
+                }
+            }
+            ViewBag.User = user;
+            ViewBag.Exam = ConvertToExamModel(ExamService.GetById(ExamResultService.GetById(id).ExamId));
+            ViewBag.Result = resultModel;
+            ViewBag.AllResults = examResultModels;
+            ViewBag.QuestionsRight = QuestionsRight;
+            ViewBag.QuestionsWrong = QuestionsWrong;
+            return View();
         }
     }
 }
