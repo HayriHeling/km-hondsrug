@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eduria.Models;
 using EduriaData.Models;
 
 namespace Eduria.Services
@@ -29,6 +30,15 @@ namespace Eduria.Services
         public MediaSource GetByMediaType(int type)
         {
             return GetAll().FirstOrDefault(x => x.MediaType == type);
+        }
+        public MediaSourceModel ConvertToModel(MediaSource mediaSource)
+        {
+            return new MediaSourceModel
+            {
+                MediaSourceId = mediaSource.MediaSourceId,
+                MediaType = (MediaType)mediaSource.MediaType,
+                Source = mediaSource.Source
+            };
         }
     }
 }

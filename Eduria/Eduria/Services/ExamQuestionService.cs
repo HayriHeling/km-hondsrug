@@ -37,5 +37,137 @@ namespace Eduria.Services
         {
             return Context.ExamQuestions.First(x => x.QuestionId == questionId && x.ExamId == examId);
         }
+
+        /// <summary>
+        /// Get a sum of the record TimesWrong per Question.
+        /// </summary>
+        /// <param name="id">The QuestionId</param>
+        /// <returns>TotalTimesWrong.</returns>
+        public int GetTotalTimesWrong(int id)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == id
+                select ul.TimesWrong;
+                 
+            return query
+                .DefaultIfEmpty(0)
+                .Sum();
+        }
+
+        public int GetTotalTimesWrong(int questionId, int examId)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == questionId && eq.ExamId == examId
+                select ul.TimesWrong;
+
+            return query
+                .DefaultIfEmpty()
+                .Sum();
+        }
+
+        /// <summary>
+        /// Get the total times good.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetTotalTimesGood(int id)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == id
+                select ul.CorrectAnswered;
+
+            return query
+                .DefaultIfEmpty(0)
+                .Sum();
+        }
+
+        public int GetTotalTimesGood(int questionId, int examId)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == questionId && eq.ExamId == examId
+                select ul.CorrectAnswered;
+
+            return query
+                .DefaultIfEmpty()
+                .Sum();
+        }
+
+        /// <summary>
+        /// Get the name of the question.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetQuestionName(int id)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where q.QuestionId == id
+                select q.Text;
+
+            return query
+                .First()
+                .ToString();
+        }
+
+        /// <summary>
+        /// Get all the questions by the exam id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<Question> GetQuestionsByExamId(int id)
+        {
+            var query =
+                from q in Context.Questions
+                join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                where eq.ExamId == id
+                select new Question
+                {
+                    QuestionId = q.QuestionId,
+                    Text = q.Text
+                };
+
+            return query
+                .GroupBy(x => x.QuestionId)
+                .Select(x => x.First())
+                .ToList();
+        }
+
+        public IEnumerable<Question> GetQuestionsByUserId(int id)
+        {
+            var query =
+                 from q in Context.Questions
+                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                 where ul.UserId == id
+                 select new Question
+                 {
+                     QuestionId = q.QuestionId,
+                     Text = q.Text,
+                     QuestionType = q.QuestionType,
+                     TimeTableId = q.TimeTableId
+                 };
+
+            return query;
+        }
+
+        public int GetQuestionIdByExamQuestionId(int id)
+        {
+            return Context.ExamQuestions.First(x => x.ExamHasQuestionId == id).QuestionId;
+        }
     }
 }
