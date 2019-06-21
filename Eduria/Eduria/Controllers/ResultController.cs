@@ -36,6 +36,10 @@ namespace Eduria.Controllers
             ExamResultService = examResultSerivce;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             IEnumerable<User> users = UserService.GetAll();
@@ -81,6 +85,12 @@ namespace Eduria.Controllers
 
             return View(tuple);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="question"></param>
+        /// <returns></returns>
         public QuestionModel ConvertToQuestionModel(Question question)
         {
             return new QuestionModel
@@ -92,6 +102,12 @@ namespace Eduria.Controllers
                 TimeTableModel = ConvertToTimeTableModel(TimeTableService.GetById(question.TimeTableId))
             };
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timeTable"></param>
+        /// <returns></returns>
         public TimeTableModel ConvertToTimeTableModel(TimeTable timeTable)
         {
             return new TimeTableModel
@@ -118,6 +134,10 @@ namespace Eduria.Controllers
             return View(questionModels);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Exam()
         {
             IEnumerable<Exam> exams = ExamService.GetAll();
@@ -211,6 +231,10 @@ namespace Eduria.Controllers
             return View(tuple);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult StudentResult()
         {
             return View(ExamResultService.GetExamResultByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));

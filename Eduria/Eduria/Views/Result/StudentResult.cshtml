@@ -26,11 +26,9 @@
                 <td>@item.StartedAt</td>
                 <td>@item.FinishedAt</td>
                 <td>
-                    <form method="post" asp-controller="Result" asp-action="StudentExamResult">
-                        <input type="number" name="id" value="@item.ExamResultId" style="display:none;" />
-                        <input type="number" name="examId" value="@item.UserId" style="display:none;" />
-                        <input type="submit" name="submit" value="Bekijken" class="button" />
-                    </form>
+                    <a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">
+                        <i class="fas fa-glasses"></i>
+                    </a>
                 </td>
             </tr>
         }
