@@ -26,7 +26,7 @@
                 {
                     Class classEnum = (Class)item.ClassId;
                     <tr>
-                        <td><a asp-controller="" asp-action="" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></td>
+                        <td><a asp-controller="Result" asp-action="StudentResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></td>
                         <td>@classEnum</td>
                         <td>@item.UserNum</td>
                     </tr>

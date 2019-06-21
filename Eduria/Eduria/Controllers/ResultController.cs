@@ -235,10 +235,19 @@ namespace Eduria.Controllers
         /// Action for returning the specified models.
         /// </summary>
         /// <returns></returns>
-        public IActionResult StudentResult()
+        public IActionResult StudentResult(int id)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            int userId;
 
+            if (!User.Identity.IsAuthenticated)
+            {
+                userId = id;
+            }
+            else
+            {
+                userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            
             IEnumerable<Question> question = ExamQuestionService.GetQuestionsByUserId(userId);
             IEnumerable<QuestionModel> questionModels = question.Select(result => new QuestionModel
             {
