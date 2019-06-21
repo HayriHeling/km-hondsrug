@@ -232,12 +232,37 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Action for returning the specified models.
         /// </summary>
         /// <returns></returns>
         public IActionResult StudentResult()
         {
-            return View(ExamResultService.GetExamResultByUserId(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)));
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            IEnumerable<Question> question = ExamQuestionService.GetQuestionsByUserId(userId);
+            IEnumerable<QuestionModel> questionModels = question.Select(result => new QuestionModel
+            {
+                QuestionId = result.QuestionId,
+                QuestionType = result.QuestionType,
+                Text = result.Text
+            });
+
+            IEnumerable<UserEQLog> logs = UserEQLogService.GetAllByUserId(userId);
+            IEnumerable<UserEQLogModel> logModels = logs.Select(result => new UserEQLogModel
+            {
+                UserEQLogId = result.UserEQLogId,
+                ExamHasQuestionId = result.ExamHasQuestionId,
+                ExamResultId = result.ExamResultId,
+                QuestionModel = ConvertToQuestionModel(QuestionService.GetById(ExamQuestionService.GetById(result.ExamHasQuestionId).QuestionId)),
+                UserId = result.UserId,
+                TimesWrong = result.TimesWrong,
+                AnsweredOn = result.AnsweredOn,
+                CorrectAnswered = result.CorrectAnswered
+            });
+
+            var tuple = Tuple.Create(ExamResultService.GetExamResultByUserId(userId), questionModels, logModels);
+
+            return View(tuple);
         }
     }
 }

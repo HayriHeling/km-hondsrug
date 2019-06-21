@@ -32,5 +32,10 @@ namespace Eduria.Services
         {
             return Context.UserEQLogs.FirstOrDefault(x => x.ExamResultId == resultId && x.UserId == userId && x.ExamHasQuestionId == examQuestionId);
         }
+
+        public IEnumerable<UserEQLog> GetAllByUserId(int id)
+        {
+            return GetAll().Where(x => x.UserId == id);
+        }
     }
 }

@@ -146,5 +146,23 @@ namespace Eduria.Services
                 .Select(x => x.First())
                 .ToList();
         }
+
+        public IEnumerable<Question> GetQuestionsByUserId(int id)
+        {
+            var query =
+                 from q in Context.Questions
+                 join eq in Context.ExamQuestions on q.QuestionId equals eq.QuestionId
+                 join ul in Context.UserEQLogs on eq.ExamHasQuestionId equals ul.ExamHasQuestionId
+                 where ul.UserId == id
+                 select new Question
+                 {
+                     QuestionId = q.QuestionId,
+                     Text = q.Text,
+                     QuestionType = q.QuestionType,
+                     TimeTableId = q.TimeTableId
+                 };
+
+            return query;
+        }
     }
 }
