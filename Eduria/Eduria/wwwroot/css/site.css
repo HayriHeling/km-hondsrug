@@ -58,7 +58,7 @@ h4 {
 }
 
 .button.blue:hover {
-    background-color: #29abe2;
+    background-color: #1f98cc;
 }
 
 .no-button {
@@ -175,6 +175,10 @@ footer {
     border: 1px solid #ed1c24;
     border-radius: unset;
     color: #ed1c24;
+}
+
+.ghost:hover {
+    background-color: #ed1c24;
 }
 
 a {
@@ -487,10 +491,12 @@ p {
 
 .wrong {
     background-color: #f44242;
+    color:#fff;
 }
 
 .correct {
     background-color: #74b027;
+    color: #fff;
 }
 
 #exam p {
@@ -890,11 +896,11 @@ border-radius: 2px;
     }
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #29abe2;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #29abe2;
 }
 
 input:checked + .slider:before {
