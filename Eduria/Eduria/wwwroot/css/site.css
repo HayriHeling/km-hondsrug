@@ -140,8 +140,9 @@ footer {
     padding: 10px 0;
     color: #808080;
     font-size: 12px;
-    position: absolute;
+    position: fixed;
     bottom: 0;
+    z-index: 999;
     width: 100%;
 }
 
