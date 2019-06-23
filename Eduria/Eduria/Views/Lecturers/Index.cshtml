@@ -2,24 +2,27 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h2>Index</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Achternaam</th>
-            <th>Voornaam</th>
-            <th>Tijdlijn</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(UserModel lecturer in ViewBag.lecturers)
-        {
-            <tr>
-                <td>@lecturer.LastName</td>
-                <td>@lecturer.FirstName</td>
-                <td><input type="button" value="Tijdlijn" onclick="location.href='@Url.Action("Index", "Timeline", new { id = lecturer.UserId })'"/></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<section id="content">
+    <div class="row medium">
+        <h2>Overzicht docenten</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Achternaam</th>
+                    <th>Voornaam</th>
+                    <th>Tijdlijn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (UserModel lecturer in ViewBag.lecturers)
+                {
+                    <tr>
+                        <td>@lecturer.LastName</td>
+                        <td>@lecturer.FirstName</td>
+                        <td><input type="button" value="Tijdlijn" class="button green" onclick="location.href='@Url.Action("Index", "Timeline", new { id = lecturer.UserId })'" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

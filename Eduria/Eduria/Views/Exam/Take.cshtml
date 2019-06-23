@@ -2,89 +2,92 @@
 @{
     ViewData["Title"] = "Take";
 }
-
-<h2>@ViewBag.exam.Name</h2>
-<div id="startDiv">
-    <p>@ViewBag.exam.Description</p>
-    <input type="button" value="Start toets" onclick="StartExam()" />
-</div>
-    <div id="examDiv" style="display: none;">
-        @foreach (QuestionModel q in ViewBag.questions)
-        {
-            List<AnswerModel> qAnswers = new List<AnswerModel>();
-            string source = q.MediaSourceModel.Source;
-            string[] parsedSource = source.Split("?v=");
-            string embed = parsedSource[(parsedSource.Length - 1)];
-        <div id="question@(q.QuestionId)" class="questions">
-            <p>@q.Text</p>
-            @if (q.MediaSourceModel.MediaType == MediaType.Audio)
-            {
-                <audio controls>
-                    <source src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" type="audio/mp3">
-                    Your browser does not support the audio element.
-                </audio>
-            }
-            else if (q.MediaSourceModel.MediaType == MediaType.Image)
-            {
-                <img src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" style="height: 315px;" />
-            }
-            else if (q.MediaSourceModel.MediaType == MediaType.Video)
-            {
-                <iframe width="420" height="315"
-                        src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
-            }
-
-
-            @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
-            {
-                foreach (AnswerModel a in ViewBag.answers)
+    <section id="content">
+        <div class="row medium">
+            <h2>@ViewBag.exam.Name</h2>
+            <div id="startDiv">
+                <p>@ViewBag.exam.Description</p>
+                <input type="button" class="button green" value="Start toets" onclick="StartExam()" />
+            </div>
+            <div id="examDiv" style="display: none;">
+                @foreach (QuestionModel q in ViewBag.questions)
                 {
-                    if (a.QuestionId == q.QuestionId)
-                    {
-                        qAnswers.Add(a);
-                    }
+                    List<AnswerModel> qAnswers = new List<AnswerModel>();
+                    string source = q.MediaSourceModel.Source;
+                    string[] parsedSource = source.Split("?v=");
+                    string embed = parsedSource[(parsedSource.Length - 1)];
+                    <div id="question@(q.QuestionId)" class="questions">
+                        <p>@q.Text</p>
+                        @if (q.MediaSourceModel.MediaType == MediaType.Audio)
+                        {
+                            <audio controls>
+                                <source src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" type="audio/mp3">
+                                Your browser does not support the audio element.
+                            </audio>
+                        }
+                        else if (q.MediaSourceModel.MediaType == MediaType.Image)
+                        {
+                            <img src="@Url.Content(String.Format("~/Content/{0}", q.MediaSourceModel.Source))" style="height: 315px;" />
+                        }
+                        else if (q.MediaSourceModel.MediaType == MediaType.Video)
+                        {
+                            <iframe width="420" height="315"
+                                    src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
+                        }
+
+
+                        @if ((QuestionType)q.QuestionType == QuestionType.Meerkeuze)
+                        {
+                            foreach (AnswerModel a in ViewBag.answers)
+                            {
+                                if (a.QuestionId == q.QuestionId)
+                                {
+                                    qAnswers.Add(a);
+                                }
+                            }
+                            Random rng = new Random();
+                            int n = qAnswers.Count;
+                            while (n > 1)
+                            {
+                                n--;
+                                int k = rng.Next(n + 1);
+                                AnswerModel value = qAnswers[k];
+                                qAnswers[k] = qAnswers[n];
+                                qAnswers[n] = value;
+                            }
+                            @foreach (AnswerModel a in qAnswers)
+                            {
+                                <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
+                            }
+                        }
+                        @if ((QuestionType)q.QuestionType == QuestionType.Open)
+                        {
+                            <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
+                        }
+                        @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
+                        {
+                            int count = 0;
+                            <div class="cc-selector">
+                                @foreach (TimeTableModel tModel in ViewBag.timetables)
+                                {
+                                    count++;
+                                    <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
+                                    <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
+                                }
+                            </div>
+                        }
+                    </div>
                 }
-                Random rng = new Random();
-                int n = qAnswers.Count;
-                while (n > 1)
-                {
-                    n--;
-                    int k = rng.Next(n + 1);
-                    AnswerModel value = qAnswers[k];
-                    qAnswers[k] = qAnswers[n];
-                    qAnswers[n] = value;
-                }
-                @foreach (AnswerModel a in qAnswers)
-                {
-                    <p><input type="radio" name="@a.QuestionId" value="@a.AnswerId" onclick="SetAnswer(@a.QuestionId, @q.QuestionType, @a.AnswerId)" />@a.Text</p>
-                }
-            }
-            @if ((QuestionType)q.QuestionType == QuestionType.Open)
-            {
-                <input type="text" name="@q.QuestionId" placeholder="Antwoord" onchange="SetAnswer(@q.QuestionId, @q.QuestionType, this)" />
-            }
-            @if ((QuestionType)q.QuestionType == QuestionType.Tijdvak)
-            {
-                int count = 0;
-                <div class="cc-selector">
-                    @foreach (TimeTableModel tModel in ViewBag.timetables)
-                    {
-                        count++;
-                        <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
-                        <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
-                    }
-                </div>
-            }
+                <div id="questionCount"></div>
+                <input type="button" class="button blue" value="Vorige Vraag" onclick="PreviousQuestion()" />
+                <input type="button" class="button blue" value="Volgende Vraag" onclick="NextQuestion()" />
+                <input type="button" class="button red" value="Eindig Examen" onclick="StopExam()" />
+            </div>
+            <form id="examForm" method="post" asp-controller="Exam" asp-action="Results" hidden>
+                <input id="examJson" name="examJson" type="text" />
+            </form>
         </div>
-        }
-        <div id="questionCount"></div>
-        <input type="button" value="Vorige Vraag" onclick="PreviousQuestion()" />
-        <input type="button" value="Volgende Vraag" onclick="NextQuestion()" />
-        <input type="button" value="Eindig Examen" onclick="StopExam()" />
-    </div>
-<form id="examForm" method="post" asp-controller="Exam" asp-action="Results" hidden>
-    <input id="examJson" name="examJson" type="text" />
-</form>
+    </section>
 <script>
     var questionArray = [];
     var currentQuestion = 0;

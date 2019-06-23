@@ -35,6 +35,7 @@
                     {
                         <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
                         <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+                        <a asp-controller="Lecturers" asp-action="Index">Docenten </a>
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
                         </a>
@@ -48,18 +49,18 @@
             </div>
 
             <div class="medium-2 columns search">
-                <input type="text" placeholder="Zoeken..." />
+                <!-- <input type="text" placeholder="Zoeken..." /> -->
             </div>
             <div class="medium-3 columns myAccount">
                 <p>
-                    <i class="fas fa-envelope"></i>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a> <i class="fas fa-cog"></i>
+                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a>
+
                     }
                     else
                     {
-                        <a asp-controller="Login" asp-action="Login">Inloggen </a> <i class="fas fa-cog"></i>
+                        <a asp-controller="Login" asp-action="Login">Inloggen </a>
                     }
 
                 </p>
