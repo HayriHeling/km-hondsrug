@@ -4,80 +4,79 @@
     ViewData["Title"] = "Create";
 }
 
+    <section id="addUser" class="row">
+        @{
+            @if (ViewBag.success == 0)
+            {
+                <p class="alert red">@ViewBag.msg</p>
+            }
+            else if (ViewBag.success == 1)
+            {
+                <p class="alert green">@ViewBag.msg</p>
+            }
+        }
 
-@{
-    @if (ViewBag.success == 0)
-    {
-        <p style="color:red;">@ViewBag.msg</p>
-    }
-    else if (ViewBag.success == 1)
-    {
-        <p style="color:green;">@ViewBag.msg</p>
-    }
-}
+        <div class="medium-6 columns">
+            <h4>Gebruiker aanmaken</h4>
+            <p>Voeg hier een gebruiker toe:</p>
+        </div>
+        <div class="medium-6 columns">
 
-<section id="addUser" class="row">
-    <div class="medium-6 columns">
-        <h4>Gebruiker aanmaken</h4>
-        <p>Voeg hier een gebruiker toe:</p>
-    </div>
-    <div class="medium-6 columns">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" type="text" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
 
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" type="text" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserNum" class="control-label"></label>
-                <input asp-for="UserNum" class="form-control" />
-                <span asp-validation-for="UserNum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserType" class="control-label"></label>
-                @Html.DropDownListFor(x => x.UserType,
-                    new SelectList(Enum.GetValues(typeof(UserRoles))),
-                    "",
-                    new { @class = "form-control" })
-                <span asp-validation-for="UserType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClassId" class="control-label"></label>
-                @Html.DropDownListFor(x => x.ClassId,
-                    new SelectList(Enum.GetValues(typeof(Class))),
-                    new { @class = "form-control" })
-                <span asp-validation-for="ClassId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword" class="control-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Aanmaken" class="button blue" />
-            </div>
-        </form>
-    </div>
-</section>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserNum" class="control-label"></label>
+                    <input asp-for="UserNum" class="form-control" />
+                    <span asp-validation-for="UserNum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserType" class="control-label"></label>
+                    @Html.DropDownListFor(x => x.UserType,
+                        new SelectList(Enum.GetValues(typeof(UserRoles))),
+                        "",
+                        new { @class = "form-control" })
+                    <span asp-validation-for="UserType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ClassId" class="control-label"></label>
+                    @Html.DropDownListFor(x => x.ClassId,
+                        new SelectList(Enum.GetValues(typeof(Class))),
+                        new { @class = "form-control" })
+                    <span asp-validation-for="ClassId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Aanmaken" class="button blue" />
+                </div>
+            </form>
+        </div>
+    </section>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
