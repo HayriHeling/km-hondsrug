@@ -36,6 +36,37 @@ h4 {
 }
 
 
+.button.green {
+    background-color: #74b027;
+
+}
+
+.button.green:hover {
+    background-color: #649c1c;
+}
+
+.button.red {
+    background-color: #ed1c24;
+}
+
+.button.red:hover {
+    background-color: #ce131a;
+}
+
+.button.blue {
+    background-color: #29abe2;
+}
+
+.button.blue:hover {
+    background-color: #29abe2;
+}
+
+.no-button {
+    border: none;
+    background-color: unset;
+    color: yellowgreen;
+}
+
 #myBtn {
     font-style: italic;
     text-decoration: underline;
@@ -58,6 +89,8 @@ h4 {
 .alert.green {
     background-color: #74b027;
 }
+
+
 
 .alert a {
     color: #fff;
@@ -92,6 +125,14 @@ h4 {
     color: #fff;
 }
 
+#header a {
+    color: #fff;
+}
+
+#header a:hover {
+    color: #ed1c24;
+}
+
 /* General Footer */
 
 footer {
@@ -123,14 +164,10 @@ footer {
 }
 
 .button {
-    background-color: #29abe2;
     color: #fff;
     border-radius: unset;
 }
 
-.button:hover {
-    background-color: #ed1c24;
-}
 
 .ghost {
     background-color: unset;
@@ -147,6 +184,7 @@ a {
     border: unset;
     box-shadow: unset;
     border-radius: 1px;
+    border: 1px solid #e9e9e9;
 }
 
 [type='text']::placeholder {
@@ -456,6 +494,12 @@ p {
 
 #exam p {
     color: #afacac;
+}
+
+.category {
+    margin: 5px;
+    padding: 5px;
+    background-color: #f9f9f9;
 }
 
 

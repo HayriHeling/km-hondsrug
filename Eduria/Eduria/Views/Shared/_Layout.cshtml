@@ -48,18 +48,18 @@
             </div>
 
             <div class="medium-2 columns search">
-                <input type="text" placeholder="Zoeken..." />
+                <!-- <input type="text" placeholder="Zoeken..." /> -->
             </div>
             <div class="medium-3 columns myAccount">
                 <p>
-                    <i class="fas fa-envelope"></i>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a> <i class="fas fa-cog"></i>
+                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a>
+
                     }
                     else
                     {
-                        <a asp-controller="Login" asp-action="Login">Inloggen </a> <i class="fas fa-cog"></i>
+                        <a asp-controller="Login" asp-action="Login">Inloggen </a>
                     }
 
                 </p>
