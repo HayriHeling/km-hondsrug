@@ -8,7 +8,7 @@
             @{
                 if (ViewBag.success == 1)
                 {
-                    <p style="color:green;">Nieuwe toets is aangemaakt!</p>
+                    <p class="alert green">Nieuwe toets is aangemaakt!</p>
                 }
             }
             <p id="warning" style="color:red;"></p>
@@ -27,9 +27,9 @@
                     <div id="questionBox">
 
                     </div>
-                    <input type="button" class="button" onclick="AddQuestion(0)" value="Voeg Meerkeuze vraag toe.">
-                    <input type="button" class="button" onclick="AddQuestion(1)" value="Voeg Tijdvakken vraag toe.">
-                    <input type="button" class="button" onclick="AddQuestion(2)" value="Voeg Open vraag toe.">
+                    <input type="button" class="button" onclick="AddQuestion(0)" value="Voeg meerkeuze toe">
+                    <input type="button" class="button" onclick="AddQuestion(1)" value="Voeg tijdvak toe">
+                    <input type="button" class="button" onclick="AddQuestion(2)" value="Voeg open vraag toe">
                 </div>
             </div>
             <div class="medium-6 columns">
@@ -67,7 +67,7 @@
             </div>
             <div class="medium-12 columns">
                 <div class="form-group" style="width: 100%; float: left;margin: 10px;">
-                    <input type="button" class="button" onclick="SaveExam()" value="Toets aanmaken" />
+                    <input type="button" class="button green" onclick="SaveExam()" value="Toets aanmaken" />
                 </div>
             </div>
         </form>
