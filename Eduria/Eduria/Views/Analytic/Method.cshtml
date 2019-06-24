@@ -7,7 +7,7 @@
 <div class="row xlarge">
     <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
     <div class="medium-10 columns">
-        @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
+        @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
         {
             <input type="submit" value="Terug" />
         }
@@ -41,7 +41,7 @@
 <script>
     var methodArray = [];
     var defaultId = 4;
-    var textboxValue = document.getElementById('inputMethodText');
+    var methodTextbox = document.getElementById('inputMethodText');
 
     function addTextBox() {
         var textbox = document.createElement("INPUT");
@@ -73,7 +73,7 @@
     }
 
     function submitMethodArray() {
-        var textBoxValue = document.getElementById('inputMethodText').value;
+        var textBoxValue = (methodTextbox != null) ? methodTextbox.value : "";
 
         $.ajax({
             type: "POST",

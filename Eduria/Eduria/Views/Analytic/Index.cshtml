@@ -10,19 +10,7 @@
             {
                 @using (Html.BeginForm("Index", "Analytic", FormMethod.Post))
                 {
-                    //<select id=""
-                    for (int j=0; j < Model.UserModels.Count; j++)
-                    {
 
-                    }
-
-                    Html.DropDownListFor(m => m.UserModels., new List<SelectListItem> {
-                        new SelectListItem
-                        {
-                            Text = Model.UserModels[j].UserId.ToString() + " " + Model.UserModels[j].Firstname + " " + Model.UserModels[j].Lastname,
-                            Value = Model.UserModels[j].UserId.ToString()
-                        }
-                    });
 
                     <input type="submit" value="Selecteer" />
                 }
@@ -33,8 +21,9 @@
             {
                 @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
                 {
-                    @Html.HiddenFor(m => Model.AnalyticDataModels[i].PeriodNum)
-                    @Html.HiddenFor(m => Model.AnalyticDataModels[i].SchoolYearStart)
+                    <input type="hidden" name="AnalyticDataModels.Index" value=@i />
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].PeriodNum)
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].SchoolYearStart)
 
                     if (year <= Model.AnalyticDataModels[i].SchoolYearStart)
                     {
@@ -46,8 +35,7 @@
                     <p>
                         Exam code: @Model.AnalyticDataModels[i].ExamCode<br />
                         Periode: @Model.AnalyticDataModels[i].PeriodNum<br />
-                        <input type="hidden" name="Index" value=@i />
-                        <button value=@i>Selecteer</button>
+                        <input type="submit" value="Selecteer" />
                     </p>
                 }
             }

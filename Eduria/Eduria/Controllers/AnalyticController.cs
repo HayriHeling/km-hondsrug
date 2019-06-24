@@ -70,9 +70,9 @@ namespace Eduria.Controllers
         }
 
         [HttpPost]
-        public IActionResult Show(IList<AnalyticDataModel> analyticDataModels)
+        public IActionResult Show(AnalyticDataAndUsersModel analyticDataAndUsersModel)
         {
-            AnalyticDataModel analyticData = analyticDataModels.First();
+            AnalyticDataModel analyticData = analyticDataAndUsersModel.AnalyticDataModels.First();
             int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
@@ -145,7 +145,7 @@ namespace Eduria.Controllers
                 return RedirectToAction("Index");
             }
 
-            Service.AddToAnalytic(methodParam, Service.GetAnalyticDataByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart).AnalyticDataId, textParam);
+            Service.AddToAnalytic(methodParam, analyticDataId, textParam);
             return RedirectToAction("Method");
         }
 

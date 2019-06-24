@@ -261,7 +261,7 @@ namespace Eduria.Services
                 foreach (var id in methodParam)
                 {
                     //When a own method is filled in, use this Add method.
-                    if (GetDefaultOptionByAnalyticDefaultId(id) == (int)DefaultOption.InputScore)
+                    if (GetDefaultOptionByAnalyticDefaultId(id) == (int)DefaultOption.InputScore && !String.IsNullOrEmpty(ownMethod))
                     {
                         AddInputToAnalyticDefault(id, analyticId, ownMethod);
                     }
