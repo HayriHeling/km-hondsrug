@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;

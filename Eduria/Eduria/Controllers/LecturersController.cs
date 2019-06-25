@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers
 {
+    [Authorize(Roles = "Teacher")]
     public class LecturersController : Controller
     {
         private UserService Service { get; set; }

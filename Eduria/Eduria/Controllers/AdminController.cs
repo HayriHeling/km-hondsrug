@@ -1,15 +1,11 @@
-﻿using System;
-using Eduria.Models;
+﻿using Eduria.Models;
 using Eduria.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.SqlServer.Management.Smo;
-using Microsoft.SqlServer.Management.Diagnostics;
-using Microsoft.SqlServer;
-using Microsoft.SqlServer.Management;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly DatabaseService _databaseService;
@@ -18,7 +14,7 @@ namespace Eduria.Controllers
         {
             _databaseService = databaseService;
         }
-        
+
         public IActionResult Index()
         {
             return View();
