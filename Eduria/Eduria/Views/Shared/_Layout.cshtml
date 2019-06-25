@@ -35,6 +35,8 @@
                     {
                         <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
                         <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+                        <a asp-controller="Analytic" asp-action="Index">Statistieken </a>
+                        <a asp-controller="Timeline " asp-action="Index">Mijn tijdlijn </a>
                         <a asp-controller="Lecturers" asp-action="Index">Docenten </a>
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
@@ -55,8 +57,7 @@
                 <p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a>
-
+                        <p>Hallo NAAM <a asp-controller="Login" asp-action="Logout">Uitloggen </a></p>
                     }
                     else
                     {
