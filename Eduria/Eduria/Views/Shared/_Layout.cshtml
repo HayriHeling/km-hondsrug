@@ -27,7 +27,7 @@
             <div class="medium-2 columns">
                 <a href="/"><img src="~/images/logo.png" class="logo" /></a>
             </div>
-            <div class="medium-5 columns menu">
+            <div class="medium-8 columns menu">
                 <div class="topnav" id="myTopnav">
                     <a href="/" class="active"><i class="fas fa-home"></i></a>
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
@@ -35,6 +35,8 @@
                     {
                         <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
                         <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+                        <a asp-controller="Analytic" asp-action="Index">Statistieken </a>
+                        <a asp-controller="Timeline " asp-action="Index">Mijn tijdlijn </a>
                         <a asp-controller="Lecturers" asp-action="Index">Docenten </a>
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
@@ -47,16 +49,11 @@
 
                 </div>
             </div>
-
-            <div class="medium-2 columns search">
-                <!-- <input type="text" placeholder="Zoeken..." /> -->
-            </div>
-            <div class="medium-3 columns myAccount">
+            <div class="medium-2 columns myAccount">
                 <p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Logout" asp-action="Index">Uitloggen </a>
-
+                        <p>Hallo NAAM <a asp-controller="Login" asp-action="Logout">Uitloggen </a></p>
                     }
                     else
                     {
