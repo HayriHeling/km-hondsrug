@@ -23,13 +23,11 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// GET: Login/Login
-        /// 
         /// Shows the login page.
         /// </summary>
         /// <returns>The login page.</returns>
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Index()
         {
             if (Request.Cookies["LastLoggedInTime"] != null)
             {
@@ -40,8 +38,6 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// POST: Login/Login
-        /// 
         /// Checks the input from the login page and logs in if input is correct.
         /// </summary>
         /// <param name="user">The user object containing the student number and password from the submitted login form.</param>
@@ -102,8 +98,6 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// GET: Login/LoggedIn
-        /// 
         /// Shows the welcome page if the user logged in correctly.
         /// </summary>
         /// <returns>The LoggedIn view if the user is logged in correctly, the Login view if the user isn't logged in.</returns>
@@ -111,7 +105,7 @@ namespace Eduria.Controllers
         {
             if (HttpContext.Session.GetInt32("Username") == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             ViewBag.Username = HttpContext.Session.GetInt32("Username");
@@ -120,20 +114,6 @@ namespace Eduria.Controllers
             ViewBag.Lastname = HttpContext.Session.GetString("Lastname");
 
             return View();
-        }
-
-        /// <summary>
-        /// GET: Login/Logout
-        /// 
-        /// Logs the user out and redirects to the Login page.
-        /// </summary>
-        /// <returns>The Login view.</returns>
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            Task login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            return RedirectToAction("Login");
         }
 
         public ActionResult ForgotPassword(string Email)

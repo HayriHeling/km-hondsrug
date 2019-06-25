@@ -55,12 +55,12 @@
                 <p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Login" asp-action="Logout">Uitloggen </a>
+                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Logout">Uitloggen </a>
 
                     }
                     else
                     {
-                        <a asp-controller="Login" asp-action="Login">Inloggen </a>
+                        <a asp-controller="Login">Inloggen </a>
                     }
 
                 </p>
