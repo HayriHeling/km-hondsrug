@@ -55,7 +55,7 @@
                 <p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Logout">Uitloggen </a>
+                        <img src="~/images/profile.png" class="profile" alt="profielfoto" /> <a asp-controller="Logout" asp-action="Index">Uitloggen </a>
 
                     }
                     else
@@ -67,7 +67,7 @@
             </div>
         </div>    
     </header>
-        @RenderBody()
+        @RenderBody() 
     <footer>
         <div class="row">
             <div class="medium-12 columns text-center">
