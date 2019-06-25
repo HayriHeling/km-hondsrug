@@ -224,11 +224,13 @@
             if (questions[i].id == questionCount) {
                 var string = "<p><input type='button' class='no-button' id='show" + questionCount + "' onClick='Show(" + questionCount + ")' value='" + questionText + "'/></p>";
                 string += "<div id='question" + questionCount + "'>";
-                string += "<p>" + questionText + " ";
                 string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveQuestion(" + questionCount + ")' value='&#10005;'/></p>";
-                string += "<p>" + questionCatId + "</p>";
-                string += "<p>" + questionMediaType + "</p>";
-                string += "<p>" + questionMediaLink + "</p>";
+                string += "<p>Vraag: " + questionText + " ";               
+                string += "<p>Categorie: " + questionCatId + "</p>";
+                string += "<p>Media: " + questionMediaType + "</p>";
+                if (questionMediaType != "Geen") {
+                    string += "<p>MediaLink: " + questionMediaLink + "</p>";
+                }                
                 string += "</div>";
                 questionBox.append(string);
                 Show(questionCount);
@@ -247,14 +249,17 @@
         var string = "<p><input type='button' class='no-button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
         string += "<div id='question" + count + "' style='border: 2px solid white;'>";
         string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
-        string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveQuestion(" + count + ")' value='&#10005;'/></p>";
+        string += "<label>Vraag " + listIndex + "</label>"
+        string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";        
+        string += "<label>Categorie</label>"
         string += "<p><select id='category" + count + "' name='questionCategory' selected>";
         string += $("#examCategory").html();
         string += "</select></p>";
         if (type != 1) {
+            string += "<label>Media</label>"
             string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
-            string += "<option value = '0'>None</option>";
+            string += "<option value = '0'>Geen</option>";
             string += "<option value = '1'>Audio</option>";
             string += "<option value = '2'>Image</option>";
             string += "<option value = '3'>Video</option>";
@@ -307,7 +312,9 @@
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
         var string = "<div id='answer" + questionId + "-" + id + "'>";
-        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='answer " + id + "'/>";
+        string += "<label>Antwoord " + (id+1) + "</label>"
+        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='Antwoord'/>";
+        string += "<label>Correct</label>"
         string += "<p><select id='answerCorrect" + id + "' name='answerCorrect' selected='0'>";
         string += "<option value = '0'>Niet correct</option>";
         string += "<option value = '1'>Correct</option>";

@@ -14,7 +14,7 @@ namespace Eduria
 
     public enum MediaType
     {
-        None,
+        Geen,
         Audio,
         Image,
         Video
