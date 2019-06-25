@@ -166,7 +166,9 @@ namespace Eduria.Controllers
                 {
                     TimeTableId = t.TimeTableId,
                     Text = t.Text,
-                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(t.MediaSourceId))
+                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(t.MediaSourceId)),
+                    Description = t.Description,
+                    TimeTableDesignId = t.TimeTableDesignId
                 };
                 timetables.Add(tModel);
             }
@@ -819,7 +821,9 @@ namespace Eduria.Controllers
             {
                 TimeTableId = timeTable.TimeTableId,
                 MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
-                Text = timeTable.Text
+                Text = timeTable.Text,
+                Description = timeTable.Description,
+                TimeTableDesignId = timeTable.TimeTableDesignId
             };
         }
     }

@@ -115,12 +115,7 @@ namespace Eduria.Controllers
                 ExamId = exam.ExamId,
                 Name = exam.Name,
                 QuestionModels = questionModels,
-                TimeTable = new TimeTableModel
-                {
-                    TimeTableId = timeTable.TimeTableId,
-                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
-                    Text = timeTable.Text
-                }
+                TimeTable = ConvertToTimeTableModel(timeTable)
             };
         }
 
@@ -230,7 +225,9 @@ namespace Eduria.Controllers
             {
                 TimeTableId = timeTable.TimeTableId,
                 MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
-                Text = timeTable.Text
+                Text = timeTable.Text,
+                Description = timeTable.Description,
+                TimeTableDesignId = timeTable.TimeTableDesignId
             };
         }
     }
