@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers
 {
-    [Authorize(Roles = "Teacher")]
     public class LecturersController : Controller
     {
         private UserService Service { get; set; }

@@ -94,7 +94,7 @@ namespace Eduria.Controllers
             // Adds a cookie with the last logged in time.
             Response.Cookies.Append("LastLoggedInTime", DateTime.Now.ToString());
 
-            return RedirectToAction("LoggedIn");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         /// <summary>
