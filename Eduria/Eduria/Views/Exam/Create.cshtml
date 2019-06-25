@@ -268,7 +268,7 @@
             string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
 
             string += "<div id='audiodiv" + count + "'>";
-            string += "<p><input type='button' class='audiobuttons button blue" + count + "' onclick='startRecording()' value='Begin opname'>";
+            string += "<p><input type='button' class='audiobuttons button blue" + count + "' onclick='startRecording()' value='Begin opname'> ";
             string += "<input type='button' class='audiobuttons button blue" + count + "' onclick ='stopRecording(" + count + ")' value ='Stop opname'></p>";
             string += "<input type='file' id='audiofile" + count + "' name='files' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
             string += "<div id='audio" + count + "'></div>";
@@ -312,6 +312,9 @@
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
         var string = "<div id='answer" + questionId + "-" + id + "'>";
+        if (type == 0) {
+            string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='&#10005;'/></button></p>";
+        }
         string += "<label>Antwoord " + (id+1) + "</label>"
         string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='Antwoord'/>";
         string += "<label>Correct</label>"
@@ -320,9 +323,6 @@
         string += "<option value = '1'>Correct</option>";
         string += "</select></p>";
         string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
-        if (type == 0) {
-            string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='&#10005;'/></button></p>";
-        }
         string += "</div>";
         answersbox.append(string);
         $(".answerQuestionId").hide();
