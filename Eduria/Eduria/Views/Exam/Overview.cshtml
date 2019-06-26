@@ -43,7 +43,7 @@
                             <td>@tt.Text</td>
                             @if (ViewBag.userType == 2)
                             {
-                                <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId">Start toets</a></td>
+                                <td><a asp-controller="Exam" asp-action="Take" asp-route-id="@item.ExamId"><i class="fas fa-play fa-1x"></i></a></td>
                             }
                             @if (ViewBag.userType == 1)
                             {
