@@ -60,8 +60,29 @@ namespace Eduria
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseExceptionHandler("/Home/Error");
+            app.UseExceptionHandler("/Error");
             app.UseHsts();
+
+            app.Use(async (ctx, next) =>
+            {
+                await next();
+
+                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                {
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/Error/PageNotFound";
+                    await next();
+                }
+
+                if (ctx.Response.StatusCode == 401 && !ctx.Response.HasStarted)
+                {
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/Error/PageNotAllowed";
+                    await next();
+                }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
