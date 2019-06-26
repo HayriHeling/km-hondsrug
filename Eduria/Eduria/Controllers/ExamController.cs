@@ -138,6 +138,7 @@ namespace Eduria.Controllers
             //return View(GetExamDataById(id));
             _examId = id;
             _dateTime = DateTime.Now;
+            ViewBag.userId = UserService.GetById(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).UserId;
             if (examResult < 0)
             {
                 return View(GetExamModelByExamId(id));
@@ -371,18 +372,19 @@ namespace Eduria.Controllers
         /// <param name="score"></param>
         /// <param name="examResultId"></param>
         /// <returns></returns>
-        public void SendResults(string jsoninput, string examId, string userId, string score, string starttime, string endtime, string examResultId)
+        public void SendResults(string jsoninput, string examId, string userId, string score, string maxscore, string starttime, string endtime, string examResultId)
         {
             int examResultIdOutput = 0;
             int examIdInt = Int32.Parse(examId);
             int userIdInt = Int32.Parse(userId);
             int scoreInt = Int32.Parse(score);
+            int maxScoreInt = Int32.Parse(maxscore);
             DateTime startTime = ConvertToDateTime(starttime);
             DateTime endTime = ConvertToDateTime(endtime);
             int examResultIdInt = Int32.Parse(examResultId);
             if (examResultIdInt < 0)
             {
-                ImportExamResultToDatabase(examIdInt, userIdInt, scoreInt, startTime, endTime);
+                ImportExamResultToDatabase(examIdInt, userIdInt, scoreInt, maxScoreInt, startTime, endTime);
                 examResultIdOutput = ExamResultService.GetExamResultByUserAndStartDate(userIdInt, startTime).ExamResultId;
             }
             else
@@ -504,7 +506,7 @@ namespace Eduria.Controllers
         /// <summary>
         /// Function that imports the result of the exam in the database.
         /// </summary>
-        public void ImportExamResultToDatabase(int examId, int userId, int score, DateTime start, DateTime end)
+        public void ImportExamResultToDatabase(int examId, int userId, int score, int maxScore, DateTime start, DateTime end)
         {
             ExamResult examResult = new ExamResult()
             {
@@ -512,7 +514,8 @@ namespace Eduria.Controllers
                 StartedAt = start,
                 FinishedAt = end,
                 UserId = userId,
-                Score = score
+                Score = score,
+                MaxScore = maxScore
             };
             ExamResultService.Add(examResult);
         }
@@ -536,7 +539,8 @@ namespace Eduria.Controllers
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
                 ExamResultId = -1,
-                Score = -1
+                Score = -1,
+                MaxScore = -1
             };
         }
 
@@ -576,7 +580,8 @@ namespace Eduria.Controllers
                 Name = exam.Name,
                 QuestionModels = CreateQuestionModelsList(tempQuestions.ToList()),
                 ExamResultId = examResultId, 
-                Score = examResult.Score
+                Score = examResult.Score,
+                MaxScore = examResult.MaxScore
             };
         }
 

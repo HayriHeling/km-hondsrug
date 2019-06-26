@@ -15,7 +15,7 @@ namespace EduriaData.Models.TimeLineLayer
         public int UserId { get; set; }
         [Required, MaxLength(100)]
         public string Name { get; set; }
-        [MaxLength(256)]
+        [MaxLength(Int32.MaxValue)]
         public string Description { get; set; }
         [Required]
         public int BeforeChrist { get; set; }

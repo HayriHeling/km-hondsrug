@@ -13,5 +13,6 @@ namespace Eduria.Models
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public int Score { get; set; }
+        public int MaxScore { get; set; }
     }
 }
