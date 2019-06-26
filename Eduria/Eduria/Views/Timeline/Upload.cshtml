@@ -6,100 +6,161 @@
     <section id="content">
         <div class="row medium">
             <input type="button" value="<" onclick="location.href='@Url.Action("Index", "Timeline")'" class="button blue" />
-            @for (int i = 0; i < ViewBag.media.Count; i++)
-            {
-                MediaSourceModel model = ViewBag.media[i];
-                if (model.MediaType == MediaType.Audio)
-                {
-                    if (i == 0)
-                    {
-                        <h2>Audio</h2>
-                    }
-                    <audio controls>
-                        <source src="@Url.Content(String.Format("~/Content/{0}", model.Source))" type="audio/mp3">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+            <h2>Media toevoegen</h2>
+            <select id="mediatype" selected='0' name='questionMediaType' oninput='OnChangeMediaType()'>
+                <option value="1">Audio</option>
+                <option value="2">Afbeeldingen</option>
+                <option value="3">Video</option>
+            </select>
+            <div id="audiodiv">
+                <div class="medium-6 columns">
+                    <h2>upload audio</h2>
+                    <form id="AudioFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+                        <input type="number" name="mType" value="1" style="display:none;" />
                         <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                        <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-                        <input type="submit" name="submit" value="Verwijderen" class="button red" />
+                        <input type="file" name="files" accept="audio/*" multiple />
+                        <input type="submit" name="submit" value="audio uploaden" class="button blue" />
                     </form>
-
-                }
-            }
-            @for (int i = 0; i < ViewBag.media.Count; i++)
-            {
-                MediaSourceModel model = ViewBag.media[i];
-                if (model.MediaType == MediaType.Image)
-                {
-                    if (i == 0)
-                    {
-                        <h2>Afbeeldingen</h2>
-                    }
-                    <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="height: 315px;" />
-                    <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
-                        <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                        <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-                        <input type="submit" name="submit" value="Verwijderen" class="button red" />
-                    </form>
-                }
-            }
-            @for (int i = 0; i < ViewBag.media.Count; i++)
-            {
-                MediaSourceModel model = ViewBag.media[i];
-                if (model.MediaType == MediaType.Video)
-                {
-                    if (i == 0)
-                    {
-                        <h2>Videos</h2>
-                    }
-                    string[] parsedSource = model.Source.Split("?v=");
-                    string embed = parsedSource[(parsedSource.Length - 1)];
-                    <iframe width="420" height="315"
-                            src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
-                    <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
-                        <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                        <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
-                        <input type="submit" name="submit" value="Verwijderen" class="button red" />
-                    </form>
-                }
-            }
-
-            <p>
-                <input type='button' class='audiobuttons button green' onclick='startRecording()' value='Start opname'>
-                <input type='button' class='audiobuttons button red' onclick='stopRecording()' value='Stop opname'>
-            </p>
-            <div id='audio'></div>
-            <h2>upload audio</h2>
-            <form id="AudioFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
-                <input type="number" name="mType" value="1" style="display:none;" />
-                <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                <input type="file" name="files" accept="audio/*" multiple />
-                <input type="submit" name="submit" value="audio uploaden" class="button blue" />
-            </form>
-
-            <h2>upload afbeeldingen</h2>
-            <form id="ImageFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
-                <input type="number" name="mType" value="2" style="display:none;" />
-                <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                <input type="file" name="files" accept="image/*" multiple />
-                <input type="submit" name="submit" value="afbeeldingen uploaden" class="button blue" />
-            </form>
-
-            <h2>upload videos</h2>
-            <form id="VideoFilesForm" method="post" asp-action="SaveLink" asp-controller="Timeline">
-                <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
-                <input type="text" name="source" placeholder="youtube link" />
-                <input type="submit" name="submit" value="video uploaden" class="button blue" />
-            </form>
+                </div>
+                <div class="medium-6 columns">
+                    <h2>opnemen</h2>
+                    <p>
+                        <input type='button' id="startrecord" class='audiobuttons button green' onclick='startRecording()' value='Start opname'>
+                        <input type='button' id="stoprecord" class='audiobuttons button red' onclick='stopRecording()' value='Stop opname'>
+                    </p>
+                    <div id='audio'></div>
+                </div>
+            </div>
+            <div id="imagediv">
+                <h2>upload afbeeldingen</h2>
+                <form id="ImageFilesForm" method="post" enctype="multipart/form-data" asp-action="UploadMediaToInformationAsync" asp-controller="Timeline">
+                    <input type="number" name="mType" value="2" style="display:none;" />
+                    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+                    <input type="file" name="files" accept="image/*" multiple />
+                    <input type="submit" name="submit" value="afbeeldingen uploaden" class="button blue" />
+                </form>
+            </div>
+            <div id="medialink">
+                <h2>upload videos</h2>
+                <form id="VideoFilesForm" method="post" asp-action="SaveLink" asp-controller="Timeline">
+                    <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+                    <input type="text" name="source" placeholder="youtube link" />
+                    <input type="submit" name="submit" value="video uploaden" class="button blue" />
+                </form>
+            </div>
         </div>
-    </section>
+        <div class="row medium">
+            <h1>Toegevoegde media</h1>
+            @{
+                int audioCount = 0;
+                int imageCount = 0;
+                int videoCount = 0;
+            }
+            <div class="medium-4 columns">
+                @for (int i = 0; i < ViewBag.media.Count; i++)
+                {
+                    MediaSourceModel model = ViewBag.media[i];
+                    if (model.MediaType == MediaType.Audio)
+                    {
+                        if (audioCount == 0)
+                        {
+                            <h2>Audio</h2>
+                            audioCount++;
+                        }
+                        <audio controls>
+                            <source src="@Url.Content(String.Format("~/Content/{0}", model.Source))" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+                            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+                            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+                            <input type="submit" name="submit" value="Verwijderen" class="button red" />
+                        </form>
+
+                    }
+                }
+            </div>
+            <div class="medium-4 columns">
+                @for (int i = 0; i < ViewBag.media.Count; i++)
+                {
+                    MediaSourceModel model = ViewBag.media[i];
+                    if (model.MediaType == MediaType.Image)
+                    {
+                        if (imageCount == 0)
+                        {
+                            <h2>Afbeeldingen</h2>
+                            imageCount++;
+                        }
+                        <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="height: 180px;" />
+                        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+                            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+                            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+                            <input type="submit" name="submit" value="Verwijderen" class="button red" />
+                        </form>
+                    }
+                }
+            </div>
+            <div class="medium-4 columns">
+                @for (int i = 0; i < ViewBag.media.Count; i++)
+                {
+                    MediaSourceModel model = ViewBag.media[i];
+                    if (model.MediaType == MediaType.Video)
+                    {
+                        if (videoCount == 0)
+                        {
+                            <h2>Videos</h2>
+                            videoCount++;
+                        }
+                        string[] parsedSource = model.Source.Split("?v=");
+                        string embed = parsedSource[(parsedSource.Length - 1)];
+                        <iframe width="280" height="180"
+                                src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
+                        <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
+                            <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
+                            <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
+                            <input type="submit" name="submit" value="Verwijderen" class="button red" />
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+</section>
 <script>
+    window.onload = function () {
+        $("#stoprecord").hide();
+        OnChangeMediaType();
+    }
+
+    //Changes form input options on selected value of select
+    function OnChangeMediaType() {
+        var type = "#mediatype";
+        var link = "#medialink";
+        var audiodiv = "#audiodiv";
+        var imagediv = "#imagediv";
+        $(link).hide();
+        $(imagediv).hide();
+        $(audiodiv).hide();
+        switch ($(type).val()) {
+            case "1":
+                $(audiodiv).show();
+                break;
+            case "2":
+                $(imagediv).show();
+                break;
+            case "3":
+                $(link).val("");
+                $(link).show();
+                break;
+        }
+    }
+
     //function to start recording
     function startRecording() {
         if (recorder.state == 'inactive') {
             chunks = [];
             recorder.start(500);
+            $("#stoprecord").show();
+            $("#startrecord").hide();
         }
     }
     //function to stop recording
@@ -109,6 +170,8 @@
             const blob = new Blob(chunks, { type: 'audio/mp3' });
             // convert blob to URL so it can be assigned to a audio src attribute
             createAudioElement(URL.createObjectURL(blob));
+            $("#stoprecord").hide();
+            $("#startrecord").show();
         }
     }
 
@@ -139,7 +202,8 @@
         var div = "#audio";
         var audiobuttons = ".audiobuttons";
         $(div).empty();
-        $(audiobuttons).show();
+        $("#stoprecord").show();
+        $("#startrecord").hide();
     }
 
     var recorder;
