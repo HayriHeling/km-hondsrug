@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Data per vraag";
 }
-
-<b>Vraag: </b>'@Model.Name' 
-
-<div class="row">
-    <div class="medium-6 columns">
-        <canvas id="questionChart" width="400" height="400"></canvas><p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
+<section id="content">
+    <div class="row medium">
+        <b>Vraag: </b>'@Model.Name'
+        <div class="medium-6 columns">
+            <canvas id="questionChart" width="400" height="400"></canvas><p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
+        </div>
     </div>
-</div>
+</section>
 <script>
 var ctx = document.getElementById('questionChart').getContext('2d');
 var questionChart = new Chart(ctx, {

@@ -2,73 +2,73 @@
 @{
     ViewData["Title"] = "Index";
 }
+    <section id="content">
+        
 
-<h2>Algemeen</h2>
-
-<div class="row">
-    <div class="medium-12 columns">
-        <canvas id="examChart" width="800" height="400"></canvas>
-    </div>
-</div>
-<div class="row">
-    <div class="small-4 columns">
-        <h3>Aantal: @Model.Item1.Count()</h3>
-        <p><b>Overzicht van alle leerlingen.</b></p>
-        <table>
-            <tr>
-                <th>Naam</th>
-                <th>Niveau</th>
-                <th>Code</th>
-            </tr>
-            @foreach (var item in Model.Item1)
-            {
-                if (item.UserType == UserRoles.Student)
-                {
-                    Class classEnum = (Class)item.ClassId;
+        <div class="row medium">
+            <h2>Algemeen</h2>
+            <div class="medium-12 columns">
+                <canvas id="examChart" width="800" height="400"></canvas>
+            </div>
+            <div class="small-4 columns">
+                <h3>Aantal: @Model.Item1.Count()</h3>
+                <p><b>Overzicht van alle leerlingen.</b></p>
+                <table>
                     <tr>
-                        <td><a asp-controller="Result" asp-action="StudentResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></td>
-                        <td>@classEnum</td>
-                        <td>@item.UserNum</td>
+                        <th>Naam</th>
+                        <th>Niveau</th>
+                        <th>Code</th>
                     </tr>
-                }
-            }
-        </table>
-</div>
-    <div class="small-4 columns">
-        <h3>Aantal: @Model.Item2.Count()</h3>
-        <p><b>Overzicht van alle toetsen.</b></p>
-        <table>
-            <tr>
-                <th>Toets</th>
-                <th>Beschrijving</th>
-            </tr>
-        @foreach (var item in Model.Item2)
-        {
-            <tr>
-                <td><a asp-controller="Result" asp-action="ExamResult" asp-route-id="@item.ExamId">@item.Name</a></td>
-                <td>@item.Description</td>
-             </tr>
-        }
-        </table>
-    </div>
-    <div class="small-4 columns">
-        <h3>Aantal: @Model.Item3.Count()</h3>
-        <p><b>Overzicht van alle vragen.</b></p>
-        <table>
-            <tr>
-                <th>Vraag</th>
-                <th>Categorie</th>
-            </tr>
-            @foreach (var item in Model.Item3)
-            {
-                <tr>
-                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></td>
-                    <td>@item.TimeTableModel.Text</td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+                    @foreach (var item in Model.Item1)
+                    {
+                        if (item.UserType == UserRoles.Student)
+                        {
+                            Class classEnum = (Class)item.ClassId;
+                            <tr>
+                                <td><a asp-controller="Result" asp-action="StudentResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></td>
+                                <td>@classEnum</td>
+                                <td>@item.UserNum</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+            <div class="small-4 columns">
+                <h3>Aantal: @Model.Item2.Count()</h3>
+                <p><b>Overzicht van alle toetsen.</b></p>
+                <table>
+                    <tr>
+                        <th>Toets</th>
+                        <th>Beschrijving</th>
+                    </tr>
+                    @foreach (var item in Model.Item2)
+                    {
+                        <tr>
+                            <td><a asp-controller="Result" asp-action="ExamResult" asp-route-id="@item.ExamId">@item.Name</a></td>
+                            <td>@item.Description</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="small-4 columns">
+                <h3>Aantal: @Model.Item3.Count()</h3>
+                <p><b>Overzicht van alle vragen.</b></p>
+                <table>
+                    <tr>
+                        <th>Vraag</th>
+                        <th>Categorie</th>
+                    </tr>
+                    @foreach (var item in Model.Item3)
+                    {
+                        <tr>
+                            <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">@item.Text</a></td>
+                            <td>@item.TimeTableModel.Text</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </section>
 <script>
     @{
                     int total1 = 0;

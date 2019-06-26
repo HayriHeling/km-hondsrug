@@ -90,7 +90,14 @@ h4 {
 .no-button {
     border: none;
     background-color: unset;
-    color: yellowgreen;
+    color: #29abe2;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.no-button:hover {
+    color: #ed1c24;
+    text-decoration: underline;
 }
 
 #myBtn {
@@ -415,7 +422,6 @@ a {
 }
 
 .panel {
-    padding: 0 18px;
     display: none;
     background-color: white;
     overflow: hidden;
