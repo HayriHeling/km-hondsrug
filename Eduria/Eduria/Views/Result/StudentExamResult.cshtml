@@ -1,73 +1,106 @@
 ﻿@{
     ViewData["Title"] = "StudentExamResult";
 }
-
-    <div class="row">
+<section id="content">
+    <div class="row medium">
         <h2>Toets resultaat</h2>
-        <table>
-            <tr>
-                <th>Toets</th>
-                <th>Beschrijving</th>
-                <th>Leerling</th>
-                <th>Datum</th>
-                <th>Score</th>
-            </tr>
-            <tr>
-                <td>@ViewBag.Exam.Name</td>
-                <td>@ViewBag.Exam.Description</td>
-                <td>@ViewBag.User.FirstName @ViewBag.User.LastName</td>
-                <td>@ViewBag.Result.FinishedAt</td>
-                <td>@ViewBag.Result.Score%</td>
-            </tr>
-        </table>
-    </div>
-<div class="row">
-    <div class="medium-6 columns">
-        <h2>Vragenoverzicht</h2>
-        <canvas id="examChart" width="400" height="300"></canvas>
-        <h2>Totaaloverzicht toetsafnames</h2>
-        <canvas id="examChart2" width="400" height="300"></canvas>
-    </div>
-    <div class="medium-6 columns">
-        <table>
-            <tr>
-                <th style="color: rgb(76, 255, 0);">Vragen Goed</th>
-            </tr>
-            @foreach (QuestionModel question in ViewBag.QuestionsRight)
-            {
-                <tr>
-                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
-                </tr>
-            }
-        </table>
-        <table>
-            <tr>
-                <th style="color: rgba(255, 99, 132, 1);">Vragen Fout</th>
-            </tr>
-            @foreach (QuestionModel question in ViewBag.QuestionsWrong)
-            {
-                <tr>
-                    <td><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a></td>
-                </tr>
-            }
-        </table>
-        <table>
-            <tr>
-                <th>Ook gemaakt op</th>
-            </tr>
-            @foreach (ExamResultModel result in ViewBag.AllResults)
-            {
-                if (result.FinishedAt != @ViewBag.Result.FinishedAt)
+        <div class="medium-2 columns">
+            <strong>Toets</strong>
+        </div>
+        <div class="medium-3 columns">
+            <strong>Beschrijving</strong>
+        </div>
+        <div class="medium-2 columns">
+            <strong>Leerling</strong>
+        </div>
+        <div class="medium-3 columns">
+            <strong>Datum</strong>
+        </div>
+        <div class="medium-2 columns">
+            <strong>Score</strong>
+        </div>
+
+        <div class="medium-2 columns">
+            <p> @ViewBag.Exam.Name</p>
+        </div>
+        <div class="medium-3 columns">
+            <p> @ViewBag.Exam.Description</p>
+        </div>
+        <div class="medium-2 columns">
+            <p> @ViewBag.User.FirstName @ViewBag.User.LastName</p>
+        </div>
+        <div class="medium-3 columns">
+            <p>@ViewBag.Result.FinishedAt</p>
+        </div>
+        <div class="medium-2 columns">
+            <p> @ViewBag.Result.Score%</p>
+        </div>
+
+        <div class="medium-6 columns">
+            <div class="spacer-4"></div>
+            <h2>Vragenoverzicht</h2>
+            <canvas id="examChart" width="400" height="300"></canvas>
+            <h2>Totaaloverzicht toetsafnames</h2>
+            <canvas id="examChart2" width="400" height="300"></canvas>
+        </div>
+
+        <div class="medium-6 columns">
+            <div class="spacer-4"></div>
+            <div class="txt-green accordion">Goed beantwoord</div>
+            <div class="panel">
+                @foreach (QuestionModel question in ViewBag.QuestionsRight)
                 {
-                    <tr>
-                        <td><a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@result.ExamResultId">@result.FinishedAt</a></td>
-                    </tr>
+                    <div class="testresult">
+
+                        <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a><br />
+                    </div>
+
                 }
-            }
-        </table>
-    </div>
-</div>
+            </div>
+            <div class="txt-red accordion">Foutief beantwoord</div>
+            <div class="panel">
+                @foreach (QuestionModel question in ViewBag.QuestionsWrong)
+                {
+                    <div class="testresult">
+                        <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a>
+                    </div>
+                }
+            </div>
+                    <table>
+                        <tr>
+                            <th>Ook gemaakt op</th>
+                        </tr>
+                        @foreach (ExamResultModel result in ViewBag.AllResults)
+                        {
+                            if (result.FinishedAt != @ViewBag.Result.FinishedAt)
+                            {
+                                <tr>
+                                    <td><a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@result.ExamResultId">@result.FinishedAt</a></td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+        </div>
+</section>
 <script>
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+
+
 var ctx = document.getElementById('examChart').getContext('2d');
 var examChart = new Chart(ctx, {
     type: 'bar',
@@ -76,77 +109,77 @@ var examChart = new Chart(ctx, {
         datasets: [{label: "Vragen",
             data: [@ViewBag.QuestionsRight.Count, @ViewBag.QuestionsWrong.Count],
             backgroundColor: [
-                'rgba(123, 239, 178, 1)',
-                'rgba(255, 99, 132, 1)',
+            'rgba(123, 239, 178, 1)',
+            'rgba(255, 99, 132, 1)',
             ],
             borderColor: [
-                'rgba(123, 239, 178, 1)',
-                'rgba(255, 99, 132, 1)',
+            'rgba(123, 239, 178, 1)',
+            'rgba(255, 99, 132, 1)',
             ],
             borderWidth: 3
-        }]
-    },
-    options: {
-        legend: {
-        display: true
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                }
             }]
-        }
-    }
-});
+            },
+            options: {
+            legend: {
+            display: true
+            },
+            scales: {
+            yAxes: [{
+            ticks: {
+            beginAtZero: true,
+            }
+            }]
+            }
+            }
+            });
 
-    var dateArray = [];
-    var scoreArray = [];
-    var minArray = [];
-@foreach(ExamResultModel item in ViewBag.AllResults)
-{
-    @:dateArray.push("@item.FinishedAt");
-    @:scoreArray.push("@item.Score");
-    @:minArray.push(55);
-}
-var ctx2 = document.getElementById('examChart2').getContext('2d');
-var examChart = new Chart(ctx2, {
-    type: 'line',
-    data: {
-        labels: dateArray,
-        datasets: [{label: "Score",
+            var dateArray = [];
+            var scoreArray = [];
+            var minArray = [];
+            @foreach (ExamResultModel item in ViewBag.AllResults)
+            {
+                @:dateArray.push("@item.FinishedAt");
+                @:scoreArray.push("@item.Score");
+                @:minArray.push(55);
+            }
+            var ctx2 = document.getElementById('examChart2').getContext('2d');
+            var examChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+            labels: dateArray,
+            datasets: [{label: "Score",
             data: scoreArray,
             backgroundColor: [
-                'rgba(123, 239, 178, 0)'
+            'rgba(123, 239, 178, 0)'
             ],
             borderColor: [
-                'rgba(50, 100, 200, 0.8)'
+            'rgba(50, 100, 200, 0.8)'
             ],
             pointRadius: 0,
             borderWidth: 3
-        }, {
-                data: minArray,
-                backgroundColor: [
-                'rgba(250, 0, 0, 0.1)'
-                ],
-                borderColor: [
-                'rgba(0, 0, 0, 0)'
-                ],
-                pointRadius: 0
+            }, {
+            data: minArray,
+            backgroundColor: [
+            'rgba(250, 0, 0, 0.1)'
+            ],
+            borderColor: [
+            'rgba(0, 0, 0, 0)'
+            ],
+            pointRadius: 0
             }]
-    },
-    options: {
-        legend: {
-        display: false
-        },
-        scales: {
+            },
+            options: {
+            legend: {
+            display: false
+            },
+            scales: {
             yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    max: 100
-                }
+            ticks: {
+            beginAtZero: true,
+            max: 100
+            }
             }]
-        }
-    }
-});
-</script>
+            }
+            }
+            });
+            </script>
