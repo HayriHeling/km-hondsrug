@@ -14,10 +14,11 @@ h1 {
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 24px;
     color: #afacac;
     text-transform: uppercase;
     font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
 }
 
 h3 {
@@ -33,6 +34,31 @@ h4 {
     color: #6b6b6b;
     text-transform: uppercase;
     font-family: 'Open Sans', sans-serif;
+}
+
+.spacer-4 {
+    height:40px;
+}
+
+.txt-green {
+    background-color: #74b027;
+    font-weight: 800;
+    font-size: 20px;
+    text-align:center;
+    text-transform:uppercase;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.txt-red {
+    background-color: #ed1c24;
+    font-weight: 800;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 
@@ -361,8 +387,42 @@ a {
     padding: 50px 0;
 }
 
-/* Inloggen*/
+.testresult {
+    padding: 10px;
+}
 
+.testresult:nth-child(even) {
+    background-color: #ddd;
+}
+
+.testresult:nth-child(odd) {
+    background-color: #f5f4f4;
+}
+
+.accordion {
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    padding: 20px;
+    outline: none;
+    transition: 0.4s;
+    font-size: 15px;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+    color: #6b6b6b;
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+}
+
+
+/* Inloggen*/
 #login {
     padding: 50px 0;
 }
