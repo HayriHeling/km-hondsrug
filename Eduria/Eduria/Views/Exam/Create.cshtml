@@ -3,7 +3,6 @@
 }
 <section id="content">
 <div class="row large">
-        <h2>Cre&#235;er toets</h2>
         <form id="examForm" method="post" enctype="multipart/form-data" asp-controller="UploadFiles" asp-action="Index">
             @{
                 if (ViewBag.success == 1)
@@ -12,7 +11,11 @@
                 }
             }
             <p id="warning" style="color:red;"></p>
+            <div class="medium-2 columns" id="buttonBox">
+                <h2>Vragen</h2>
+            </div>
             <div class="medium-6 columns">
+                <h2>Toets</h2>
                 <div class="questionDiv" style="padding: 20px; height: 600px; overflow:auto">
                     <input type="text" id="examName" name="examName" placeholder="Toets naam" />
                     <input type="text" id="examDescription" name="examDescription" placeholder="Omschrijving" />
@@ -25,14 +28,15 @@
                         }
                     </select>
                     <div id="questionBox">
-
+                        <h2>Vraag</h2>
                     </div>
                     <input type="button" class="button" onclick="AddQuestion(0)" value="Voeg meerkeuze toe">
                     <input type="button" class="button" onclick="AddQuestion(1)" value="Voeg tijdvak toe">
                     <input type="button" class="button" onclick="AddQuestion(2)" value="Voeg open vraag toe">
                 </div>
             </div>
-            <div class="medium-6 columns">
+            <div class="medium-4 columns">
+                <h2>Vragencatalogus</h2>
                 <div class="existingQuestionDiv" style="padding: 20px; height: 600px; overflow:auto;">
                     <input type="text" id="searchInput" name="searchInput" placeholder="Zoeken" oninput="FilterOnText()" />
                     <select id="examCategory" name="examCategory" selected='0' oninput="FilterOnCategory(this)">
@@ -77,10 +81,12 @@
 <script>
     var questions = [];
     var questionBox;
+    var buttonBox;
     var questionCount;
 
     window.onload = function () {
         questionBox = $("#questionBox");
+        buttonBox = $("#buttonBox");
     }
 
     //Filters existing questions on text.
@@ -222,13 +228,15 @@
         questions.push(newQ);
         for (var i = 0; i < questions.length; i++) {
             if (questions[i].id == questionCount) {
-                var string = "<p><input type='button' class='no-button' id='show" + questionCount + "' onClick='Show(" + questionCount + ")' value='" + questionText + "'/></p>";
-                string += "<div id='question" + questionCount + "'>";
-                string += "<p>" + questionText + " ";
+                buttonBox.append("<p><input type='button' id='show" + questionCount + "' onClick='Show(" + questionCount + ")' value='" + questionText + "' style='white-space: normal; width: 100%;'/></p>");
+                var string = "<div id='question" + questionCount + "'>";
                 string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveQuestion(" + questionCount + ")' value='&#10005;'/></p>";
-                string += "<p>" + questionCatId + "</p>";
-                string += "<p>" + questionMediaType + "</p>";
-                string += "<p>" + questionMediaLink + "</p>";
+                string += "<p>Vraag: " + questionText + " ";               
+                string += "<p>Categorie: " + questionCatId + "</p>";
+                string += "<p>Media: " + questionMediaType + "</p>";
+                if (questionMediaType != "Geen") {
+                    string += "<p>MediaLink: " + questionMediaLink + "</p>";
+                }                
                 string += "</div>";
                 questionBox.append(string);
                 Show(questionCount);
@@ -244,17 +252,20 @@
                 questionText = questions[i].text;
             }
         }
-        var string = "<p><input type='button' class='no-button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "'/></p>";
-        string += "<div id='question" + count + "' style='border: 2px solid white;'>";
+        buttonBox.append("<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "' style='white-space: normal; width: 100%;'/></p>");
+        var string = "<div id='question" + count + "' style='border: 2px solid white;'>";
         string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
-        string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";
         string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveQuestion(" + count + ")' value='&#10005;'/></p>";
+        string += "<label>Vraag " + listIndex + "</label>"
+        string += "<p><input type='text' id='text" + count + "' name='questionText' placeholder='Question " + listIndex + "'/>";        
+        string += "<label>Categorie</label>"
         string += "<p><select id='category" + count + "' name='questionCategory' selected>";
         string += $("#examCategory").html();
         string += "</select></p>";
         if (type != 1) {
+            string += "<label>Media</label>"
             string += "<p><select id='mediatype" + count + "' name='questionMediaType' selected='0' oninput='OnChangeMediaType(" + count + ")'>";
-            string += "<option value = '0'>None</option>";
+            string += "<option value = '0'>Geen</option>";
             string += "<option value = '1'>Audio</option>";
             string += "<option value = '2'>Image</option>";
             string += "<option value = '3'>Video</option>";
@@ -263,7 +274,7 @@
             string += "<p><input type='text' id='medialink" + count + "' name='questionMedialink' placeholder='medialink'/></p>";
 
             string += "<div id='audiodiv" + count + "'>";
-            string += "<p><input type='button' class='audiobuttons button blue" + count + "' onclick='startRecording()' value='Begin opname'>";
+            string += "<p><input type='button' class='audiobuttons button blue" + count + "' onclick='startRecording()' value='Begin opname'> ";
             string += "<input type='button' class='audiobuttons button blue" + count + "' onclick ='stopRecording(" + count + ")' value ='Stop opname'></p>";
             string += "<input type='file' id='audiofile" + count + "' name='files' accept='audio/*' oninput='SetAudioLink(" + count + ")'>";
             string += "<div id='audio" + count + "'></div>";
@@ -307,15 +318,17 @@
         var div = "#answers" + questionId + "";
         var answersbox = $(div);
         var string = "<div id='answer" + questionId + "-" + id + "'>";
-        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='answer " + id + "'/>";
+        if (type == 0) {
+            string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='&#10005;'/></button></p>";
+        }
+        string += "<label>Antwoord " + (id+1) + "</label>"
+        string += "<p><input type='text' id='answertext" + questionId + "-" + id + "' name='answerText' placeholder='Antwoord'/>";
+        string += "<label>Correct</label>"
         string += "<p><select id='answerCorrect" + id + "' name='answerCorrect' selected='0'>";
         string += "<option value = '0'>Niet correct</option>";
         string += "<option value = '1'>Correct</option>";
         string += "</select></p>";
         string += "<input type='number' class='answerQuestionId' name='answerQuestionId' value='" + questionId + "'/>";
-        if (type == 0) {
-            string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveAnswer(" + questionId + ", " + id + ")' value='&#10005;'/></button></p>";
-        }
         string += "</div>";
         answersbox.append(string);
         $(".answerQuestionId").hide();

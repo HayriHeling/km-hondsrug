@@ -5,41 +5,19 @@
 
 <section id="dashboardContent">
     <form>
-    <div class="row large">
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <p>Toets maken:</p>
-                <input type="submit" class="button blue" value="Cre&#235;er toets" asp-controller="Exam" asp-action="Create" asp-route-id="1" />
-                <p>Tijdvakken toets maken</p>
-                <input type="submit" class="button blue" value="Start toets" asp-controller="Exam" asp-action="Show" asp-route-id="1" />
-                <p>Overzicht alle toetsen </p>
-                <input type="submit" class="button blue" value="Start toets" asp-controller="Exam" asp-action="Overview" asp-route-id="1" />
-
-            </div>
+        <div class="row large">
+            @if (User.IsInRole("Admin"))
+            {
+                <partial name="_AdminDashboardView" />
+            }
+            else if (User.IsInRole("Teacher"))
+            {
+                <partial name="_TeacherDashboardView" />
+            }
+            else
+            {
+                <partial name="_StudentDashboardView" />
+            }
         </div>
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <input type="submit" class="button ghost" asp-controller="Admin" asp-action="Index" value="Database tool" />
-            </div>
-        </div>
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <a asp-controller="CreateUser" asp-action="Create">
-                    Gebruiker aanmaken
-                </a>
-            </div>
-        </div>
-
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <a asp-controller="Analytic" asp-action="Goal">
-                    Doel vaststellen
-                </a><br />
-                <a asp-controller="Analytic" asp-action="Index">
-                    Analytics
-                </a>
-            </div>
-        </div>
-    </div>
     </form>
 </section>

@@ -10,9 +10,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="2.1.1" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="150.18118.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <Compile Remove="Interfaces\**" />
     <Compile Remove="Models\Interfaces\**" />
+    <Content Remove="Interfaces\**" />
     <Content Remove="Models\Interfaces\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
     <EmbeddedResource Remove="Models\Interfaces\**" />
+    <None Remove="Interfaces\**" />
     <None Remove="Models\Interfaces\**" />
   </ItemGroup>
 
@@ -30,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
