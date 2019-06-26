@@ -29,15 +29,22 @@
             </div>
             <div class="medium-8 columns menu">
                 <div class="topnav" id="myTopnav">
-                    <a href="/" class="active"><i class="fas fa-home"></i></a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="active"><i class="fas fa-home"></i></a>
                     <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a asp-controller="Exam" asp-action="Overview">Toetsen </a>
-                        <a asp-controller="Student" asp-action="TestResults">Resultaten </a>
-                        <a asp-controller="Analytic" asp-action="Index">Statistieken </a>
-                        <a asp-controller="Timeline " asp-action="Index">Mijn tijdlijn </a>
-                        <a asp-controller="Lecturers" asp-action="Index">Docenten </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <partial name="_AdminView" />
+                        }
+                        else if (User.IsInRole("Teacher"))
+                        {
+                            <partial name="_TeacherView" />
+                        }
+                        else
+                        {
+                            <partial name="_StudentView" />
+                        }
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
                         </a>
@@ -53,18 +60,18 @@
                 <p>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <p>Hallo NAAM <a asp-controller="Login" asp-action="Logout">Uitloggen </a></p>
+                        <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
                     }
                     else
                     {
-                        <a asp-controller="Login" asp-action="Login">Inloggen </a>
+                        <a asp-controller="Login">Inloggen </a>
                     }
 
                 </p>
             </div>
         </div>    
     </header>
-        @RenderBody()
+        @RenderBody() 
     <footer>
         <div class="row">
             <div class="medium-12 columns text-center">

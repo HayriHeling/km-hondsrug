@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 
 namespace Eduria
 {
@@ -59,15 +60,29 @@ namespace Eduria
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+
+            app.Use(async (ctx, next) =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+                await next();
+
+                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                {
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/Error/PageNotFound";
+                    await next();
+                }
+
+                if (ctx.Response.StatusCode == 401 && !ctx.Response.HasStarted)
+                {
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/Error/PageNotAllowed";
+                    await next();
+                }
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -80,7 +95,7 @@ namespace Eduria
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Index}/{id?}");   
+                    template: "{controller=Login}/{action=Index}/{id?}");   
             });
         }
     }

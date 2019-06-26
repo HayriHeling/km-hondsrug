@@ -660,6 +660,7 @@ namespace Eduria.Controllers
         /// <param name="success"></param>
         /// <returns></returns>
         //GET: Exam/Create
+        [Authorize(Roles = "Admin,Teacher")]
         public ActionResult Create(int success = 0)
         {
             ViewBag.Success = success;
