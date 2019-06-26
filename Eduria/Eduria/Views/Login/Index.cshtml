@@ -26,11 +26,10 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <p class="alert green">Je bent nu ingelogd. <br /> Ga naar het <a asp-controller="Dashboard" asp-action="Index">dashboard</a> toe</p>
+                        <p class="alert green">Je bent al ingelogd. <br /> Ga naar het <a asp-controller="Dashboard" asp-action="Index">dashboard</a> toe</p>
                     }
                     else
                     {
-                        <p class="alert red">@ViewBag.Message</p>
                         <form asp-action="Login" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

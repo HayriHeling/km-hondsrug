@@ -1,7 +1,6 @@
 ﻿using Eduria.Services;
 using System.Collections.Generic;
 using System.Linq;
-using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 using System;
 using Eduria.Models;

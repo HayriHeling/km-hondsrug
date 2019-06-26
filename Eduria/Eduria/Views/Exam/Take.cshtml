@@ -69,10 +69,10 @@
                             int count = 0;
                             <div class="cc-selector">
                                 @foreach (TimeTableModel tModel in ViewBag.timetables)
-                                {
+                                {                                    
                                     count++;
                                     <input id="@q.QuestionId-@count" type="radio" name="@q.QuestionId" onclick="SetAnswer(@q.QuestionId, @q.QuestionType, @tModel.TimeTableId)" value="@tModel.TimeTableId" />
-                                    <label class="timeperiod @tModel.Text" for="@q.QuestionId-@count"></label>
+                                    <label for="@q.QuestionId-@count" class="timeperiod @tModel.MediaSourceModel.Source"></label>
                                 }
                             </div>
                         }

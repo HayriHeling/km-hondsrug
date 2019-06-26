@@ -320,7 +320,15 @@ namespace Eduria.Controllers
                     AddOrUpdateUserEqLog(userEqLogModel, q.id, exam.id, resultId);
 
                 }
-                examResult.Score = ((100/questionAmount) * correctAmount);
+                examResult.Score = (((100/questionAmount) * correctAmount) + 1);
+                if(examResult.Score == 1)
+                {
+                    examResult.Score = 0;
+                }
+                else if(examResult.Score > 100)
+                {
+                    examResult.Score = 100;
+                }
                 ExamResultService.Update(examResult);               
                 examModel = new ExamModel()
                 {
@@ -329,7 +337,7 @@ namespace Eduria.Controllers
                     Description = ExamService.GetById(exam.id).Description
                 };
                 ViewBag.exam = examModel;
-                ViewBag.score = (examResult.Score + 1);
+                ViewBag.score = (examResult.Score);
                 ViewBag.questions = matches;
                 return View();
             }
@@ -652,6 +660,7 @@ namespace Eduria.Controllers
         /// <param name="success"></param>
         /// <returns></returns>
         //GET: Exam/Create
+        [Authorize(Roles = "Admin,Teacher")]
         public ActionResult Create(int success = 0)
         {
             ViewBag.Success = success;
