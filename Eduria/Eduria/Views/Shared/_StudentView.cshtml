@@ -1,4 +1,6 @@
-﻿<a asp-controller="Exam" asp-action="Overview">Toetsen </a>
-<a asp-controller="Student" asp-action="TestResults">Resultaten </a>
+﻿@using System.Security.Claims;
+
+<a asp-controller="Exam" asp-action="Overview">Toetsen </a>
+<a asp-controller="Result" asp-action="StudentResult" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">Resultaten </a>
 <a asp-controller="Analytic" asp-action="Index">Statistieken </a>
 <a asp-controller="Lecturers" asp-action="Index">Docenten </a>
