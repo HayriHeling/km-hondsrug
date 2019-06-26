@@ -91,7 +91,7 @@
                             <h2>Afbeeldingen</h2>
                             imageCount++;
                         }
-                        <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="width: 100%;" />
+                        <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" style="height: 180px;" />
                         <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
                             <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />
                             <input type="number" name="mediaId" value="@ViewBag.media[i].MediaSourceId" style="display:none;" />
@@ -113,7 +113,7 @@
                         }
                         string[] parsedSource = model.Source.Split("?v=");
                         string embed = parsedSource[(parsedSource.Length - 1)];
-                        <iframe width="320" height="205"
+                        <iframe width="280" height="180"
                                 src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))"></iframe>
                         <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
                             <input type="number" name="infoId" value="@ViewBag.infoId" style="display:none;" />

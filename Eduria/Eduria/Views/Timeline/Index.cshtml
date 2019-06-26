@@ -21,11 +21,16 @@
     /* Modal Content/Box */
     .modal-content {
         background-color: #fefefe;
-        margin: 15% auto; /* 15% from the top and centered */
+        margin: 20px auto; /* 20px from the top and centered */
         padding: 20px;
         text-align: left;
         border: 1px solid #888;
         width: 80%; /* Could be more or less, depending on screen size */
+        height: 90%;
+        -webkit-animation-name: Appear;
+        -webkit-animation-duration: 0.5s;
+        animation-name: Appear;
+        animation-duration: 0.5s;
     }
 
     /* The Close Button */
@@ -41,6 +46,29 @@
             color: black;
             text-decoration: none;
             cursor: pointer;
+        }
+        @@-webkit-keyframes Appear {
+            from {
+                opacity: 0;
+                width: 1%;
+            }
+
+            to {
+                opacity: 1;
+                width: 80%;
+            }
+        }
+
+        @@keyframes Appear {
+            from {
+                opacity: 0;
+                width: 1%;
+            }
+
+            to {
+                opacity: 1;
+                width: 80%;
+            }
         }
 </style>
 
@@ -59,7 +87,9 @@
             </div>
         }
     </div>
-
+    @{
+        int count = 0;
+    }
     @foreach (TimeblockModel timeBlockModel in Model.TimeblockModels)
     {
         string modelName = timeBlockModel.TimeTableModel.Text;
@@ -74,27 +104,52 @@
                 {
                     <li>
                         <div class="right_content">
-                            <h2 id="myBtn">@timeBlockInformationModel.Name</h2>
+                            <h2 id="myBtn@(count)" onclick="OpenModal(@count)">@timeBlockInformationModel.Name</h2>
 
                             <!-- The Modal -->
-                            <div id="myModal" class="modal">
-
+                            <div id="myModal@(count)" class="modal">
+                                @{count++;}
                                 <!-- Modal content -->
-                                <div class="modal-content">
+                                <div class="modal-content" style="position:relative;">
                                     @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
                                     {
                                         <input type="button" value="&#9998;" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button blue" />
                                         <input type="button" value="Media" onclick="location.href='@Url.Action("Upload", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button blue" />
                                         <input type="button" value="&#10006;" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button red" />
                                     }
-                                        <span class="close">&times;</span>
-                                        <div>
+                                    <span class="close" onclick="CloseModal()">&times;</span>
+                                    <p style="text-align: center;">@timeBlockInformationModel.Description</p>
+                                    <div style="height: auto; position: absolute; width: 100%; left:0; bottom:0; padding: 15px 15px;">
+                                        <div style="float: left; width: 100%;">
                                             @{
                                                 int audioCount = 0;
-                                                int imageCount = 0;
-                                                int videoCount = 0;
+                                                int mediaCount = 0;
                                             }
-
+                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
+                                            {
+                                                if (mediaCount == 0)
+                                                {
+                                                    mediaCount++;
+                                                    <h2>Media</h2>
+                                                }
+                                                if (source.MediaType == MediaType.Image)
+                                                {
+                                                    <div style="height: 180px; float: left; margin: 0 5px;">
+                                                        <a href="@Url.Content(String.Format("~/Content/{0}", source.Source))" target="_blank"><img src="@Url.Content(String.Format("~/Content/{0}", source.Source))" style="height: 180px;" /></a>
+                                                    </div>
+                                                }
+                                                if (source.MediaType == MediaType.Video)
+                                                {
+                                                    string[] parsedSource = source.Source.Split("?v=");
+                                                    string embed = parsedSource[(parsedSource.Length - 1)];
+                                                    <div style="height: 180px; float: left; margin: 0 5px;">
+                                                        <iframe width="280" height="180"
+                                                                src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))" allowFullScreen="true"></iframe>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                        <div>
                                             @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
                                             {
                                                 if (source.MediaType == MediaType.Audio)
@@ -111,39 +166,8 @@
                                                 }
                                             }
                                         </div>
-                                        <div>
-                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
-                                            {
-                                                if (source.MediaType == MediaType.Image)
-                                                {
-                                                    if (imageCount == 0)
-                                                    {
-                                                        imageCount++;
-                                                        <h2>Afbeeldingen</h2>
-                                                    }
-                                                    <img src="@Url.Content(String.Format("~/Content/{0}", source.Source))" style="height: 160px;" />
-                                                }
-                                            }
-                                        </div>
-                                        <div>
-                                            @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
-                                            {
-                                                if (source.MediaType == MediaType.Video)
-                                                {
-                                                    if (videoCount == 0)
-                                                    {
-                                                        videoCount++;
-                                                        <h2>Videos</h2>
-                                                    }
-                                                    string[] parsedSource = source.Source.Split("?v=");
-                                                    string embed = parsedSource[(parsedSource.Length - 1)];
-                                                    <iframe width="210" height="160"
-                                                            src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))" allowFullScreen="true"></iframe>
-                                                }
-                                            }
-                                        </div>
-                                        <p>@timeBlockInformationModel.Description</p>
                                     </div>
+                                </div>
                             </div>
                         </div>
                         <div class="left_content">
@@ -170,6 +194,98 @@
             </ul>
         </section>
     }
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
 </div>
+<script>
+    function responsiveToggle() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "topnav";
+    }
+}
+
+
+/* Load slider and show/hide it */
+window.addEventListener('load', function () {
+    document.querySelector('.glider').addEventListener('glider-slide-visible', function (event) {
+        var glider = Glider(this);
+        console.log('Slide Visible %s', event.detail.slide)
+    });
+    document.querySelector('.glider').addEventListener('glider-slide-hidden', function (event) {
+        console.log('Slide Hidden %s', event.detail.slide)
+    });
+    document.querySelector('.glider').addEventListener('glider-refresh', function (event) {
+        console.log('Refresh')
+    });
+    document.querySelector('.glider').addEventListener('glider-loaded', function (event) {
+        console.log('Loaded')
+    });
+
+   /* Default settings slider */
+    window._ = new Glider(document.querySelector('.glider'), {
+        slidesToShow: 1, //'auto',
+        slidesToScroll: 2,
+        itemWidth: 400,
+        dragVelocity: 0.7,
+        draggable: true,
+        scrollLock: true,
+        dots: '#dots',
+        rewind: true,
+        arrows: {
+            prev: '.glider-prev',
+            next: '.glider-next'
+        },
+
+        /* Responsive for different devices */
+        responsive: [
+            {
+                breakpoint: 800,
+                settings: {
+                    slidesToScroll: 2,
+                    itemWidth: 400,
+                    slidesToShow: 'auto',
+                    exactWidth: true
+                }
+            },
+            {
+                breakpoint: 700,
+                settings: {
+                    slidesToScroll: 2,
+                    slidesToShow: 1,
+                    dots: false,
+                    arrows: false,
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToScroll: 1,
+                    slidesToShow: 1
+                }
+            },
+            {
+                breakpoint: 500,
+                settings: {
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                    dots: false,
+                    arrows: false,
+                    scrollLock: true
+                }
+            }
+        ]
+    });
+});
+
+    var currentModal = "";
+    function OpenModal(id) {
+        var modalId = "#myModal" + id + "";
+        $(modalId).show();
+        currentModal = modalId;
+    }
+// When the user clicks on <span> (x), close the modal
+    function CloseModal() {
+    $(currentModal).hide();
+}
+</script>
