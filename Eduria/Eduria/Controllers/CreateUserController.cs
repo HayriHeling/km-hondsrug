@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData;
 using EduriaData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eduria.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CreateUserController : Controller
     {      
         private UserService Service { get; set; }
@@ -67,11 +65,11 @@ namespace Eduria.Controllers
             
             if(Service.GetUserByStudNum(user.UserNum) != null)
             {
-                return RedirectToAction("Create", new { msg = "De identificatie code bestaat al!", success = 0 });
+                return RedirectToAction("Create", new { msg = "De identificatie code " + Service.GetUserByStudNum(user.UserNum).UserNum + " bestaat al!", success = 0 });
             }
             if(Service.GetUserByEmail(user.Email) != null)
             {
-                return RedirectToAction("Create", new { msg = "Het email adres bestaat al!", success = 0 });
+                return RedirectToAction("Create", new { msg = "Het email adres " + Service.GetUserByEmail(user.Email).Email + " is al in gebruik!", success = 0 });
             }
             try
             {

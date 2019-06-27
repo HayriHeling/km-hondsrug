@@ -1,0 +1,15 @@
+﻿@model IEnumerable<QuestionModel>
+
+@{
+    ViewData["Title"] = "Vragenoverzicht";
+}
+
+<h2>Overzicht van alle vragen.</h2>
+
+@foreach(var question in Model)
+{
+    <p>
+        <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@question.QuestionId">@question.Text</a>
+    </p>
+}
+

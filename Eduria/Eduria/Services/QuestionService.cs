@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
@@ -21,7 +18,7 @@ namespace Eduria.Services
 
         public override Question GetById(int id)
         {
-            return Context.Questions.Find(id);
+            return GetAll().FirstOrDefault(x => x.QuestionId == id);
         }
 
         /// <summary>
@@ -50,9 +47,8 @@ namespace Eduria.Services
         }
         public Question GetQuestionByMediaLink(string text)
         {
-            // TODO: Fix line 54
-            //return Context.Questions.FirstOrDefault(x => x.MediaLink == text);
-            return new Question();
+            int mediaSourceId = Context.MediaSources.FirstOrDefault(x => x.Source == text).MediaSourceId;
+            return Context.Questions.FirstOrDefault(x => x.MediaSourceId == mediaSourceId);
         }
 
     }

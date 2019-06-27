@@ -1,0 +1,262 @@
+﻿@model Tuple<IEnumerable<DataStudentResultModel>, IEnumerable<QuestionModel>, IEnumerable<UserEQLogModel>>
+@{
+    ViewData["Title"] = "Toetsresultaten";
+}
+
+
+    <div class="row medium">
+        <h2>Toetsresultaten </h2>
+        <div class="medium-12 columns">
+            <canvas id="examChart" width="800" height="400"></canvas>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="medium-6 columns">
+        <canvas id="questionChart" width="400" height="300"></canvas>
+    </div>
+    <div class="medium-12 columns">
+      <div class="spacer-4"></div>
+                    <div class="medium-2 columns"><strong>Toets</strong></div>
+                    <div class="medium-2 columns"> <strong>Omschrijving</strong></div>
+                    <div class="medium-2 columns"> <strong>Score</strong></div>
+                    <div class="medium-2 columns"><strong>Begonnen</strong></div>
+                    <div class="medium-2 columns"><strong>Afgerond</strong></div>
+                    <div class="medium-2 columns"><strong>Bekijken</strong></div>
+                
+                @foreach (DataStudentResultModel item in Model.Item1)
+                {
+                    <div class="medium-2 columns">
+                        @item.ExamName
+                    </div>
+                    <div class="medium-2 columns">
+                        @item.ExamDescription
+                    </div>
+                       <div class="medium-2 columns">
+                           @item.Score
+                       </div>
+                     <div class="medium-2 columns">
+                         @item.StartedAt
+                     </div>
+                     <div class="medium-2 columns">
+                        @item.FinishedAt
+                        </div>
+                     <div class="medium-2 columns">
+                         <a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">
+                             <i class="fas fa-glasses"></i>
+                         </a>
+                      </div>
+                 }
+
+                             <table>
+                                 <thead>
+                                     <tr>
+                                         <th>Vraag</th>
+                                         <th>Bekijken</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                     @foreach (QuestionModel item in Model.Item2)
+                                     {
+                                         <tr>
+                                             <td>@item.Text</td>
+                                             <td>
+                                                 <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">
+                                                     <i class="fas fa-glasses"></i>
+                                                 </a>
+                                             </td>
+                                         </tr>
+                                     }
+                                 </tbody>
+                             </table>
+
+                         </div>
+
+                     </div>
+
+
+<
+<script>
+    @{
+                    int total1 = 0;
+                    int correct1 = 0;
+                    int total2 = 0;
+                    int correct2 = 0;
+                    int total3 = 0;
+                    int correct3 = 0;
+                    int total4 = 0;
+                    int correct4 = 0;
+                    int total5 = 0;
+                    int correct5 = 0;
+                    int total6 = 0;
+                    int correct6 = 0;
+                    int total7 = 0;
+                    int correct7 = 0;
+                    int total8 = 0;
+                    int correct8 = 0;
+                    int total9 = 0;
+                    int correct9 = 0;
+                    int total10 = 0;
+                    int correct10 = 0;
+                    foreach(UserEQLogModel model in Model.Item3)
+                    {
+                        switch (model.QuestionModel.TimeTableModel.TimeTableId)
+                        {
+                            case 1:
+                                total1 += (model.TimesWrong + model.CorrectAnswered);
+                                correct1 += model.CorrectAnswered;
+                                break;
+                            case 2:
+                                total2 += (model.TimesWrong + model.CorrectAnswered);
+                                correct2 += model.CorrectAnswered;
+                                break;
+                            case 3:
+                                total3 += (model.TimesWrong + model.CorrectAnswered);
+                                correct3 += model.CorrectAnswered;
+                                break;
+                            case 4:
+                                total4 += (model.TimesWrong + model.CorrectAnswered);
+                                correct4 += model.CorrectAnswered;
+                                break;
+                            case 5:
+                                total5 += (model.TimesWrong + model.CorrectAnswered);
+                                correct5 += model.CorrectAnswered;
+                                break;
+                            case 6:
+                                total6 += (model.TimesWrong + model.CorrectAnswered);
+                                correct6 += model.CorrectAnswered;
+                                break;
+                            case 7:
+                                total7 += (model.TimesWrong + model.CorrectAnswered);
+                                correct7 += model.CorrectAnswered;
+                                break;
+                            case 8:
+                                total8 += (model.TimesWrong + model.CorrectAnswered);
+                                correct8 += model.CorrectAnswered;
+                                break;
+                            case 9:
+                                total9 += (model.TimesWrong + model.CorrectAnswered);
+                                correct9 += model.CorrectAnswered;
+                                break;
+                            case 10:
+                                total10 += (model.TimesWrong + model.CorrectAnswered);
+                                correct10 += model.CorrectAnswered;
+                                break;
+
+                        }
+                    }
+                }
+                var ctx = document.getElementById('examChart').getContext('2d');
+                var examChart = new Chart(ctx, {
+
+                type: 'bar',
+                data: {
+
+                    labels: ['Prehistorie', 'Oudheid', 'Vroege Middeleeuwen', 'Hoge en Late Middeleeuwen', 'Renaissance', 'Gouden Eeuw', 'Verlichting', 'Industrialisatie', '1ste Helft 20e Eeuw', '2e Helft 20e Eeuw'],
+                    datasets: [{
+                        label: 'Totaal',
+                        data: [@total1, @total2, @total3, @total4, @total5, @total6, @total7, @total8, @total9, @total10],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)',
+                            'rgba(54, 162, 235, 0.3)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 3
+        }, {
+                        label: 'Correct',
+            data: [@correct1, @correct2, @correct3, @correct4, @correct5, @correct6, @correct7, @correct8, @correct9, @correct10],
+            backgroundColor: [
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)',
+                'rgba(123, 239, 178, 0.5)'
+            ],
+            borderColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)',
+                'rgba(123, 239, 178, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        legend: {
+            display: true
+
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                }
+            }]
+        }
+    }
+});
+</script>
+<script>
+
+    var totalWrong = 0;
+    var totalGood = 0;
+
+    @foreach(var item in Model.Item3)
+    {
+        @:totalWrong += @item.TimesWrong;
+    }
+
+    @foreach(var item in Model.Item3)
+    {
+        @:totalGood += @item.CorrectAnswered;
+    }
+
+    var ctx = document.getElementById('questionChart').getContext('2d');
+    var questionChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Goed beantwoord', 'Foutief beantwoord'],
+        datasets: [{
+            label: 'Rood',
+            data: [totalGood, totalWrong],
+            backgroundColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+            ],
+        }]
+    },
+    options: {
+        reponsive: true
+    }
+});
+</script>

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Eduria.Models
+﻿namespace Eduria.Models
 {
-    public class AnalyticHasDefaultModel
+   public class AnalyticHasDefaultModel
     {
         public int DataHasDefaultId { get; set; }
         public int AnalyticDefaultId { get; set; }

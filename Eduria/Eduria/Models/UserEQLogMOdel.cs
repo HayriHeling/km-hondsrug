@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Eduria.Models
 {
@@ -9,6 +6,7 @@ namespace Eduria.Models
     {
         public int UserEQLogId { get; set; }
         public int ExamHasQuestionId { get; set; }
+        public QuestionModel QuestionModel { get; set; }
         public int ExamResultId { get; set; }
         public int UserId { get; set; }
         public int TimesWrong { get; set; }

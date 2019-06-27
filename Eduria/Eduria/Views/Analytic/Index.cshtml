@@ -2,9 +2,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-    <div class="row xlarge">
-        
+<section id="analytic">
+    <div class="row medium">
+        <div class="medium-2 columns">
+            <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        </div>
         <div class="medium-10 columns">
             @if (User.IsInRole("Teacher"))
             {
@@ -46,4 +48,4 @@
             }
         </div>
     </div>
-
+</section>

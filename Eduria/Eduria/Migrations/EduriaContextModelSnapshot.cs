@@ -317,8 +317,7 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AudioSource")
-                        .HasMaxLength(256);
+                    b.Property<int>("BeforeChrist");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256);
@@ -331,8 +330,7 @@ namespace Eduria.Migrations
 
                     b.Property<int>("UserId");
 
-                    b.Property<string>("VideoSource")
-                        .HasMaxLength(256);
+                    b.Property<int>("Year");
 
                     b.HasKey("TimeTableInformationId");
 

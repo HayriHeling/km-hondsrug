@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
@@ -20,12 +17,22 @@ namespace Eduria.Services
 
         public override UserEQLog GetById(int id)
         {
-            return Context.UserEQLogs.Find(id);
+            return GetAll().First(x => x.UserEQLogId == id);
         }
 
         public IEnumerable<UserEQLog> GetAllByResultId(int id)
         {
             return Context.UserEQLogs.Where(x => x.ExamResultId == id);
+        }
+
+        public UserEQLog GetByResultUserQuestionId(int resultId, int userId, int examQuestionId)
+        {
+            return Context.UserEQLogs.FirstOrDefault(x => x.ExamResultId == resultId && x.UserId == userId && x.ExamHasQuestionId == examQuestionId);
+        }
+
+        public IEnumerable<UserEQLog> GetAllByUserId(int id)
+        {
+            return GetAll().Where(x => x.UserId == id);
         }
     }
 }

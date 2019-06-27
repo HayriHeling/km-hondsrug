@@ -1,0 +1,136 @@
+﻿@model Tuple<IEnumerable<QuestionModel>, DataExamResultModel, IEnumerable<UserModel>>
+
+@{
+    ViewData["Title"] = "ExamResult";
+}
+
+    <section id="content">
+        <div class="row medium">
+            <h2>Toets resultaten</h2>
+
+            <div class="medium-6 columns">
+                <p><b>@Model.Item2.Name | @Model.Item2.Description</b></p>
+                <canvas id="examChart" width="400" height="400"></canvas>
+            </div>
+            <div class="medium-6 columns">
+                <div><b>Alle vragen van '@Model.Item2.Name'</b></div>
+                    @foreach (var item in Model.Item1)
+                    {
+                        <form method="post" asp-controller="Result" asp-action="QuestionResult">
+                            <input type="number" name="id" value="@item.QuestionId" style="display:none;" />
+                            <input type="number" name="examId" value="@ViewBag.examId" style="display:none;" />
+                            <input type="submit" name="submit" value="@item.Text" class="no-button" />
+                        </form>
+                    }
+            </div>
+        </div>
+        <div class="row medium">
+            <div class="medium-6 columns">
+                <canvas id="examChartTwo" width="400" height="400"></canvas>
+            </div>
+            <div class="medium-6 columns">
+                <p><b>De leerlingen die de toets '@Model.Item2.Name' gemaakt hebben:</b></p>
+                @foreach (var item in Model.Item3)
+                {
+                    <p><a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.UserId">@item.FirstName @item.LastName</a></p>
+                }
+            </div>
+        </div>
+    </section>
+<script>
+var ctx = document.getElementById('examChart').getContext('2d');
+var examChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Hoogste', 'Laagste', 'Gemiddeld' ],
+        datasets: [{
+            data: [@Model.Item2.HighestScore, @Model.Item2.LowestScore, @Model.Item2.AverageScore],
+            backgroundColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+            ],
+            borderColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        legend: {
+        display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                }
+            }]
+        }
+    }
+});
+</script>
+<script>
+    var monthArray = []
+    @foreach(var item in Model.Item2.TotalTimesDonePerMonth)
+    {
+        @:monthArray.push(@item);
+    }
+
+    var ctx = document.getElementById('examChartTwo').getContext('2d');
+    var examChartTwo = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Januari', 'Februari', 'Maart',
+                'April', 'Mei', 'Juni', 'Juli',
+                'Augustus', 'September', 'Oktober',
+                'November', 'December'],
+            datasets: [{
+                label: 'Januari',
+                backgroundColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(123, 239, 178, 1)',
+                ],
+                data: monthArray
+            }]
+        },
+        options: {
+        legend: {
+        display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+    });
+</script>

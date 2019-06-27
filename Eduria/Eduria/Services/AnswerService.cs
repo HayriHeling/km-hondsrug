@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using EduriaData.Models;
 using EduriaData.Models.ExamLayer;
 
 namespace Eduria.Services
@@ -32,7 +29,7 @@ namespace Eduria.Services
         /// <returns>List of Answer-models</returns>
         public IEnumerable<Answer> GetAnswersByQuestionsList(IEnumerable<Question> questions)
         {
-            IEnumerable<Answer> answers = GetAll();
+            List<Answer> answers = GetAll().ToList();
             List<Answer> tempAnswers = new List<Answer>();
             foreach (Question question in questions)
             {

@@ -14,7 +14,7 @@ namespace Eduria
 
     public enum MediaType
     {
-        None,
+        Geen,
         Audio,
         Image,
         Video
@@ -61,5 +61,16 @@ namespace Eduria
         Geel,
         LichtGroen,
         Groen
+    }
+    public enum ChristNotation
+    {
+        nChr,
+        vChr
+    }
+    public enum Class
+    {
+        nvt,
+        havo,
+        vwo
     }
 }

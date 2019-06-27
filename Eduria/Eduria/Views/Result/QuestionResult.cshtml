@@ -1,0 +1,33 @@
+﻿@model DataQuestionResultModel
+
+@{
+    ViewData["Title"] = "Data per vraag";
+}
+<section id="content">
+    <div class="row medium">
+        <b>Vraag: </b>'@Model.Name'
+        <div class="medium-6 columns">
+            <canvas id="questionChart" width="400" height="400"></canvas><p>Totaal beantwoord: <b>@Model.TimesAnswerd</b></p>
+        </div>
+    </div>
+</section>
+<script>
+var ctx = document.getElementById('questionChart').getContext('2d');
+var questionChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Goed beantwoord', 'Foutief beantwoord'],
+        datasets: [{
+            label: 'Rood',
+            data: [@Model.TimesGoodAtOnce, @Model.TimesWrong],
+            backgroundColor: [
+                'rgba(123, 239, 178, 1)',
+                'rgba(255, 99, 132, 1)',
+            ],
+        }]
+    },
+    options: {
+        reponsive: true
+    }
+});
+</script>

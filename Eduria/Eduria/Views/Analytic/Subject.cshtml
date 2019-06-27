@@ -22,14 +22,14 @@
             Planning en analyse worden beoordeeld voor je tijdvakkendossier.
         </p>
 
-        @using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
-        {
-            @foreach (var item in Model.Item1)
-            {
-
-                if (item.Option == (int)DefaultOption.Score)
+                @using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
                 {
-                    <p>@item.AnalyticDefaultName</p>
+                    @foreach (var item in Model.Item1)
+                    {
+
+                        if (item.Option == (int)DefaultOption.Score)
+                        {
+                            <p>@item.AnalyticDefaultName</p>
 
                     if (User.IsInRole("Student"))
                     {
@@ -47,10 +47,11 @@
                 }
             }
 
-            if (User.IsInRole("Student"))
-            {
-                <p><input type="submit" value="Opslaan" /></p>
-            }
-        }
-    </div>
-</div>
+                    if (User.IsInRole("Student"))
+                    {
+                        <input type="submit" value="Opslaan" class="button green"/>
+                    }
+                }
+            </div>
+        </div>
+</section>
