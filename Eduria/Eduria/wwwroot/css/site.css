@@ -121,8 +121,6 @@ h4 {
     background-color: #74b027;
 }
 
-
-
 .alert a {
     color: #fff;
     text-decoration: underline;
@@ -136,6 +134,42 @@ h4 {
     color: #ed1c24;
     color: #ed1c24;
     text-decoration: underline;
+}
+
+#content.errorPage {
+    padding-top: 10%;
+}
+
+.errorPage h1 {
+    font-size: 50px; 
+    font-weight: 800; 
+    color:#808080;
+}
+
+.errorPage h2 {
+    font-weight: 800;
+    color: #808080;
+}
+
+.errorPage h3 {
+    font-weight: 600;
+    color: #808080;
+}
+
+.errorPage a {
+    color: #ed1c24;
+}
+
+.errorPage a:hover {
+    text-decoration:underline
+}
+
+.errorPage img {
+    width: 400px;
+}
+
+.errorPage a:visited {
+    color: #ed1c24;
 }
 
 .medium {
