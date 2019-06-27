@@ -1183,3 +1183,14 @@ input:checked + .slider:before {
         margin-left: 45px;
     }
 }
+
+.grow {
+    transition: 0.5s ease;
+}
+
+.grow:hover {
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+    transition: 0.5s ease;
+}
