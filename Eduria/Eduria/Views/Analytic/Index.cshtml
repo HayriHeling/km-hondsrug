@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Eduria.Models.AnalyticHasDefaultModel>
+﻿@model AnalyticDataAndUsersModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,14 +8,43 @@
             <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
         </div>
         <div class="medium-10 columns">
-            @foreach (var item in Model)
+            @if (User.IsInRole("Teacher"))
             {
-                <p>AnalyticDataId: @item.AnalyticDataId</p>
-                <p>AnalyticDefaultId: @item.AnalyticDefaultId</p>
-                <p>Name: @item.AnalyticDefaultName</p>
-                <p>Category: @item.CategoryId</p>
-                <p>Score: @item.Score</p>
-                <hr />
+                @using (Html.BeginForm("Index", "Analytic", FormMethod.Post))
+                {
+                    @for (int i = 0; i < Model.UserModels.Count; i++)
+                    {
+                        @Html.DropDownListFor(m => m.UserModels[i].UserId,
+                            new SelectList(ViewBag.userList, "Value", "Text", Model.UserModels[i].UserId))
+                    }
+
+                    <input type="submit" value="Selecteer" />
+                }
+            }
+
+            @{int year = 0;}
+            @for (int i = 0; i < Model.AnalyticDataModels.Count(); i++)
+            {
+                @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
+                {
+                    <input type="hidden" name="AnalyticDataModels.Index" value=@i />
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].AnalyticDataId)
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].PeriodNum)
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].SchoolYearStart)
+
+                    if (year <= Model.AnalyticDataModels[i].SchoolYearStart)
+                    {
+                        <p><b>@Model.AnalyticDataModels[i].SchoolYearStart</b></p>
+
+                        year = Model.AnalyticDataModels[i].SchoolYearStart;
+                    }
+
+                    <p>
+                        Exam code: @Model.AnalyticDataModels[i].ExamCode<br />
+                        Periode: @Model.AnalyticDataModels[i].PeriodNum<br />
+                        <input type="submit" value="Selecteer" />
+                    </p>
+                }
             }
         </div>
     </div>
