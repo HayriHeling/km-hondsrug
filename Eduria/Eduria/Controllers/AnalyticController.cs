@@ -29,14 +29,14 @@ namespace Eduria.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<EduriaData.Models.User> allUsersByUserType = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList();
+            List<UserModel> allUsersByUserType = UserService.GetAllUserModelsByUserType((int)UserRoles.Student).ToList();
 
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             foreach (var item in allUsersByUserType)
             {
                 selectListItems.Add(new SelectListItem
                 {
-                    Text = item.UserId.ToString() + ": " + item.Firstname + " " + item.Lastname,
+                    Text = item.UserId.ToString() + ": " + item.FirstName + " " + item.LastName,
                     Value = item.UserId.ToString()
                 });
             }
@@ -61,14 +61,14 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Index(List<User> userModels)
         {
-            List<User> allUsersByUserType = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList();
+            List<UserModel> allUsersByUserType = UserService.GetAllUserModelsByUserType((int)UserRoles.Student).ToList();
 
             List<SelectListItem> selectListItems = new List<SelectListItem>();
             foreach (var item in allUsersByUserType)
             {
                 selectListItems.Add(new SelectListItem
                 {
-                    Text = item.UserId.ToString() + ": " + item.Firstname + " " + item.Lastname,
+                    Text = item.UserId.ToString() + ": " + item.FirstName + " " + item.LastName,
                     Value = item.UserId.ToString()
                 });
             }

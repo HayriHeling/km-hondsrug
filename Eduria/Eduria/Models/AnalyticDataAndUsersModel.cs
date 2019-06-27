@@ -7,7 +7,7 @@ namespace Eduria.Models
 {
     public class AnalyticDataAndUsersModel
     {
-        public List<EduriaData.Models.User> UserModels { get; set; }
+        public List<UserModel> UserModels { get; set; }
         public List<AnalyticDataModel> AnalyticDataModels { get; set; }
     }
 }
