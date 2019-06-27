@@ -13,7 +13,7 @@ namespace Eduria.Services
 
         private string _backupName;
 
-        private const string BackupPlace = "D:\\";
+        private const string BackupPlace = "C:\\";
 
         public DatabaseService(IOptions<AppSettingsService> appSettingsService)
         {

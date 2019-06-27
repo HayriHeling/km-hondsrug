@@ -262,12 +262,7 @@ namespace Eduria.Controllers
             List<TimeTableModel> tableModels = new List<TimeTableModel>();
             foreach(TimeTable table in tables)
             {
-                TimeTableModel tableModel = new TimeTableModel()
-                {
-                    TimeTableId = table.TimeTableId,
-                    Text = table.Text
-                };
-                tableModels.Add(tableModel);
+                tableModels.Add(ConvertToTimeTableModel(table));
             }
             ViewBag.timetables = tableModels;
             ViewBag.state = state;

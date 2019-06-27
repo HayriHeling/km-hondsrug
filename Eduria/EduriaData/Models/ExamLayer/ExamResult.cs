@@ -15,5 +15,7 @@ namespace EduriaData.Models.ExamLayer
         public DateTime StartedAt { get; set; }
         public DateTime FinishedAt { get; set; }
         public int Score { get; set; }
+        [Required]
+        public int MaxScore { get; set; }
     }
 }

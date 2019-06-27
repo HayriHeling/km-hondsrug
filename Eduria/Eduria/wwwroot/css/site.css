@@ -625,6 +625,12 @@ p {
     background-color: #f9f9f9;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
 
 /* TimePeriod Slider*/
 
@@ -1176,4 +1182,15 @@ input:checked + .slider:before {
         margin-bottom: 30px;
         margin-left: 45px;
     }
+}
+
+.grow {
+    transition: 0.5s ease;
+}
+
+.grow:hover {
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+    transition: 0.5s ease;
 }
