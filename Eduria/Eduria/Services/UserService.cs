@@ -95,6 +95,11 @@ namespace Eduria.Services
             return Context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
         }
 
+        /// <summary>
+        /// Get a logged in user's id.
+        /// </summary>
+        /// <param name="user">The logged in user</param>
+        /// <returns>Logged in user's id.</returns>
         public int GetLoggedInUserId(ClaimsPrincipal user)
         {
             return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);

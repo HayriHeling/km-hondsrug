@@ -1,15 +1,12 @@
 ﻿using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
-using EduriaData.Models.AnalyticLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 
 namespace Eduria.Controllers
 {
@@ -27,7 +24,7 @@ namespace Eduria.Controllers
         /// <summary>
         /// This is the Index result action.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The index view.</returns>
         [Authorize(Roles = "Student, Teacher")]
         [HttpGet]
         public IActionResult Index()
@@ -54,6 +51,13 @@ namespace Eduria.Controllers
             return View(analyticDataAndUsers);
         }
 
+        /// <summary>
+        /// POST: Analytic
+        /// 
+        /// The index page.
+        /// </summary>
+        /// <param name="userModels">The user model to select an analyticdata from.</param>
+        /// <returns>The index view.</returns>
         [HttpPost]
         public IActionResult Index(List<User> userModels)
         {
@@ -79,6 +83,12 @@ namespace Eduria.Controllers
             return View(analyticDataAndUsers);
         }
 
+        /// <summary>
+        /// GET: Analytic/Show
+        /// 
+        /// The page with everything of a specific analyticdata.
+        /// </summary>
+        /// <returns>The show view with the specific analyticdata.</returns>
         [HttpGet]
         public IActionResult Show()
         {
@@ -98,6 +108,13 @@ namespace Eduria.Controllers
             return View(Service.GetAnalyticDataIdAndHasDefaults(analyticDataId));
         }
 
+        /// <summary>
+        /// POST: Analytic/Show
+        /// 
+        /// The page with everything of a specific analyticdata.
+        /// </summary>
+        /// <param name="analyticDataAndUsersModel">The analyticdata to show.</param>
+        /// <returns>The show view with the specific analyticdata.</returns>
         [HttpPost]
         public IActionResult Show(AnalyticDataAndUsersModel analyticDataAndUsersModel)
         {
@@ -116,6 +133,12 @@ namespace Eduria.Controllers
             return View(Service.GetAnalyticDataIdAndHasDefaults(analyticDataId));
         }
 
+        /// <summary>
+        /// GET: Analytic/Method
+        /// 
+        /// The method page.
+        /// </summary>
+        /// <returns>The method page.</returns>
         [HttpGet]
         public IActionResult Method()
         {
@@ -179,6 +202,12 @@ namespace Eduria.Controllers
             return RedirectToAction("Method");
         }
 
+        /// <summary>
+        /// GET: Analytic/Subject
+        /// 
+        /// The subject page.
+        /// </summary>
+        /// <returns>The subject view.</returns>
         [HttpGet]
         public IActionResult Subject()
         {
@@ -230,6 +259,13 @@ namespace Eduria.Controllers
             return RedirectToAction("Subject");
         }
 
+        /// <summary>
+        /// POST: Analytic/AddMethodScore
+        /// 
+        /// Adds a score to the specified methods.
+        /// </summary>
+        /// <param name="form">Form containing methods.</param>
+        /// <returns>Redirect to the method view.</returns>
         [Authorize(Roles = "Teacher")]
         [HttpPost]
         public IActionResult AddMethodScore(IFormCollection form)
@@ -238,6 +274,12 @@ namespace Eduria.Controllers
             return RedirectToAction("Method");
         }
 
+        /// <summary>
+        /// GET: Analytic/Goal
+        /// 
+        /// Shows the goal view page.
+        /// </summary>
+        /// <returns>The goal view.</returns>
         [HttpGet]
         public IActionResult Goal()
         {
@@ -355,12 +397,25 @@ namespace Eduria.Controllers
             return RedirectToAction("Goal");
         }
 
+        /// <summary>
+        /// POST: Analytic/Period
+        /// 
+        /// The period page.
+        /// </summary>
+        /// <returns>The period view.</returns>
         [Authorize(Roles = "Teacher")]
         public IActionResult Period()
         {
             return View();
         }
 
+        /// <summary>
+        /// POST: Analytic/AddPeriod
+        /// 
+        /// Adds a period to the database.
+        /// </summary>
+        /// <param name="periodModel">The period model to use the values from.</param>
+        /// <returns>A redirect to the period view.</returns>
         public IActionResult AddPeriod(PeriodModel periodModel)
         {
             //First add the PeriodModel to the database.

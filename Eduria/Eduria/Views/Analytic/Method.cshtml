@@ -4,61 +4,60 @@
     ViewData["Title"] = "Werkwijze";
 }
 <section id="analytic">
-<div class="row medium">
-    <div class="medium-2 columns">
-        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
-    </div>
-    <div class="medium-10 columns">
-        @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
-        {
-            <input type="submit" value="Terug" />
-        }
-
-        @if (Model.Item1.Count() != 0)
-        {
-            using (Html.BeginForm("AddMethodScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
+    <div class="row medium">
+        <div class="medium-2 columns">
+            <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
+        </div>
+        <div class="medium-10 columns">
+            @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
             {
-                foreach (var item in Model.Item1)
+                <input type="submit" value="Terug" />
+            }
+
+            @if (Model.Item1.Count() != 0)
+            {
+                using (Html.BeginForm("AddMethodScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
                 {
-                    <p>@item.AnalyticDefaultId</p>
-                    <p>@item.AnalyticDefaultName</p>
-                    <p>@item.Input</p>
-                    <p>@item.Score</p>
-
-                    if (User.IsInRole("Teacher"))
+                    foreach (var item in Model.Item1)
                     {
-                        Array scoreEnum = Enum.GetValues(typeof(DefaultScore));
+                        <p>@item.AnalyticDefaultId</p>
+                        <p>@item.AnalyticDefaultName</p>
+                        <p>@item.Input</p>
+                        <p>@item.Score</p>
 
-                        for (int i = 0; i < scoreEnum.Length; i++)
+                        if (User.IsInRole("Teacher"))
                         {
-                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)scoreEnum.GetValue(i))
+                            Array scoreEnum = Enum.GetValues(typeof(DefaultScore));
+
+                            for (int i = 0; i < scoreEnum.Length; i++)
+                            {
+                                @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)scoreEnum.GetValue(i))
+                            }
                         }
                     }
-                }
-                if (User.IsInRole("Teacher"))
-                {
-                    <input type="submit" value="Opslaan" />
+                    if (User.IsInRole("Teacher"))
+                    {
+                        <input type="submit" value="Opslaan" />
+                    }
                 }
             }
-        }
-        else
-        {
-            @foreach (var item in Model.Item2)
+            else
             {
-                <label class="container">
-                    <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
-                    <span class="checkmark"></span>
-                    @item.AnalyticDefaultName
-                </label>
+                @foreach (var item in Model.Item2)
+                {
+                    <label class="container">
+                        <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
+                        <span class="checkmark"></span>
+                        @item.AnalyticDefaultName
+                    </label>
                 }
 
                 <hr />
                 <button type="submit" onclick="submitMethodArray()" class="button green">Toevoegen</button>
-
-        }
-        <div id="inputMethod"></div>
+            }
+            <div id="inputMethod"></div>
+        </div>
     </div>
-</div>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
@@ -109,7 +108,8 @@
             type: "POST",
             traditional: true,
             url: "/Analytic/AddMethod",
-            data: { methodParam: methodArray, textParam: textBoxValue }
+            data: { methodParam: methodArray, textParam: textBoxValue },
+            success: window.location.href = "/Analytic"
         });
     }
 </script>
