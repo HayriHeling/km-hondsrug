@@ -61,7 +61,7 @@ namespace Eduria.Services
         /// <returns>The AnalyticData object.</returns>
         public override AnalyticData GetById(int id)
         {
-            throw new NotImplementedException();
+            return GetAll().FirstOrDefault(x => x.AnaylticDefaultId == id);
         }
 
         /// <summary>
