@@ -33,11 +33,11 @@
 
                     if (User.IsInRole("Student"))
                     {
-                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Rood)
-                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Oranje)
-                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Geel)
-                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.LichtGroen)
-                        @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Groen)
+                        @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Rood)
+                        @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Oranje)
+                        @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Geel)
+                        @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.LichtGroen)
+                        @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Groen)
                     }
                 }
                 else
@@ -49,7 +49,7 @@
 
             if (User.IsInRole("Student"))
             {
-                <input type="submit" value="Opslaan" />
+                <p><input type="submit" value="Opslaan" /></p>
             }
         }
     </div>

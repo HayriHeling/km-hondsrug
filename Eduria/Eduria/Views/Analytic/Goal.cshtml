@@ -24,9 +24,10 @@
                 <td>@Model.AnalyticHasDefaultModels[i].Input</td>
                 <td>
                     <!-- Creates score input if user is teacher -->
-                    @{ Array scoreEnum = Enum.GetValues(typeof(DefaultScore)); }
                     @if (Model.AnalyticHasDefaultModels[i].Score == null && User.IsInRole("Teacher"))
                     {
+                        Array scoreEnum = Enum.GetValues(typeof(DefaultScore));
+
                         @for (int j = 0; j < scoreEnum.Length; j++)
                         {
                             @Html.RadioButtonFor(m => m.AnalyticHasDefaultModels[i].Score, (int)scoreEnum.GetValue(j), new { @checked = false })

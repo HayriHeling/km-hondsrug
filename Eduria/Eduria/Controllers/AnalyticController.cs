@@ -5,6 +5,7 @@ using EduriaData.Models.AnalyticLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,21 +32,49 @@ namespace Eduria.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            List<EduriaData.Models.User> allUsersByUserType = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList();
+
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+            foreach (var item in allUsersByUserType)
+            {
+                selectListItems.Add(new SelectListItem
+                {
+                    Text = item.UserId.ToString() + ": " + item.Firstname + " " + item.Lastname,
+                    Value = item.UserId.ToString()
+                });
+            }
+            SelectList selectList = new SelectList(selectListItems, "Value", "Text");
+            ViewBag.userList = selectList;
+
             AnalyticDataAndUsersModel analyticDataAndUsers = new AnalyticDataAndUsersModel
             {
                 AnalyticDataModels = Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)).ToList(),
-                UserModels = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList()
+                UserModels = allUsersByUserType
             };
             return View(analyticDataAndUsers);
         }
 
         [HttpPost]
-        public IActionResult Index(int userId)
+        public IActionResult Index(List<User> userModels)
         {
+            List<User> allUsersByUserType = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList();
+
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+            foreach (var item in allUsersByUserType)
+            {
+                selectListItems.Add(new SelectListItem
+                {
+                    Text = item.UserId.ToString() + ": " + item.Firstname + " " + item.Lastname,
+                    Value = item.UserId.ToString()
+                });
+            }
+            SelectList selectList = new SelectList(selectListItems, "Value", "Text");
+            ViewBag.userList = selectList;
+
             AnalyticDataAndUsersModel analyticDataAndUsers = new AnalyticDataAndUsersModel
             {
-                AnalyticDataModels = Service.GetAllAnalyticDatasByUserId(UserService.GetLoggedInUserId(User)).ToList(),
-                UserModels = UserService.GetAllUsersByUserType((int)UserRoles.Student).ToList()
+                AnalyticDataModels = Service.GetAllAnalyticDatasByUserId(userModels.First().UserId).ToList(),
+                UserModels = allUsersByUserType
             };
             return View(analyticDataAndUsers);
         }
@@ -59,7 +88,7 @@ namespace Eduria.Controllers
                 SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
             };
 
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -73,13 +102,14 @@ namespace Eduria.Controllers
         public IActionResult Show(AnalyticDataAndUsersModel analyticDataAndUsersModel)
         {
             AnalyticDataModel analyticData = analyticDataAndUsersModel.AnalyticDataModels.First();
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? analyticData.AnalyticDataId : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
                 return RedirectToAction("Index");
             }
 
+            HttpContext.Session.SetInt32("AnalyticId", analyticData.AnalyticDataId);
             HttpContext.Session.SetInt32("Period", analyticData.PeriodNum);
             HttpContext.Session.SetInt32("SchoolYear", analyticData.SchoolYearStart);
 
@@ -95,7 +125,7 @@ namespace Eduria.Controllers
                 SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
             };
 
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -113,7 +143,7 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Method(AnalyticDataModel analyticData)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -158,7 +188,7 @@ namespace Eduria.Controllers
                 SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
             };
 
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -176,7 +206,7 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Subject(AnalyticDataModel analyticData)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -200,6 +230,14 @@ namespace Eduria.Controllers
             return RedirectToAction("Subject");
         }
 
+        [Authorize(Roles = "Teacher")]
+        [HttpPost]
+        public IActionResult AddMethodScore(IFormCollection form)
+        {
+            Service.AddDefaultDataScore(form);
+            return RedirectToAction("Method");
+        }
+
         [HttpGet]
         public IActionResult Goal()
         {
@@ -209,7 +247,7 @@ namespace Eduria.Controllers
                 SchoolYearStart = (int)HttpContext.Session.GetInt32("SchoolYear")
             };
 
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1)
             {
@@ -229,7 +267,7 @@ namespace Eduria.Controllers
         [HttpPost]
         public IActionResult Goal(AnalyticDataModel analyticData)
         {
-            int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
+            int analyticDataId = User.IsInRole("Teacher") ? (int)HttpContext.Session.GetInt32("AnalyticId") : Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), analyticData.PeriodNum, analyticData.SchoolYearStart);
 
             if (analyticDataId == -1) {
                 return RedirectToAction("Index");
@@ -301,7 +339,7 @@ namespace Eduria.Controllers
             {
                 IEnumerable<AnalyticHasDefaultModel> analyticHasDefaults = analyticDefaultAndHasDefaultModel.AnalyticHasDefaultModels.Where(x => x.Score != null);
 
-                int analyticDataId = Service.GetAnalyticDataIdByUserIdAndPeriodAndYear(UserService.GetLoggedInUserId(User), (int)HttpContext.Session.GetInt32("Period"), (int)HttpContext.Session.GetInt32("SchoolYear"));
+                int analyticDataId = (int)HttpContext.Session.GetInt32("AnalyticId");
 
                 if (analyticDataId == -1)
                 {

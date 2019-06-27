@@ -304,6 +304,21 @@ namespace Eduria.Services
             }
         }
 
+        public DefaultDataScore GetDefaultDataScoreByAnalyticHasDefaultId(int analyticHasDefaultId)
+        {
+            var query = from dds in Context.DefaultDataScores
+                        where dds.DataHasDefaultId == analyticHasDefaultId
+                        select new DefaultDataScore
+                        {
+                            DataHasDefaultId = dds.DataHasDefaultId,
+                            DefaultDateScoreId = dds.DefaultDateScoreId,
+                            Score = dds.Score
+                        };
+
+
+            return query.FirstOrDefault();
+        }
+
         /// <summary>
         /// Add an DefaultDataScore object to the database.
         /// </summary>
@@ -322,16 +337,19 @@ namespace Eduria.Services
                     dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
-                //Make an new instance of DefaultDataScore object and fill it.
-                DefaultDataScore defaultDataScore = new DefaultDataScore
+                if (GetDefaultDataScoreByAnalyticHasDefaultId(dataHasDefault.DataHasDefaultId) == null)
                 {
-                    DataHasDefaultId = dataHasDefault.DataHasDefaultId,
-                    Score = score
-                };
+                    //Make an new instance of DefaultDataScore object and fill it.
+                    DefaultDataScore defaultDataScore = new DefaultDataScore
+                    {
+                        DataHasDefaultId = dataHasDefault.DataHasDefaultId,
+                        Score = score
+                    };
 
-                //Add the DefaultDataScore object to the database.
-                Context.DefaultDataScores.Add(defaultDataScore);
-                Context.SaveChanges();
+                    //Add the DefaultDataScore object to the database.
+                    Context.DefaultDataScores.Add(defaultDataScore);
+                    Context.SaveChanges();
+                }
             }
         }
 
@@ -429,15 +447,20 @@ namespace Eduria.Services
             listOfDefaultDataScore.RemoveAt(listOfDefaultDataScore.Count - 1);
 
             foreach (var item in listOfDefaultDataScore)
-            {    
-                DefaultDataScore defaultDataScore = new DefaultDataScore
-                {
-                    DataHasDefaultId = int.Parse(item.Key),
-                    Score = int.Parse(item.Value)
-                };
+            {
+                int hasDefaultDataId = int.Parse(item.Key);
 
-                Context.DefaultDataScores.Add(defaultDataScore);
-                Context.SaveChanges();
+                if (GetDefaultDataScoreByAnalyticHasDefaultId(hasDefaultDataId) == null)
+                {
+                    DefaultDataScore defaultDataScore = new DefaultDataScore
+                    {
+                        DataHasDefaultId = hasDefaultDataId,
+                        Score = int.Parse(item.Value)
+                    };
+
+                    Context.DefaultDataScores.Add(defaultDataScore);
+                    Context.SaveChanges();
+                }
             }
         }
 

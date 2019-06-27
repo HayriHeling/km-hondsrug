@@ -10,7 +10,11 @@
             {
                 @using (Html.BeginForm("Index", "Analytic", FormMethod.Post))
                 {
-
+                    @for (int i = 0; i < Model.UserModels.Count; i++)
+                    {
+                        @Html.DropDownListFor(m => m.UserModels[i].UserId,
+                            new SelectList(ViewBag.userList, "Value", "Text", Model.UserModels[i].UserId))
+                    }
 
                     <input type="submit" value="Selecteer" />
                 }
@@ -22,6 +26,7 @@
                 @using (Html.BeginForm("Show", "Analytic", FormMethod.Post))
                 {
                     <input type="hidden" name="AnalyticDataModels.Index" value=@i />
+                    @Html.HiddenFor(m => m.AnalyticDataModels[i].AnalyticDataId)
                     @Html.HiddenFor(m => m.AnalyticDataModels[i].PeriodNum)
                     @Html.HiddenFor(m => m.AnalyticDataModels[i].SchoolYearStart)
 
