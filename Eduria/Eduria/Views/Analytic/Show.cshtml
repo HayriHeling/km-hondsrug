@@ -2,79 +2,79 @@
 @{
     ViewData["Title"] = "View";
 }
+    <section id="content">
+        <div class="row xlarge">
+            <div class="medium-12 columns">
+                @using (Html.BeginForm("Index", "Analytic", FormMethod.Get))
+                {
+                    <input type="submit" value="Terug" />
+                }
 
-<div class="row xlarge">
+                <h2>Reflectie</h2>
+                @using (Html.BeginForm("Subject", "Analytic", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+                    @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
+                    @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Reflectie))
+                    {
+                        <p>@item.AnalyticDefaultName</p>
+                        <p>@item.Input</p>
+                        <p>@item.Score</p>
+                    }
 
-    <div class="medium-10 columns">
-        @using (Html.BeginForm("Index", "Analytic", FormMethod.Get))
-        {
-            <input type="submit" value="Terug" />
-        }
+                    @if (User.IsInRole("Student"))
+                    {
+                        <input type="submit" class="button blue" value="Bewerken" />
+                    }
+                    @if (User.IsInRole("Teacher"))
+                    {
+                        <input type="submit" class="button green" value="Beoordelen" />
+                    }
+                }
 
-        <h2>Reflectie</h2>
-        @using (Html.BeginForm("Subject", "Analytic", FormMethod.Post))
-        {
-            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
-            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
-            @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Reflectie))
-            {
-                <p>@item.AnalyticDefaultName</p>
-                <p>@item.Input</p>
-                <p>@item.Score</p>
-            }
+                <h2>Werkwijze</h2>
+                @using (Html.BeginForm("Method", "Analytic", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+                    @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
+                    @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Werkwijze))
+                    {
+                        <p>@item.AnalyticDefaultName</p>
+                        <p>@item.Input</p>
+                        <p>@item.Score</p>
+                    }
 
-            @if (User.IsInRole("Student"))
-            {
-                <input type="submit" value="Bewerken" />
-            }
-            @if (User.IsInRole("Teacher"))
-            {
-                <input type="submit" value="Beoordelen" />
-            }
-        }
+                    @if (User.IsInRole("Student"))
+                    {
+                        <input type="submit" class="button blue" value="Bewerken" />
+                    }
+                    @if (User.IsInRole("Teacher"))
+                    {
+                        <input type="submit" class="button green" value="Beoordelen" />
+                    }
+                }
 
-        <h2>Werkwijze</h2>
-        @using (Html.BeginForm("Method", "Analytic", FormMethod.Post))
-        {
-            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
-            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
-            @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Werkwijze))
-            {
-                <p>@item.AnalyticDefaultName</p>
-                <p>@item.Input</p>
-                <p>@item.Score</p>
-            }
+                <h2>Leerdoelen</h2>
+                @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
+                    @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
+                    @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Leerdoel))
+                    {
+                        <p>@item.AnalyticDefaultName</p>
+                        <p>@item.Input</p>
+                        <p>@item.Score</p>
+                    }
 
-            @if (User.IsInRole("Student"))
-            {
-                <input type="submit" value="Bewerken" />
-            }
-            @if (User.IsInRole("Teacher"))
-            {
-                <input type="submit" value="Beoordelen" />
-            }
-        }
-
-        <h2>Leerdoelen</h2>
-        @using (Html.BeginForm("Goal", "Analytic", FormMethod.Post))
-        {
-            @Html.HiddenFor(m => m.AnalyticData.PeriodNum)
-            @Html.HiddenFor(m => m.AnalyticData.SchoolYearStart)
-            @foreach (var item in Model.AnalyticHasDefaultModels.Where(x => x.CategoryId == (int)AnalyticCategory.Leerdoel))
-            {
-                <p>@item.AnalyticDefaultName</p>
-                <p>@item.Input</p>
-                <p>@item.Score</p>
-            }
-
-            @if (User.IsInRole("Student"))
-            {
-                <input type="submit" value="Bewerken" />
-            }
-            @if (User.IsInRole("Teacher"))
-            {
-                <input type="submit" value="Beoordelen" />
-            }
-        }
-    </div>
-</div>
+                    @if (User.IsInRole("Student"))
+                    {
+                        <input type="submit" class="button blue" value="Bewerken" />
+                    }
+                    @if (User.IsInRole("Teacher"))
+                    {
+                        <input type="submit" class="button green" value="Beoordelen" />
+                    }
+                }
+            </div>
+        </div>
+    </section>

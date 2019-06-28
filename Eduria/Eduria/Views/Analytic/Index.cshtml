@@ -4,10 +4,7 @@
 }
 <section id="analytic">
     <div class="row medium">
-        <div class="medium-2 columns">
-            <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
-        </div>
-        <div class="medium-10 columns">
+        <div class="medium-12 columns">
             @if (User.IsInRole("Teacher"))
             {
                 @using (Html.BeginForm("Index", "Analytic", FormMethod.Post))
@@ -18,7 +15,7 @@
                             new SelectList(ViewBag.userList, "Value", "Text", Model.UserModels[i].UserId))
                     }
 
-                    <input type="submit" value="Selecteer" />
+                    <input type="submit" class="button blue" value="Selecteer" />
                 }
             }
 
@@ -42,7 +39,7 @@
                     <p>
                         Exam code: @Model.AnalyticDataModels[i].ExamCode<br />
                         Periode: @Model.AnalyticDataModels[i].PeriodNum<br />
-                        <input type="submit" value="Selecteer" />
+                        <input type="submit" class="button blue" value="Selecteer" />
                     </p>
                 }
             }
