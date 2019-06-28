@@ -30,15 +30,8 @@
 
 /* The Close Button */
 .close {
-    color: #fff;
-    background-color: #29abe2;
-    padding: 10px;
-    text-align: center;
-    width: 50px;
+    color: #ddd;
     float: right;
-    right: -20px;
-    top: -20px;
-    position: absolute;
     font-size: 28px;
     font-weight: bold;
 }
