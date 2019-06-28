@@ -3,27 +3,25 @@
     ViewData["Title"] = "Toetsresultaten";
 }
 
-
-    <div class="row medium">
-        <h2>Toetsresultaten </h2>
-        <div class="medium-12 columns">
-            <canvas id="examChart" width="800" height="400"></canvas>
+    <section id="content">
+        <div class="row medium">
+            <h2>Toetsresultaten </h2>
+            <div class="medium-12 columns">
+                <canvas id="examChart" width="800" height="400"></canvas>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="medium-6 columns">
+                <canvas id="questionChart" width="400" height="300"></canvas>
+            </div>
+            <div class="medium-12 columns">
+                <div class="spacer-4"></div>
+                <div class="medium-2 columns"><strong>Toets</strong></div>
+                <div class="medium-2 columns"> <strong>Omschrijving</strong></div>
+                <div class="medium-1 columns"> <strong>Score</strong></div>
+                <div class="medium-3 columns"><strong>Begonnen</strong></div>
+                <div class="medium-4 columns"><strong>Afgerond</strong></div>
 
-<div class="row">
-    <div class="medium-6 columns">
-        <canvas id="questionChart" width="400" height="300"></canvas>
-    </div>
-    <div class="medium-12 columns">
-      <div class="spacer-4"></div>
-                    <div class="medium-2 columns"><strong>Toets</strong></div>
-                    <div class="medium-2 columns"> <strong>Omschrijving</strong></div>
-                    <div class="medium-2 columns"> <strong>Score</strong></div>
-                    <div class="medium-2 columns"><strong>Begonnen</strong></div>
-                    <div class="medium-2 columns"><strong>Afgerond</strong></div>
-                    <div class="medium-2 columns"><strong>Bekijken</strong></div>
-                
                 @foreach (DataStudentResultModel item in Model.Item1)
                 {
                     <div class="medium-2 columns">
@@ -32,50 +30,38 @@
                     <div class="medium-2 columns">
                         @item.ExamDescription
                     </div>
-                       <div class="medium-2 columns">
-                           @item.Score
-                       </div>
-                     <div class="medium-2 columns">
-                         @item.StartedAt
-                     </div>
-                     <div class="medium-2 columns">
+                    <div class="medium-1 columns">
+                        @item.Score
+                    </div>
+                    <div class="medium-3 columns">
+                        @item.StartedAt
+                    </div>
+                    <div class="medium-3 columns">
                         @item.FinishedAt
-                        </div>
-                     <div class="medium-2 columns">
-                         <a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">
-                             <i class="fas fa-glasses"></i>
-                         </a>
-                      </div>
-                 }
-
-                             <table>
-                                 <thead>
-                                     <tr>
-                                         <th>Vraag</th>
-                                         <th>Bekijken</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody>
-                                     @foreach (QuestionModel item in Model.Item2)
-                                     {
-                                         <tr>
-                                             <td>@item.Text</td>
-                                             <td>
-                                                 <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">
-                                                     <i class="fas fa-glasses"></i>
-                                                 </a>
-                                             </td>
-                                         </tr>
-                                     }
-                                 </tbody>
-                             </table>
-
-                         </div>
-
-                     </div>
+                    </div>
+                    <div class="medium-1 columns text-right">
+                        <a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                }
 
 
-<
+                <div class="medium-10 columns"><strong>Vragen:</strong></div>
+
+                @foreach (QuestionModel item in Model.Item2)
+                {
+                    <div class="medium-10 columns">@item.Text</div>
+                    <div class="medium-2 columns text-right">
+                        <a asp-controller="Result" asp-action="QuestionResult" asp-route-id="@item.QuestionId">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </section>
 <script>
     @{
                     int total1 = 0;
