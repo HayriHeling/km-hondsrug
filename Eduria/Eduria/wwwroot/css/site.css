@@ -313,24 +313,17 @@ a {
     font-size: 12px;
 }
 
-
 .profile {
     width: 35px;
     margin: 0 10px;
 }
+
 .search {
     padding-top: 10px;
 }
 
 .myAccount {
-    font-size: 12px;
     line-height: 55px;
-}
-
-.myAccount i {
-    color: #808080;
-    font-size: 16px;
-    padding-left: 20px;
 }
 
 /* Responsive menu */
@@ -394,9 +387,6 @@ a {
 }
 
 @media screen and (max-width: 768px) {
-    .myAccount {
-        display: none;
-    }
 
     .logo {
         display: none;
