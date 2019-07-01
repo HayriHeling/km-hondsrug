@@ -8,7 +8,7 @@ namespace EduriaData.Models.AnalyticLayer
         public int DefaultDataInputId { get; set; }
         [Required]
         public int DataHasDefaultId { get; set; }
-        [Required]
+        [Required, StringLength(int.MaxValue)]
         public string Text { get; set; }
     }
 }
