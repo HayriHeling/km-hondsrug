@@ -118,30 +118,30 @@ namespace Eduria.Controllers
 
         public ActionResult ForgotPassword(string Email)
         {
-            
-            if (ModelState.IsValid)
+            try
             {
-                string token = Guid.NewGuid().ToString();
-
-                if (token != null)
+                if (ModelState.IsValid)
                 {
-                    //Create URL with above token  
-                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
-                    Service.SetUserToken(Email, token);
+                    string token = Guid.NewGuid().ToString();
 
-                    //Call send email methods.  
-                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
-                    return Content("Er is een mail met een link naar " + Email + " verzonden.");
+                    if (token != null)
+                    {
+                        //Create URL with above token  
+                        string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                        Service.SetUserToken(Email, token);
 
+                        //Call send email methods.  
+                        EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
+                        return Content("Er is een mail met een link naar " + Email + " verzonden.");
+
+                    }
                 }
-                else
-                {
-                    // If user does not exist or is not confirmed.  
-                    return View("Password");
-
-                }
+                return View("Password");
             }
-            return View("Password");
+            catch
+            {
+                return View("Password");
+            }          
         }
     }
 }
