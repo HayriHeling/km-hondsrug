@@ -132,16 +132,21 @@ namespace Eduria.Controllers
 
                         //Call send email methods.  
                         EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
-                        return Content("Er is een mail met een link naar " + Email + " verzonden.");
-
+                        return RedirectToAction("PasswordReset", new { email = Email });
                     }
                 }
-                return View("Password");
+                return RedirectToAction("PasswordReset", new { email = Email });
             }
             catch
             {
-                return View("Password");
+                return RedirectToAction("PasswordReset", new { email = Email });
             }          
+        }
+
+        public IActionResult PasswordReset(string email)
+        {
+            ViewBag.email = email;
+            return View();
         }
     }
 }
