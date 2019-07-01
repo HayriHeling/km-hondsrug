@@ -10,7 +10,7 @@ namespace EduriaData.Models.ExamLayer
         public int TimeTableId { get; set; }
         [Required]
         public int MediaSourceId { get; set; }
-        [Required, MaxLength(200)]
+        [Required, StringLength(int.MaxValue)]
         public string Text { get; set; }
         [Required]
         public int QuestionType { get; set; }
