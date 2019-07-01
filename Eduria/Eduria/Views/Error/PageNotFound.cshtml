@@ -1,15 +1,22 @@
 ﻿@{
     ViewData["Title"] = "Pagina niet gevonden";
+    Layout = null;
 }
-
-<div class="row">
-    <div class="medium-12 columns">
-        <div class="center-screen">
-            <span style="color: orange; margin-left: 65px;">
-                <i class="fas fa-exclamation-circle fa-9x"></i>
-            </span>
-            <h1>Helaas deze pagina bestaat niet...</h1>
-            <h3>Probeer <a asp-controller="Login">deze</a> pagina eens!</h3>
+<html>
+<head>
+    <link href="~/css/site.css" type="text/css" rel="stylesheet" />
+    <link href="~/css/foundation.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <section id="content" class="errorPage">
+        <div class="row">
+            <div class="medium-12 columns text-center">
+                <img src="~/Content/404img2.png" />
+                <h1>404</h1>
+                <h2>Helaas deze pagina bestaat niet...</h2>
+                <h3>Ga terug naar het <a  asp-controller="Dashboard" asp-action="Index">dashboard</a></h3>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+    </body>
+</html>

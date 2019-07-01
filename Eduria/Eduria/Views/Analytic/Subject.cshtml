@@ -5,50 +5,52 @@
 @{
     ViewData["Title"] = "Subject";
 }
-    <section id="analytic">
-        <div class="row medium">
-            <div class="medium-2 columns">
-                <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
-            </div>
-            <div class="medium-10 columns">
-                <h2>Toetsanalyse | Onderwerpen</h2>
-                <p>
-                    Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed
-                    ging.
-                    Deze analyse heb je nodig voor het vaststellen van de planning voor de komende periode.
-                    Planning en analyse worden beoordeeld voor je tijdvakkendossier.
-                </p>
 
-                @using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
+<section id="analytic">
+    <div class="row medium">
+        <div class="medium-12 columns">
+            @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
+            {
+                <input type="submit" value="Terug" />
+            }
+
+            <h2>Toetsanalyse | Onderwerpen</h2>
+            <p>
+                Analyseer op het welke onderdelen het goed ging en op welke onderdelen het minder goed
+                ging.
+                Deze analyse heb je nodig voor het vaststellen van de planning voor de komende periode.
+                Planning en analyse worden beoordeeld voor je tijdvakkendossier.
+            </p>
+
+            @using (Html.BeginForm("AddScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
+            {
+                @foreach (var item in Model.Item1)
                 {
-                    @foreach (var item in Model.Item1)
+                    <p>@item.AnalyticDefaultName</p>
+                    <p>@item.Score</p>
+
+                    if (item.Option == (int)DefaultOption.Score)
                     {
-
-                        if (item.Option == (int)DefaultOption.Score)
+                        if (User.IsInRole("Student") && item.Score == null)
                         {
-                            <p>@item.AnalyticDefaultName</p>
-
-                            if (User.IsInRole("Student"))
-                            {
-                                @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Rood)
-                                @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Oranje)
-                                @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Geel)
-                                @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.LichtGroen)
-                                @Html.RadioButton(item.AnalyticDefaultId.ToString(), (int)DefaultScore.Groen)
-                            }
-                        }
-                        else
-                        {
-                            <p>@item.AnalyticDefaultName</p>
-                            @Html.TextBox("Hello");
+                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Rood)
+                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Oranje)
+                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Geel)
+                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.LichtGroen)
+                            @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)DefaultScore.Groen)
                         }
                     }
-
-                    if (User.IsInRole("Student"))
+                    else
                     {
-                        <input type="submit" value="Opslaan" class="button green"/>
+                        @Html.TextBox("Hello");
                     }
                 }
-            </div>
+
+                if (User.IsInRole("Student"))
+                {
+                    <p><input type="submit" value="Opslaan" class="button green" /></p>
+                }
+            }
         </div>
+    </div>
 </section>
