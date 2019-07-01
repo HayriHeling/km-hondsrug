@@ -243,6 +243,15 @@ footer {
     color: #fff;
 }
 
+.dashboardItem.purple {
+    background-color: #BE29EC;
+    color: #fff;
+}
+
+.dashboardItem.purple a {
+    color: #fff;
+}
+
 .logo {
     width: 150px;
 }

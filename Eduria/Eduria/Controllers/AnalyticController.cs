@@ -38,7 +38,8 @@ namespace Eduria.Controllers
         {
             return View();
         }
-        
+
+        [Authorize(Roles = "Teacher")]
         public IActionResult AddPeriod(PeriodModel periodModel)
         {
             //First add the PeriodModel to the database.
