@@ -1,14 +1,15 @@
 ﻿@using System.Globalization
 @model Eduria.Models.TimelineModel
 @{
-    ViewData["Title"] = "ViewTimeline";
+    ViewData["Title"] = "Tijdlijn bekijken";
 }
 <style>
     /* The Modal (background) */
     .modal {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
+        z-index: 5; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
         left: 0;
         top: 0;
         width: 100%; /* Full width */
@@ -18,28 +19,30 @@
         background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
     }
 
-    /* Modal Content/Box */
+    /* Modal Content */
     .modal-content {
         background-color: #fefefe;
-        margin: 20px auto; /* 20px from the top and centered */
+        margin: auto;
         padding: 20px;
-        text-align: left;
         border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
-        height: 90%;
-        -webkit-animation-name: Appear;
-        -webkit-animation-duration: 0.5s;
-        animation-name: Appear;
-        animation-duration: 0.5s;
+        width: 50%;
+        text-align:left;
     }
 
     /* The Close Button */
     .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+            color: #fff;
+            background-color: #29abe2;
+            padding: 10px;
+            text-align: center;
+            width: 50px;
+            float: right;
+            position:absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 28px;
+            font-weight: bold;
+            }
 
         .close:hover,
         .close:focus {
@@ -118,9 +121,9 @@
                                         <input type="button" value="&#10006;" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button red" />
                                     }
                                     <span class="close" onclick="CloseModal()">&times;</span>
-                                    <p style="text-align: center;">@timeBlockInformationModel.Description</p>
-                                    <div style="height: auto; position: absolute; width: 100%; left:0; bottom:0; padding: 15px 15px;">
-                                        <div style="float: left; width: 100%;">
+                                    <p>@timeBlockInformationModel.Description</p>
+                                    <div style="height:auto; width: 100%; left:0; bottom:0; padding: 15px 15px;">
+    
                                             @{
                                                 int audioCount = 0;
                                                 int mediaCount = 0;
@@ -148,7 +151,6 @@
                                                     </div>
                                                 }
                                             }
-                                        </div>
                                         <div>
                                             @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
                                             {

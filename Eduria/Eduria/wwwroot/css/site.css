@@ -121,8 +121,6 @@ h4 {
     background-color: #74b027;
 }
 
-
-
 .alert a {
     color: #fff;
     text-decoration: underline;
@@ -136,6 +134,42 @@ h4 {
     color: #ed1c24;
     color: #ed1c24;
     text-decoration: underline;
+}
+
+#content.errorPage {
+    padding-top: 10%;
+}
+
+.errorPage h1 {
+    font-size: 50px; 
+    font-weight: 800; 
+    color:#808080;
+}
+
+.errorPage h2 {
+    font-weight: 800;
+    color: #808080;
+}
+
+.errorPage h3 {
+    font-weight: 600;
+    color: #808080;
+}
+
+.errorPage a {
+    color: #ed1c24;
+}
+
+.errorPage a:hover {
+    text-decoration:underline
+}
+
+.errorPage img {
+    width: 400px;
+}
+
+.errorPage a:visited {
+    color: #ed1c24;
 }
 
 .medium {
@@ -288,24 +322,17 @@ a {
     font-size: 12px;
 }
 
-
 .profile {
     width: 35px;
     margin: 0 10px;
 }
+
 .search {
     padding-top: 10px;
 }
 
 .myAccount {
-    font-size: 12px;
     line-height: 55px;
-}
-
-.myAccount i {
-    color: #808080;
-    font-size: 16px;
-    padding-left: 20px;
 }
 
 /* Responsive menu */
@@ -369,9 +396,6 @@ a {
 }
 
 @media screen and (max-width: 768px) {
-    .myAccount {
-        display: none;
-    }
 
     .logo {
         display: none;
@@ -616,12 +640,12 @@ p {
 
 .wrong {
     background-color: #f44242;
-    color:#fff;
+    color: #fff !important;
 }
 
 .correct {
     background-color: #74b027;
-    color: #fff;
+    color: #fff !important;
 }
 
 #exam p {

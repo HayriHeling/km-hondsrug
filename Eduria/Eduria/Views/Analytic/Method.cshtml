@@ -4,68 +4,92 @@
     ViewData["Title"] = "Werkwijze";
 }
 <section id="analytic">
-<div class="row medium">
-    <div class="medium-2 columns">
-        <partial name="~/Views/Shared/_AnalyticSideMenu.cshtml" />
-    </div>
-    <div class="medium-10 columns">
-        @if (Model.Item1.Count() != 0)
-        {
-            @foreach (var item in Model.Item1)
+    <div class="row medium">
+        <div class="medium-12 columns">
+            @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
             {
-                <p>@item.AnalyticDefaultId</p>
-                <p>@item.AnalyticDefaultName : @item.Input</p>
-                <p>@item.Score</p>
+                <input type="submit" value="Terug" />
             }
-        }
-        else
-        {
-            @foreach (var item in Model.Item2)
+
+            @if (Model.Item1.Count() != 0)
             {
-                <label class="container">
-                    <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
-                    <span class="checkmark"></span>
-                    @item.AnalyticDefaultName
-                </label>
+                using (Html.BeginForm("AddMethodScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
+                {
+                    foreach (var item in Model.Item1)
+                    {
+                        <p>@item.AnalyticDefaultId</p>
+                        <p>@item.AnalyticDefaultName</p>
+                        <p>@item.Input</p>
+                        <p>@item.Score</p>
+
+                        if (User.IsInRole("Teacher"))
+                        {
+                            Array scoreEnum = Enum.GetValues(typeof(DefaultScore));
+
+                            for (int i = 0; i < scoreEnum.Length; i++)
+                            {
+                                @Html.RadioButton(item.DataHasDefaultId.ToString(), (int)scoreEnum.GetValue(i))
+                            }
+                        }
+                    }
+                    if (User.IsInRole("Teacher"))
+                    {
+                        <input type="submit" value="Opslaan" />
+                    }
+                }
+            }
+            else
+            {
+                @foreach (var item in Model.Item2)
+                {
+                    <label class="container">
+                        <input type=checkbox id="@item.AnalyticDefaultId" name="@item.AnalyticDefaultName" onclick="getMethods(@item.AnalyticDefaultId)" />
+                        <span class="checkmark"></span>
+                        @item.AnalyticDefaultName
+                    </label>
                 }
 
                 <hr />
                 <button type="submit" onclick="submitMethodArray()" class="button green">Toevoegen</button>
-
             }
-
             <div id="inputMethod"></div>
         </div>
-</div>
+    </div>
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
     var methodArray = [];
     var defaultId = 4;
-    var textboxValue = document.getElementById('inputMethodText');
+    var methodTextbox = document.getElementById('inputMethodText');
 
-    function addTextBox() {
+    function addTextBox()
+    {
         var textbox = document.createElement("INPUT");
         textbox.setAttribute("type", "text");
         textbox.id = 'inputMethodText'
         document.getElementById('inputMethod').appendChild(textbox);
     }
 
-    function deleteTextBox() {
+    function deleteTextBox()
+    {
         var textbox = document.getElementById('inputMethodText');
         textbox.remove();
     }
 
-    function getMethods(id) {
-
-        if (!methodArray.includes(id)) {
-            if (id == defaultId) {
+    function getMethods(id)
+    {
+        if (!methodArray.includes(id))
+        {
+            if (id == defaultId)
+            {
                 addTextBox()
             }
             methodArray.push(id);
         }
-        else {
-            if (id == defaultId) {
+        else
+        {
+            if (id == defaultId)
+            {
                 deleteTextBox();
             }
             methodArray.pop(id);
@@ -73,16 +97,17 @@
         console.log(methodArray);
     }
 
-    function submitMethodArray() {
-        var textBoxValue = document.getElementById('inputMethodText').value;
+    function submitMethodArray()
+    {
+        var textBoxValue = (methodTextbox != null) ? methodTextbox.value : "";
 
         $.ajax({
             type: "POST",
             traditional: true,
             url: "/Analytic/AddMethod",
-            data: { methodParam: methodArray, textParam: textBoxValue }
+            data: { methodParam: methodArray, textParam: textBoxValue },
+            success: window.location.href = "/Analytic"
         });
-
     }
 </script>
 

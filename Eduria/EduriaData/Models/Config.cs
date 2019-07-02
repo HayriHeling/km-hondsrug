@@ -13,7 +13,7 @@ namespace EduriaData.Models
         public string Password { get; set; }
         [Required, MaxLength(256)]
         public string Subject { get; set; }
-        [Required, MaxLength(256)]
+        [Required, StringLength(int.MaxValue)]
         public string Body { get; set; }
         [Required]
         public int SMTPPort { get; set; }

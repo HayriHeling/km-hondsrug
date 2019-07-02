@@ -1,15 +1,20 @@
 ﻿@{
     ViewData["Title"] = "Error";
+     Layout = null;
 }
-
-<div class="row">
-    <div class="medium-12 columns">
-        <div class="center-screen">
-            <span style="color: red; margin-left: 65px;">
-                <i class="fas fa-exclamation-triangle fa-9x"></i>
-            </span>
-            <h1>Helaas is er een fout opgetreden..</h1>
-            <h3>Probeer het later opnieuw!</h3>
+<html>
+<head>
+    <link href="~/css/site.css" type="text/css" rel="stylesheet" />
+    <link href="~/css/foundation.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+    <section id="content" class="errorPage">
+        <div class="row">
+            <div class="medium-12 columns text-center">
+                <img src="~/Content/404img2.png" />
+                <h2>Helaas, er is een fout opgetreden</h2>
+           </div>
         </div>
-    </div>
-</div>
+    </section>
+</body>
+</html>

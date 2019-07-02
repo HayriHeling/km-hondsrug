@@ -34,9 +34,9 @@ window.addEventListener('load', function () {
         itemWidth: 400,
         dragVelocity: 0.7,
         draggable: true,
-        scrollLock: true,
+        scrollLock: false,
         dots: '#dots',
-        rewind: true,
+        rewind: false,
         arrows: {
             prev: '.glider-prev',
             next: '.glider-next'

@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Eduria.Models;
 
 namespace Eduria.Services
 {
@@ -89,6 +94,46 @@ namespace Eduria.Services
         public User GetUserByEmail(string email)
         {          
             return Context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+        }
+
+        /// <summary>
+        /// Gets all users with given usertype
+        /// </summary>
+        /// <param name="userType">The type of user</param>
+        /// <returns>All users with given usertype</returns>
+        public IEnumerable<UserModel> GetAllUserModelsByUserType(int userType)
+        {
+            IEnumerable<User> users = GetAllUsersByUserType(userType);
+            List<UserModel> userModels = new List<UserModel>();
+
+            foreach (User item in users)
+            {
+                UserModel userModel = new UserModel
+                {
+                    UserId = item.UserId,
+                    FirstName = item.Firstname,
+                    LastName = item.Lastname,
+                    Email = item.Email,
+                    UserType = (UserRoles)item.UserType,
+                    UserNum = item.UserNum,
+                    ClassId = item.ClassId,
+                    Password = item.Password,
+                    ConfirmPassword = item.Password                    
+                };
+                userModels.Add(userModel);
+            }
+
+            return userModels;
+        }
+
+        /// <summary>
+        /// Get a logged in user's id.
+        /// </summary>
+        /// <param name="user">The logged in user</param>
+        /// <returns>Logged in user's id.</returns>
+        public int GetLoggedInUserId(ClaimsPrincipal user)
+        {
+            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

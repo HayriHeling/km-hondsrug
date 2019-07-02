@@ -61,9 +61,14 @@ namespace Eduria.Services
         /// <returns>The AnalyticData object.</returns>
         public override AnalyticData GetById(int id)
         {
-            throw new NotImplementedException();
+            return GetAll().FirstOrDefault(x => x.AnalyticDataId == id);
         }
 
+        /// <summary>
+        /// Adds an alayticdata for every student.
+        /// </summary>
+        /// <param name="users">All the users to add an analyticdata for</param>
+        /// <param name="periodId">The specified period id for the analyticdata</param>
         public void AddAnalyticDataPerUser(IEnumerable<User> users, int periodId)
         {
             if (users.Count() != 0)
@@ -98,9 +103,6 @@ namespace Eduria.Services
                             PeriodId = p.PeriodId
                         };
             return query.First().PeriodId;
-
-
-            //return Context.Periods.Where(pn => pn.PeriodNum == periodNum).Where(sy => sy.SchoolYearStart == startYear).First().PeriodId;
         }
 
         /// <summary>
@@ -210,6 +212,7 @@ namespace Eduria.Services
         /// </summary>
         /// <param name="category">The specific category.</param>
         /// <returns>An IEnumerable with all the AnalyticDefaultModels.</returns>
+
         public IEnumerable<AnalyticDefaultModel> GetAllAnalyticDefaultByCategoryId(int category)
         {
             var query = from ad in Context.AnalyticDefaults
@@ -259,7 +262,7 @@ namespace Eduria.Services
                 foreach (var id in methodParam)
                 {
                     //When a own method is filled in, use this Add method.
-                    if (GetDefaultOptionByAnalyticDefaultId(id) == (int)DefaultOption.InputScore)
+                    if (GetDefaultOptionByAnalyticDefaultId(id) == (int)DefaultOption.InputScore && !String.IsNullOrEmpty(ownMethod))
                     {
                         AddInputToAnalyticDefault(id, analyticId, ownMethod);
                     }
@@ -279,7 +282,7 @@ namespace Eduria.Services
         /// <param name="text">The text that the user filled in on the form.</param>
         public void AddInputToAnalyticDefault(int analyticDefaultId, int analyticDataId, string text)
         {
-            if (analyticDefaultId != 0 && analyticDataId != 0)
+            if (analyticDefaultId != 0 && analyticDataId != 0 && !String.IsNullOrEmpty(text))
             {
                 DataHasDefault dataHasDefault = GetDataHasDefaultByAnalyticDefaultIdAndAnalyticDataId(analyticDefaultId, analyticDataId);
 
@@ -303,6 +306,26 @@ namespace Eduria.Services
         }
 
         /// <summary>
+        /// Gets the score of a specified analyticHasDefault.
+        /// </summary>
+        /// <param name="analyticHasDefaultId">The specified analyticHasDefault id.</param>
+        /// <returns>The score of a specified analyticHasDefault.</returns>
+        public DefaultDataScore GetDefaultDataScoreByAnalyticHasDefaultId(int analyticHasDefaultId)
+        {
+            var query = from dds in Context.DefaultDataScores
+                        where dds.DataHasDefaultId == analyticHasDefaultId
+                        select new DefaultDataScore
+                        {
+                            DataHasDefaultId = dds.DataHasDefaultId,
+                            DefaultDateScoreId = dds.DefaultDateScoreId,
+                            Score = dds.Score
+                        };
+
+
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
         /// Add an DefaultDataScore object to the database.
         /// </summary>
         /// <param name="analyticDefaultId">The specific AnalyticDefaultId.</param>
@@ -320,16 +343,19 @@ namespace Eduria.Services
                     dataHasDefault = AddDataHasDefault(analyticDefaultId, analyticDataId);
                 }
 
-                //Make an new instance of DefaultDataScore object and fill it.
-                DefaultDataScore defaultDataScore = new DefaultDataScore
+                if (GetDefaultDataScoreByAnalyticHasDefaultId(dataHasDefault.DataHasDefaultId) == null)
                 {
-                    DataHasDefaultId = dataHasDefault.DataHasDefaultId,
-                    Score = score
-                };
+                    //Make an new instance of DefaultDataScore object and fill it.
+                    DefaultDataScore defaultDataScore = new DefaultDataScore
+                    {
+                        DataHasDefaultId = dataHasDefault.DataHasDefaultId,
+                        Score = score
+                    };
 
-                //Add the DefaultDataScore object to the database.
-                Context.DefaultDataScores.Add(defaultDataScore);
-                Context.SaveChanges();
+                    //Add the DefaultDataScore object to the database.
+                    Context.DefaultDataScores.Add(defaultDataScore);
+                    Context.SaveChanges();
+                }
             }
         }
 
@@ -427,15 +453,20 @@ namespace Eduria.Services
             listOfDefaultDataScore.RemoveAt(listOfDefaultDataScore.Count - 1);
 
             foreach (var item in listOfDefaultDataScore)
-            {    
-                DefaultDataScore defaultDataScore = new DefaultDataScore
-                {
-                    DataHasDefaultId = int.Parse(item.Key),
-                    Score = int.Parse(item.Value)
-                };
+            {
+                int hasDefaultDataId = int.Parse(item.Key);
 
-                Context.DefaultDataScores.Add(defaultDataScore);
-                Context.SaveChanges();
+                if (GetDefaultDataScoreByAnalyticHasDefaultId(hasDefaultDataId) == null)
+                {
+                    DefaultDataScore defaultDataScore = new DefaultDataScore
+                    {
+                        DataHasDefaultId = hasDefaultDataId,
+                        Score = int.Parse(item.Value)
+                    };
+
+                    Context.DefaultDataScores.Add(defaultDataScore);
+                    Context.SaveChanges();
+                }
             }
         }
 
@@ -449,6 +480,7 @@ namespace Eduria.Services
         {
             AnalyticDefaultAndHasDefaultModel analyticDefaultAndHasDefaultModel = new AnalyticDefaultAndHasDefaultModel
             {
+                AnalyticData = GetAnalyticDataById(id),
                 AnalyticHasDefaultModels = GetAllDefaultsByAnalyticDataIdAndCategoryName(id, category).ToList(),
                 AnalyticDefaultModels = GetAllAnalyticDefaultByCategoryId(category).ToList()
             };
@@ -475,6 +507,12 @@ namespace Eduria.Services
             return query.First().AnalyticDataId;
         }
 
+        /// <summary>
+        /// Gets the analyticDatas of a user by year and period.
+        /// </summary>
+        /// <param name="form">The form with the year and period values.</param>
+        /// <param name="userId">The specified user id.</param>
+        /// <returns>All analyticDatas of the user with the specified values.</returns>
         public IEnumerable<AnalyticHasDefaultModel> GetAnalyticDataByYearAndPeriodAndUserId(IFormCollection form, int userId)
         {
             var query = from dhd in Context.DataHasDefaults
@@ -503,6 +541,10 @@ namespace Eduria.Services
             return query.ToList();
         }
 
+        /// <summary>
+        /// Adds a period to the database.
+        /// </summary>
+        /// <param name="periodModel">The periodmodel to take the values from</param>
         public void AddPeriod(PeriodModel periodModel)
         {
             if (periodModel != null)
@@ -519,6 +561,100 @@ namespace Eduria.Services
                 Context.Periods.Add(period);
                 Context.SaveChanges();
             }
+        }
+
+        /// <summary>
+        /// Gets the analyticData id of a user by year and period.
+        /// </summary>
+        /// <param name="userId">The specified user id.</param>
+        /// <param name="period">The specified period.</param>
+        /// <param name="year">The specified year.</param>
+        /// <returns>The analyticData of the user with the specified values.</returns>
+        public int GetAnalyticDataIdByUserIdAndPeriodAndYear(int userId, int period, int year)
+        {
+            var query = from ad in Context.AnalyticDatas
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where ad.UserId == userId && p.PeriodNum == period && p.SchoolYearStart == year
+                        select new AnalyticData
+                        {
+                            AnalyticDataId = ad.AnalyticDataId
+                        };
+
+            if (query.Any())
+            {
+                return query.First().AnalyticDataId;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// Gets all analyticDatas of a specific user.
+        /// </summary>
+        /// <param name="userId">The specified user id.</param>
+        /// <returns>A list of all analyticDatas of a specific user.</returns>
+        public IEnumerable<AnalyticDataModel> GetAllAnalyticDatasByUserId(int userId)
+        {
+            var query = from ad in Context.AnalyticDatas
+                        join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                        where ad.UserId == userId
+                        orderby p.SchoolYearStart
+                        orderby p.PeriodNum
+                        select new AnalyticDataModel
+                        {
+                            AnalyticDataId = ad.AnalyticDataId,
+                            ExamCode = ad.ExamCode,
+                            PeriodNum = p.PeriodNum,
+                            PeriodStart = p.PeriodStart,
+                            PeriodEnd = p.PeriodEnd,
+                            SchoolYearStart = p.SchoolYearStart,
+                            SchoolYearEnd = p.SchoolYearEnd
+                        };
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Gets a model with two models combined containing analyticdata and hasdefaults.
+        /// </summary>
+        /// <param name="analyticDataId">The specified analyticData id.</param>
+        /// <returns>A combined model containing analyticdata and hasdefaults.</returns>
+        public AnalyticDataAndHasDefaultModel GetAnalyticDataIdAndHasDefaults(int analyticDataId)
+        {
+            AnalyticDataModel analyticData = GetAnalyticDataById(analyticDataId);
+            AnalyticDataAndHasDefaultModel analyticDataAndHasDefaultModel = new AnalyticDataAndHasDefaultModel
+            {
+                AnalyticData = GetAnalyticDataById(analyticDataId),
+                AnalyticHasDefaultModels = GetAllDataByAnalyticDataId(analyticDataId).ToList()
+            };
+
+            return analyticDataAndHasDefaultModel;
+        }
+
+        /// <summary>
+        /// Gets analyticdata by analyticdata id.
+        /// </summary>
+        /// <param name="analyticDataId">The specified analyticdata id.</param>
+        /// <returns>The analytic data with the specific analyticdata id.</returns>
+        public AnalyticDataModel GetAnalyticDataById(int analyticDataId)
+        {
+            IQueryable<AnalyticDataModel> query = from ad in Context.AnalyticDatas
+                                                  join p in Context.Periods on ad.PeriodId equals p.PeriodId
+                                                  where ad.AnalyticDataId == analyticDataId
+                                                  select new AnalyticDataModel
+                                                  {
+                                                      AnalyticDataId = ad.AnalyticDataId,
+                                                      ExamCode = ad.ExamCode,
+                                                      PeriodNum = p.PeriodNum,
+                                                      PeriodStart = p.PeriodStart,
+                                                      PeriodEnd = p.PeriodEnd,
+                                                      SchoolYearStart = p.SchoolYearStart,
+                                                      SchoolYearEnd = p.SchoolYearEnd
+                                                  };
+
+            return query.FirstOrDefault();
         }
     }
 }

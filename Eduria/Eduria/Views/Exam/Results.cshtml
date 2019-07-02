@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Results";
+    ViewData["Title"] = "Resultaten";
 }
 
     <section id="content">
@@ -20,7 +20,7 @@
 
                 @foreach (QuestionAnswerModel QA in ViewBag.questions)
                 {
-                    if (QA.AnswerText != QA.GivenAnswerText)
+                    if (QA.AnswerText.ToLower() != QA.GivenAnswerText.ToLower())
                     {
                         <p style="color: red;"><b>@QA.QuestionText</b></p>
                     }

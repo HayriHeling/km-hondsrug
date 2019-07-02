@@ -4,14 +4,16 @@ using Eduria;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eduria.Migrations
 {
     [DbContext(typeof(EduriaContext))]
-    partial class EduriaContextModelSnapshot : ModelSnapshot
+    [Migration("20190625100307_Bugfixv2")]
+    partial class Bugfixv2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,8 +226,6 @@ namespace Eduria.Migrations
 
                     b.Property<DateTime>("FinishedAt");
 
-                    b.Property<int>("MaxScore");
-
                     b.Property<int>("Score");
 
                     b.Property<DateTime>("StartedAt");
@@ -249,7 +249,7 @@ namespace Eduria.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(2147483647);
+                        .HasMaxLength(200);
 
                     b.Property<int>("TimeTableId");
 

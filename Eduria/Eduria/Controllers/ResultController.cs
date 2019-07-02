@@ -113,7 +113,9 @@ namespace Eduria.Controllers
             {
                 TimeTableId = timeTable.TimeTableId,
                 Text = timeTable.Text,
-                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId))
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
+                Description = timeTable.Description,
+                TimeTableDesignId = timeTable.TimeTableDesignId
             };
         }
         public UserModel ConvertToUserModel(User user)
