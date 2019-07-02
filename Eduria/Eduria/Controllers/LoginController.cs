@@ -29,6 +29,11 @@ namespace Eduria.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (TempData["loginMessage"] != null)
+            {
+                ViewBag.Message = TempData["loginMessage"].ToString();
+            }
+
             if (Request.Cookies["LastLoggedInTime"] != null)
             {
                 ViewBag.LLIT = Request.Cookies["LastLoggedInTime"].ToString();
@@ -56,8 +61,8 @@ namespace Eduria.Controllers
 
             if (LoggedInUser == null)
             {
-                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
-                return View();
+                TempData["loginMessage"] = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
+                return RedirectToAction("Index");
             }
 
             byte[] hashBytes = Convert.FromBase64String(LoggedInUser.Password);
@@ -65,8 +70,8 @@ namespace Eduria.Controllers
 
             if (!hash.Verify(user.Password))
             {
-                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
-                return View();
+                TempData["loginMessage"] = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
+                return RedirectToAction("Index");
             }
 
             // Signs a user in with an identity containing a name and a role.
