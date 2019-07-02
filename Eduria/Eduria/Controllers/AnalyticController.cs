@@ -156,20 +156,6 @@ namespace Eduria.Controllers
             }
 
             return View(Service.GetCombinedAnalyticDefaultAndData(analyticDataId, (int)AnalyticCategory.Werkwijze));
-
-        [Authorize(Roles = "Teacher")]
-        public IActionResult AddPeriod(PeriodModel periodModel)
-        {
-            //First add the PeriodModel to the database.
-            Service.AddPeriod(periodModel);
-            //Then get that PeriodId by PeriodNum and SchoolYearStart.
-            int periodId = Service.GetByPeriodIdByPeriodNumAndStartYear(periodModel.PeriodNum, periodModel.SchoolYearStart);
-            //Then get all users by usertype.
-            IEnumerable<User> users = UserService.GetAllUsersByUserType((int)(UserRoles.Student));
-            //Finally adds for every user an AnalyticData.
-            Service.AddAnalyticDataPerUser(users, periodId);
-            //Redirect to the Period Action.
-            return RedirectToAction("Period");
         }
 
         /// <summary>
