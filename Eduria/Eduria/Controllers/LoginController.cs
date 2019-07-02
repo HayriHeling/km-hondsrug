@@ -34,6 +34,11 @@ namespace Eduria.Controllers
                 ViewBag.LLIT = Request.Cookies["LastLoggedInTime"].ToString();
             }
 
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
             return View();
         }
 
