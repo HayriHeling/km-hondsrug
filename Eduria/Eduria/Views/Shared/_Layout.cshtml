@@ -8,7 +8,7 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/css/foundation.css" />
-        <link rel="stylesheet" href="~/css/site.css" /><meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/flexslider.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
         <script src="~/js/Chart.min.js"></script>
@@ -16,7 +16,6 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/foundation.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="~/css/flexslider.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
         <script src="~/js/Chart.min.js"></script>
@@ -52,7 +51,6 @@
                 </div>
             </div>
             <div class="medium-2 columns myAccount">
-                <p>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
@@ -61,8 +59,6 @@
                     {
                         <a asp-controller="Login">Inloggen </a>
                     }
-
-                </p>
             </div>
         </div>    
     </header>

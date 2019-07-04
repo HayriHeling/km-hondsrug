@@ -326,7 +326,9 @@ a {
 
 .myAccount {
     line-height: 55px;
+    font-size: 14px;
 }
+
 
 
 /* Responsive menu */
@@ -403,6 +405,15 @@ a {
     .menu {
         width: 100%;
     }
+
+    .myAccount a {
+        float:right;
+    }
+
+    .myAccount a:hover {
+        text-decoration: underline;
+    }
+
 }
 
 /* Users*/
@@ -648,8 +659,8 @@ p {
 
 .category {
     margin: 5px;
-    padding: 5px;
-    background-color: #f9f9f9;
+    padding: 10px;
+    background-color: #fbfbfb;
 }
 
 input::-webkit-outer-spin-button,
@@ -1002,6 +1013,20 @@ border-radius: 2px;
         top: -30px;
         left: 50px;
         right: inherit;
+    }
+
+    #periodJagers, #periodGrieken, #periodMonniken, #periodSteden, #periodOntdekkers, #periodRegenten, #periodPruiken, #periodBurgers, #periodDe, #periodTelevisie {
+        display: block;
+        overflow: auto;
+        padding: 0px;
+    }
+
+    .timeline ul li {
+        padding: 0 10px 45px 10px;
+    }
+
+    .modal-content {
+        width: 90%;
     }
 }
 
