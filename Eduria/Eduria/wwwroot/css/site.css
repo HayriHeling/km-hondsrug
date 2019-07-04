@@ -1,5 +1,6 @@
 ﻿body {
     font-family: 'Open Sans', sans-serif;
+    background-color: #f7f7f9;
 }
 
 label {
@@ -201,9 +202,9 @@ h4 {
 /* General Footer */
 
 footer {
-    background-color: #f7f7f9;
+    background-color: #1e1e1e;
     padding: 10px 0;
-    color: #808080;
+    color: #ffffff;
     font-size: 12px;
     position: fixed;
     bottom: 0;
