@@ -10,7 +10,7 @@ namespace EduriaData.Models.ExamLayer
         public int TimeTableId { get; set; }
         [Required, MaxLength(45)]
         public string Name { get; set; }
-        [Required, MaxLength(256)]
+        [Required, MaxLength(512)]
         public string Description { get; set; }
         [Required]
         public int IsActive { get; set; }

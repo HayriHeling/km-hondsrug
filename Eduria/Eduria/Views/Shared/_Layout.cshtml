@@ -30,21 +30,18 @@
             <div class="medium-8 columns menu">
                 <div class="topnav" id="myTopnav">
                     <a asp-controller="Dashboard" asp-action="Index" class="active"><i class="fas fa-home"></i></a>
-                    <a asp-controller="TimePeriods" asp-action="Index">Tijdvakken </a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <partial name="_AdminView" />
-                        }
-                        else if (User.IsInRole("Teacher"))
+                        if (User.IsInRole("Teacher"))
                         {
                             <partial name="_TeacherView" />
                         }
-                        else
+
+                        if (User.IsInRole("Student"))
                         {
                             <partial name="_StudentView" />
                         }
+
                         <a href="javascript:void(0);" class="icon" onclick="responsiveToggle()">
                             <i class="fa fa-bars"></i>
                         </a>

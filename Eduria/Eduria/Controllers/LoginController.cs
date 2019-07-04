@@ -29,9 +29,19 @@ namespace Eduria.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            if (TempData["loginMessage"] != null)
+            {
+                ViewBag.Message = TempData["loginMessage"].ToString();
+            }
+
             if (Request.Cookies["LastLoggedInTime"] != null)
             {
                 ViewBag.LLIT = Request.Cookies["LastLoggedInTime"].ToString();
+            }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Dashboard");
             }
 
             return View();
@@ -51,8 +61,8 @@ namespace Eduria.Controllers
 
             if (LoggedInUser == null)
             {
-                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
-                return View();
+                TempData["loginMessage"] = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
+                return RedirectToAction("Index");
             }
 
             byte[] hashBytes = Convert.FromBase64String(LoggedInUser.Password);
@@ -60,8 +70,8 @@ namespace Eduria.Controllers
 
             if (!hash.Verify(user.Password))
             {
-                ViewBag.Message = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
-                return View();
+                TempData["loginMessage"] = "Verkeerde gebruikersnaam/wachtwoord combinatie, probeer het nog eens.";
+                return RedirectToAction("Index");
             }
 
             // Signs a user in with an identity containing a name and a role.
@@ -118,30 +128,35 @@ namespace Eduria.Controllers
 
         public ActionResult ForgotPassword(string Email)
         {
-            
-            if (ModelState.IsValid)
+            try
             {
-                string token = Guid.NewGuid().ToString();
-
-                if (token != null)
+                if (ModelState.IsValid)
                 {
-                    //Create URL with above token  
-                    string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
-                    Service.SetUserToken(Email, token);
+                    string token = Guid.NewGuid().ToString();
 
-                    //Call send email methods.  
-                    EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
-                    return Content("Er is een mail met een link naar " + Email + " verzonden.");
+                    if (token != null)
+                    {
+                        //Create URL with above token  
+                        string lnkHref = " <a href='" + Url.Action("Reset", "Password", new { Token = token }, "https") + "'> Wachtwoord wijzigen</a>";
+                        Service.SetUserToken(Email, token);
 
+                        //Call send email methods.  
+                        EmailManager.SendEmail(Email, _configService.GetNewest(), lnkHref);
+                        return RedirectToAction("PasswordReset", new { email = Email });
+                    }
                 }
-                else
-                {
-                    // If user does not exist or is not confirmed.  
-                    return View("Password");
-
-                }
+                return RedirectToAction("PasswordReset", new { email = Email });
             }
-            return View("Password");
+            catch
+            {
+                return RedirectToAction("PasswordReset", new { email = Email });
+            }          
+        }
+
+        public IActionResult PasswordReset(string email)
+        {
+            ViewBag.email = email;
+            return View();
         }
     }
 }

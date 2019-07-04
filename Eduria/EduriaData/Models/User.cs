@@ -15,12 +15,14 @@ namespace EduriaData.Models
         [Required, MaxLength(100)]
         public string Email { get; set; }
         [Required]
+        [Display(Name = "Gebruikersnummer")]
         public int UserNum { get; set; }
         [Required]
         public int UserType { get; set; }
         [Required]
         public int ClassId { get; set; }
         [Required, MaxLength(200)]
+        [Display(Name = "Wachtwoord")]
         public string Password { get; set; }
         [MaxLength(200)]
 
