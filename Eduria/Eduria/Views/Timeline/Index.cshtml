@@ -22,11 +22,15 @@
     /* Modal Content */
     .modal-content {
         background-color: #fefefe;
-        margin: auto;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        position: absolute;
         padding: 20px;
         border: 1px solid #888;
         width: 50%;
-        text-align:left;
+        text-align: left;
+        display: inline-block;
     }
 
     /* The Close Button */
@@ -113,7 +117,7 @@
                             <div id="myModal@(count)" class="modal">
                                 @{count++;}
                                 <!-- Modal content -->
-                                <div class="modal-content" style="position:relative;">
+                                <div class="modal-content">
                                     @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
                                     {
                                         <input type="button" value="&#9998;" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button blue" />
