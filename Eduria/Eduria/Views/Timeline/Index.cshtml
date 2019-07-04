@@ -22,11 +22,15 @@
     /* Modal Content */
     .modal-content {
         background-color: #fefefe;
-        margin: auto;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        position: absolute;
         padding: 20px;
         border: 1px solid #888;
         width: 50%;
-        text-align:left;
+        text-align: left;
+        display: inline-block;
     }
 
     /* The Close Button */
@@ -113,16 +117,17 @@
                             <div id="myModal@(count)" class="modal">
                                 @{count++;}
                                 <!-- Modal content -->
-                                <div class="modal-content" style="position:relative;">
+                                <div class="modal-content">
                                     @if (ViewBag.user.UserId == ViewBag.loggedUser || (ViewBag.user.UserType == (int)UserRoles.Admin && ViewBag.loggedUserType == (int)UserRoles.Docent))
                                     {
                                         <input type="button" value="&#9998;" onclick="location.href='@Url.Action("EditInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button blue" />
                                         <input type="button" value="Media" onclick="location.href='@Url.Action("Upload", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button blue" />
-                                        <input type="button" value="&#10006;" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button red" />
+                                        <input type="button" value="&#128465;" onclick="location.href='@Url.Action("DeleteInformation", "Timeline", new { id = timeBlockInformationModel.TimeBlockInformationId })'" class="button red" />
                                     }
                                     <span class="close" onclick="CloseModal()">&times;</span>
+                                    <h2><strong>@modelName</strong></h2>
                                     <p>@timeBlockInformationModel.Description</p>
-                                    <div style="height:auto; width: 100%; left:0; bottom:0; padding: 15px 15px;">
+                                    <div class="medium-12 columns">
     
                                             @{
                                                 int audioCount = 0;
@@ -135,23 +140,24 @@
                                                     mediaCount++;
                                                     <h2>Media</h2>
                                                 }
-                                                if (source.MediaType == MediaType.Image)
-                                                {
+                                                    if (source.MediaType == MediaType.Image)
+                                                    {
                                                     <div style="height: 180px; float: left; margin: 0 5px;">
                                                         <a href="@Url.Content(String.Format("~/Content/{0}", source.Source))" target="_blank"><img src="@Url.Content(String.Format("~/Content/{0}", source.Source))" style="height: 180px;" /></a>
                                                     </div>
-                                                }
-                                                if (source.MediaType == MediaType.Video)
-                                                {
+                                                    }
+                                                    if (source.MediaType == MediaType.Video)
+                                                    {
                                                     string[] parsedSource = source.Source.Split("?v=");
                                                     string embed = parsedSource[(parsedSource.Length - 1)];
                                                     <div style="height: 180px; float: left; margin: 0 5px;">
                                                         <iframe width="280" height="180"
                                                                 src="@Url.Content(String.Format("https://www.youtube.com/embed/{0}", embed))" allowFullScreen="true"></iframe>
                                                     </div>
-                                                }
+                                                    }
                                             }
-                                        <div>
+                                        </div>
+                                        <div class="medium-12 columns">
                                             @foreach (MediaSourceModel source in timeBlockInformationModel.MediaSourceModels)
                                             {
                                                 if (source.MediaType == MediaType.Audio)
@@ -167,7 +173,6 @@
                                                     </audio>
                                                 }
                                             }
-                                        </div>
                                     </div>
                                 </div>
                             </div>

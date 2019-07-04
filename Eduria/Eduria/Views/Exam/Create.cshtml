@@ -252,8 +252,8 @@
                 questionText = questions[i].text;
             }
         }
-        buttonBox.append("<p><input type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "' style='white-space: normal; width: 100%;'/></p>");
-        var string = "<div id='question" + count + "' style='border: 2px solid white;'>";
+        buttonBox.append("<p><input  class='no-button' type='button' id='show" + count + "' onClick='Show(" + count + ")' value='" + questionText + "' style='white-space: normal; width: 100%;'/></p>");
+        var string = "<div id='question" + count + "' style='border: 2px solid white; padding: 10px;'>";
         string += "<input type='text' class='questionId' name='questionId' value= '" + count + "'/>";
         string += "<input type='button' class='button red' style='float:right;' onClick = 'RemoveQuestion(" + count + ")' value='&#10005;'/></p>";
         string += "<label>Vraag " + listIndex + "</label>"
