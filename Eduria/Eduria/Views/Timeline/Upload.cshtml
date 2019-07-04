@@ -64,10 +64,9 @@
                 if (model.MediaType == MediaType.Audio)
                 {
                     if (audioCount == 0)
-                    {<div class="medium-4 columns">
+                    { 
                             <h2>Audio</h2>
                             audioCount++;
-                        </div>
                     }
                     <audio controls>
                         <source src="@Url.Content(String.Format("~/Content/{0}", model.Source))" type="audio/mp3">
@@ -89,10 +88,8 @@
                 {
                     if (imageCount == 0)
                     {
-                        <div class="medium-4 columns">
                             <h3>Afbeeldingen</h3>
                             imageCount++;
-                        </div>
                     }
                     <img src="@Url.Content(String.Format("~/Content/{0}", model.Source))" />
                     <form method="post" asp-controller="Timeline" asp-action="DeleteMedia">
@@ -184,7 +181,7 @@
         $(div).empty();
         const downloadEl = document.createElement('a');
         downloadEl.style = 'display: block';
-        downloadEl.innerHTML = 'download';
+        downloadEl.innerHTML = '<i class="fas fa-download"></i>';
         downloadEl.download = 'audio.mp3';
         downloadEl.href = blobUrl;
         const audioEl = document.createElement('audio');
@@ -192,11 +189,11 @@
         const sourceEl = document.createElement('source');
         sourceEl.src = blobUrl;
         sourceEl.type = 'audio/webm';
-        const remove = "<button onclick='removeAudioElement()'>Verwijder</button>"
+        const remove = "<button onclick='removeAudioElement()'><i class='fas fa-trash-alt'></i></button>"
         audioEl.appendChild(sourceEl);
         $(div).append(audioEl);
-        $(div).append(remove);
         $(div).append(downloadEl);
+        $(div).append(remove);
         $(audiobuttons).hide();
     }
     //Removes created audio element of index q.

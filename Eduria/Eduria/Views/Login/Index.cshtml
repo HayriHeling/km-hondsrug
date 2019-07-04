@@ -23,10 +23,6 @@
                             <p class="alert red">@ViewBag.Message</p>
                         }
                     }
-                    else
-                    {
-                        <p class="text-muted">Je was voor het laatst ingelogd op @ViewBag.LLIT</p>
-                    }
 
                     @if (User.Identity.IsAuthenticated)
                     {
