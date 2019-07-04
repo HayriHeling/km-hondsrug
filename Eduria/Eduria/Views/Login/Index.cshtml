@@ -18,6 +18,10 @@
                     @if (string.IsNullOrEmpty(ViewBag.LLIT))
                     {
                         <p class="text-muted">Inloggen</p>
+                        if (!string.IsNullOrEmpty(ViewBag.Message))
+                        {
+                            <p class="alert red">@ViewBag.Message</p>
+                        }
                     }
                     else
                     {
@@ -35,12 +39,12 @@
 
                             <div class="form-group">
                                 <label asp-for="UserNum" class="control-label"></label>
-                                <input asp-for="UserNum" class="form-control" placeholder="Gebruikersnummer"/>
+                                <input asp-for="UserNum" class="form-control" placeholder="Gebruikersnummer" />
                                 <span asp-validation-for="UserNum" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label asp-for="Password" class="control-label"></label>
-                                <input asp-for="Password" class="form-control" type="password" placeholder="Wachtwoord"/>
+                                <input asp-for="Password" class="form-control" type="password" placeholder="Wachtwoord" />
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <label id="myBtn">Wachtwoord vergeten?</label><br />
