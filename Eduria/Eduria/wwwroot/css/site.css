@@ -199,10 +199,6 @@ h4 {
     color: #fff;
 }
 
-#header a:active {
-    border-bottom: 5px solid #29abe2;
-    color: #fff;
-}
 
 /* General Footer */
 
@@ -283,15 +279,6 @@ footer {
     color: #fff;
 }
 
-.dashboardItem.darkgrey {
-    background-color: #808080;
-    color: #fff;
-}
-
-.dashboardItem.darkgrey a {
-    color: #fff;
-}
-
 .logo {
     width: 150px;
 }
@@ -341,6 +328,7 @@ a {
     line-height: 55px;
 }
 
+
 /* Responsive menu */
 .topnav {
     overflow: hidden;
@@ -363,7 +351,7 @@ a {
     color: #fff;
 }
 .topnav a.active
-    .topnav.active {
+{
         background-color: none;
         border-bottom: 5px solid #1fa1d8;
     }
