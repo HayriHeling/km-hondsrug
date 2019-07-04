@@ -826,7 +826,7 @@ input::-webkit-inner-spin-button {
 
 /* Timeline */
 
-#periodPrehistorie, #periodOudheid, #periodVroege, #periodHoge, #periodRenaissance, #periodVerlichting, #periodGouden, #periodIndustrialisatie, #periodOorlogen, #periodTv {
+#periodJagers, #periodGrieken, #periodMonniken, #periodSteden, #periodOntdekkers, #periodRegenten, #periodPruiken, #periodBurgers, #periodDe, #periodTelevisie {
     display: block;
     overflow: auto;
     padding: 100px;
@@ -838,7 +838,7 @@ input::-webkit-inner-spin-button {
     width: 50%;
 }
 
-#periodOudheid, #periodHoge, #periodGouden, #periodIndustrialisatie, #periodTv {
+#periodGrieken, #periodSteden, #periodRegenten, #periodBurgers, #periodTelevisie {
     background-color: #efecec;
 }
 
@@ -882,6 +882,8 @@ input::-webkit-inner-spin-button {
     padding: 0px 2px 2px 0px;
     text-align: center;
     padding-top: 12px;
+    text-transform: inherit;
+    font-size: 20px;
     font-weight: 600;
 }
 
