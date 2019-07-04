@@ -249,7 +249,7 @@
             url: "/Exam/SendResults",
             data: { jsoninput : JSON.stringify(outputJson), examId : JSON.stringify(ExamId), userId : JSON.stringify(UserId), score : JSON.stringify(score), maxscore : JSON.stringify(maxScore), starttime : JSON.stringify(StartTime), endtime: JSON.stringify(EndTime), examResultId: JSON.stringify(ExamResultId) },
             success: function() {
-                window.location.href = "/Student/TestResults/";
+                window.location.href = "/Result/StudentResult/";
             },
             dataType: "text",
             traditional: true

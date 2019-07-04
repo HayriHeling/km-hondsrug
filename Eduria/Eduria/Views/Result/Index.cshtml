@@ -11,7 +11,7 @@
                 <canvas id="examChart" width="800" height="400"></canvas>
             </div>
             <div class="small-4 columns">
-                <h3>Aantal: @Model.Item1.Count()</h3>
+                <h3>Aantal: @Model.Item1.Where(x => x.UserType == UserRoles.Student).Count()</h3>
                 <p><b>Overzicht van alle leerlingen.</b></p>
                 <table>
                     <tr>
