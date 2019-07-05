@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using Microsoft.Extensions.Options;
 
 namespace Eduria.Services
@@ -13,11 +14,12 @@ namespace Eduria.Services
 
         private string _backupName;
 
-        private string BackupPlace = Environment.CurrentDirectory;
+        private string BackupPlace;
 
         public DatabaseService(IOptions<AppSettingsService> appSettingsService)
         {
             _appSettingsService = appSettingsService.Value;
+            BackupPlace = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", "DatabaseBackup.bak");
         }
 
         /// <summary>
@@ -32,13 +34,13 @@ namespace Eduria.Services
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection) {CommandType = CommandType.Text};
             int iRows = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
-            return BackupPlace + "\\" + _backupName;
+            return BackupPlace;
         }
 
         public string QueryBuilder()
         {
             return "BACKUP DATABASE " + DatabaseName + "" +
-                   " TO DISK = '" + BackupPlace + "\\" + _backupName + "' " +
+                   " TO DISK = '" + BackupPlace + "' " +
                    "WITH FORMAT, MEDIANAME = 'Z_SQLServerBackups', " +
                    "NAME = '" + _backupName + "';";
         }
