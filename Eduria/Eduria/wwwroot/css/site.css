@@ -501,94 +501,94 @@ a {
 }
 
 .prehistorie {
-    background-image: url(/images/prehistorieimg.png);
+    background-image: url(/Content/prehistorieimg.png);
     background-size: 100px 100px;
 }
 
-.prehistorie:hover {
-    background-image: url(/images/prehistorieimg2.png);
-}
+    .prehistorie:hover {
+        background-image: url(/Content/prehistorieimg2.png);
+    }
 
 .oudheid {
-    background-image: url(/images/oudheidicon.png);
+    background-image: url(/Content/oudheid.png);
     background-size: 100px 100px;
 }
 
-.oudheid:hover {
-    background-image: url(/images/oudheid2.png);
-}
+    .oudheid:hover {
+        background-image: url(/Content/oudheid2.png);
+    }
 
 .vmiddeleeuwen {
-    background-image: url(/images/vroegmiddeleeuwen.png);
+    background-image: url(/Content/vroegmiddeleeuwen.png);
 }
 
-.vmiddeleeuwen:hover {
-    background-image: url(/images/vroegmiddeleeuwen2.png);
-}
+    .vmiddeleeuwen:hover {
+        background-image: url(/Content/vroegmiddeleeuwen2.png);
+    }
 
 .lmiddeleeuwen {
-    background-image: url(/images/latemiddeleeuwen.png);
+    background-image: url(/Content/latemiddeleeuwen.png);
 }
 
-.lmiddeleeuwen:hover {
-    background-image: url(/images/latemiddeleeuwen2.png);
-}
+    .lmiddeleeuwen:hover {
+        background-image: url(/Content/latemiddeleeuwen2.png);
+    }
 
 .nieuwetijd {
-    background-image: url(/images/nieuwetijd.png);
+    background-image: url(/Content/nieuwetijd.png);
 }
 
-.nieuwetijd:hover {
-    background-image: url(/images/nieuwetijd2.png);
-}
+    .nieuwetijd:hover {
+        background-image: url(/Content/nieuwetijd2.png);
+    }
 
 .goudeneeuw {
-    background-image: url(/images/goudeneeuw.png);
+    background-image: url(/Content/goudeneeuw.png);
 }
 
-.goudeneeuw:hover {
-    background-image: url(/images/goudeneeuw2.png);
-}
+    .goudeneeuw:hover {
+        background-image: url(/Content/goudeneeuw2.png);
+    }
 
 .verlichting {
-    background-image: url(/images/verlichting.png);
+    background-image: url(/Content/verlichting.png);
 }
 
-.verlichting:hover {
-    background-image: url(/images/verlichting2.png);
-}
+    .verlichting:hover {
+        background-image: url(/Content/verlichting2.png);
+    }
 
 .industrie {
-    background-image: url(/images/industrie.png);
+    background-image: url(/Content/industrie.png);
 }
 
-.industrie:hover {
-    background-image: url(/images/industrie2.png);
-}
+    .industrie:hover {
+        background-image: url(/Content/industrie2.png);
+    }
 
 
 .oorlog {
-    background-image: url(/images/oorlog.png);
+    background-image: url(/Content/oorlog.png);
 }
 
-.oorlog:hover {
-    background-image: url(/images/oorlog2.png);
-}
+    .oorlog:hover {
+        background-image: url(/Content/oorlog2.png);
+    }
 
 .tv {
-    background-image: url(/images/tv.png);
+    background-image: url(/Content/tv.png);
 }
 
-.tv:hover {
-    background-image: url(/images/tv2.png);
-}
+    .tv:hover {
+        background-image: url(/Content/tv2.png);
+    }
 
 .cc-selector input:active + .timeperiod {
     opacity: .9;
 }
 
 .cc-selector input:checked + .timeperiod {
-    background-image: url('/images/done.png');
+    background-image: url('/Content/done.png');
 }
 
 .timeperiod {
