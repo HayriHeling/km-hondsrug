@@ -53,6 +53,17 @@
             <div class="medium-2 columns myAccount">
                     @if (User.Identity.IsAuthenticated)
                     {
+
+                    <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
+                }
+                else
+                {
+                    <a asp-controller="Login">Inloggen </a>
+                }
+
+                    </p>
+                </div>
+
                         <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
                     }
                     else
@@ -60,27 +71,26 @@
                         <a asp-controller="Login">Inloggen </a>
                     }
             </div>
-        </div>    
-    </header>
-        @RenderBody() 
-    <footer>
-        <div class="row">
-            <div class="medium-12 columns text-center">
-                Copyright &copy; @DateTime.Now.Year - Eduria kennisapplicatie
+        </header>
+        @RenderBody()
+        <footer>
+            <div class="row">
+                <div class="medium-12 columns text-center">
+                    Copyright &copy; @DateTime.Now.Year - Eduria kennisapplicatie
+                </div>
             </div>
-        </div>
-    </footer>
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/glider.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/glider.js"></script>
-    </environment>
+        </footer>
+        <environment include="Development">
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            <script src="~/js/glider.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            <script src="~/js/glider.js"></script>
+        </environment>
 
-    @RenderSection("Scripts", required: false)
-</body>
+        @RenderSection("Scripts", required: false)
+    </body>
 </html>
