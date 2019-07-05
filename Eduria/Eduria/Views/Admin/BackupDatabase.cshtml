@@ -6,7 +6,7 @@
         <div class="medium-12 columns">
             <h2>Backup database</h2>
             <form>
-                <p>Je database backup is gedownload naar @Model.BackupData.</p>
+                <p>Je database backup kan <a onclick="location.href = '@Url.Action("Download", "Admin")'">hier</a> worden gedownload.</p>
                 <input type="submit" asp-controller="Dashboard" class="button blue" asp-action="Index" value="Terug naar je dashboard" />
             </form>
         </div>
