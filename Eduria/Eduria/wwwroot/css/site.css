@@ -603,11 +603,6 @@ a {
     height: 220px;
 }
 
-.timeperiod:hover {
-    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
-    -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
-    filter: brightness(1.2) grayscale(.5) opacity(.9);
-}
 
 [type='radio'] + label {
     margin-left: 0;
