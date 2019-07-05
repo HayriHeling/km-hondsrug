@@ -1,4 +1,5 @@
-﻿using Eduria.Models;
+﻿using System.IO;
+using Eduria.Models;
 using Eduria.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,25 @@ namespace Eduria.Controllers
                 ConnectionString = "",
                 Name = "EduriaData"
             });
+        }
+
+        public ActionResult Download()
+        {
+            string fullName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Content\\", "DatabaseBackup.bak");
+
+            byte[] fileBytes = GetFile(fullName);
+            return File(
+                fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "DatabaseBackup.bak");
+        }
+
+        byte[] GetFile(string s)
+        {
+            System.IO.FileStream fs = System.IO.File.OpenRead(s);
+            byte[] data = new byte[fs.Length];
+            int br = fs.Read(data, 0, data.Length);
+            if (br != fs.Length)
+                throw new System.IO.IOException(s);
+            return data;
         }
 
         public void UploadDatabase()
