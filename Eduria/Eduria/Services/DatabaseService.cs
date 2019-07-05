@@ -13,7 +13,7 @@ namespace Eduria.Services
 
         private string _backupName;
 
-        private const string BackupPlace = "D:\\";
+        private string BackupPlace = Environment.CurrentDirectory;
 
         public DatabaseService(IOptions<AppSettingsService> appSettingsService)
         {
@@ -32,13 +32,13 @@ namespace Eduria.Services
             SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlConnection) {CommandType = CommandType.Text};
             int iRows = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
-            return BackupPlace + _backupName;
+            return BackupPlace + "\\" + _backupName;
         }
 
         public string QueryBuilder()
         {
             return "BACKUP DATABASE " + DatabaseName + "" +
-                   " TO DISK = '" + BackupPlace + _backupName + "' " +
+                   " TO DISK = '" + BackupPlace + "\\" + _backupName + "' " +
                    "WITH FORMAT, MEDIANAME = 'Z_SQLServerBackups', " +
                    "NAME = '" + _backupName + "';";
         }
