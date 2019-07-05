@@ -4,6 +4,7 @@ namespace Eduria.Models
 {
     public class DataExamResultModel
     {
+        public int ExamResultId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int TotalTimesDone { get; set; }
