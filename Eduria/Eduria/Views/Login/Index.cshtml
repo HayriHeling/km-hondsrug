@@ -9,23 +9,20 @@
         <link href="~/css/account.css" type="text/css" rel="stylesheet" />
         <link href="~/css/site.css" type="text/css" rel="stylesheet" />
         <link href="~/css/foundation.css" type="text/css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
     </head>
     <body>
         <div class="row">
             <div class="medium-12 columns">
                 <div class="center-screen">
-
+                    <h2>Inloggen</h2>
                     @if (string.IsNullOrEmpty(ViewBag.LLIT))
                     {
-                        <p class="text-muted">Inloggen</p>
+
                         if (!string.IsNullOrEmpty(ViewBag.Message))
                         {
                             <p class="alert red">@ViewBag.Message</p>
                         }
-                    }
-                    else
-                    {
-                        <p class="text-muted">Je was voor het laatst ingelogd op @ViewBag.LLIT</p>
                     }
 
                     @if (User.Identity.IsAuthenticated)

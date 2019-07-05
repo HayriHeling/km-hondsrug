@@ -51,9 +51,9 @@
                 </div>
             </div>
             <div class="medium-2 columns myAccount">
-                <p>
                     @if (User.Identity.IsAuthenticated)
                     {
+
                     <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
                 }
                 else
@@ -63,6 +63,13 @@
 
                     </p>
                 </div>
+
+                        <p>Hallo <b>@User.Identity.Name</b> <a asp-controller="Logout" asp-action="Index">Uitloggen </a></p>
+                    }
+                    else
+                    {
+                        <a asp-controller="Login">Inloggen </a>
+                    }
             </div>
         </header>
         @RenderBody()

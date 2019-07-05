@@ -38,7 +38,7 @@ namespace Eduria
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Add own DbContext and use Sql Server.
-            services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaLive")));
+            services.AddDbContext<EduriaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EduriaDevelopment")));
             //Add over services.
             services.Configure<AppSettingsService>(Configuration.GetSection("ConnectionStrings"));
             services.AddScoped<ExamResultService>();

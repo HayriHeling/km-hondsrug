@@ -196,8 +196,9 @@ h4 {
 }
 
 #header a:hover {
-    color: #ed1c24;
+    color: #fff;
 }
+
 
 /* General Footer */
 
@@ -269,21 +270,12 @@ footer {
 }
 
 .dashboardItem.red {
-    background-color: #ed1c24;
+    background-color: #e85359;
     color: #fff;
 }
 
 .dashboardItem.red a {
-    background-color: #ed1c24;
-    color: #fff;
-}
-
-.dashboardItem.purple {
-    background-color: #BE29EC;
-    color: #fff;
-}
-
-.dashboardItem.purple a {
+    background-color: #e85359;
     color: #fff;
 }
 
@@ -334,7 +326,10 @@ a {
 
 .myAccount {
     line-height: 55px;
+    font-size: 14px;
 }
+
+
 
 /* Responsive menu */
 .topnav {
@@ -354,13 +349,14 @@ a {
 }
 
 .topnav a:hover {
-    background-color: #ddd;
-    color: #29abe2;
+    border-bottom: 5px solid #1fa1d8;
+    color: #fff;
 }
-
-.active {
-    color: #29abe2;
-}
+.topnav a.active
+{
+        background-color: none;
+        border-bottom: 5px solid #1fa1d8;
+    }
 
 .topnav .icon {
     display: none;
@@ -409,6 +405,15 @@ a {
     .menu {
         width: 100%;
     }
+
+    .myAccount a {
+        float:right;
+    }
+
+    .myAccount a:hover {
+        text-decoration: underline;
+    }
+
 }
 
 /* Users*/
@@ -451,7 +456,6 @@ a {
 }
 
 .active, .accordion:hover {
-    background-color: #ccc;
     color: #6b6b6b;
 }
 
@@ -655,8 +659,8 @@ p {
 
 .category {
     margin: 5px;
-    padding: 5px;
-    background-color: #f9f9f9;
+    padding: 10px;
+    background-color: #fbfbfb;
 }
 
 input::-webkit-outer-spin-button,
@@ -832,8 +836,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Timeline */
-
-#periodPrehistorie, #periodOudheid, #periodVroege, #periodHoge, #periodRenaissance, #periodVerlichting, #periodGouden, #periodIndustrialisatie, #periodOorlogen, #periodTv {
+#periodJagers, #periodGrieken, #periodMonniken, #periodSteden, #periodOntdekkers, #periodRegenten, #periodPruiken, #periodBurgers, #periodDe, #periodTelevisie {
     display: block;
     overflow: auto;
     padding: 100px;
@@ -845,7 +848,7 @@ input::-webkit-inner-spin-button {
     width: 50%;
 }
 
-#periodOudheid, #periodHoge, #periodGouden, #periodIndustrialisatie, #periodTv {
+#periodGrieken, #periodSteden, #periodRegenten, #periodBurgers, #periodTelevisie {
     background-color: #efecec;
 }
 
@@ -889,6 +892,8 @@ input::-webkit-inner-spin-button {
     padding: 0px 2px 2px 0px;
     text-align: center;
     padding-top: 12px;
+    text-transform: inherit;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -1009,6 +1014,20 @@ border-radius: 2px;
         left: 50px;
         right: inherit;
     }
+
+    #periodJagers, #periodGrieken, #periodMonniken, #periodSteden, #periodOntdekkers, #periodRegenten, #periodPruiken, #periodBurgers, #periodDe, #periodTelevisie {
+        display: block;
+        overflow: auto;
+        padding: 0px;
+    }
+
+    .timeline ul li {
+        padding: 0 10px 45px 10px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
 }
 
 /* The switch - the box around the slider */
@@ -1063,6 +1082,10 @@ input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+}
+
+#audio audio {
+    width:100%;
 }
 
 /* Rounded sliders */
@@ -1212,9 +1235,18 @@ input:checked + .slider:before {
         padding: 0px;
     }
 
+    .timeline .button {
+        float: right;
+        margin-right: 10px;
+    }
+
     h1 {
         margin-bottom: 30px;
         margin-left: 45px;
+    }
+
+    .timeline h1 {
+        font-size: 20px;
     }
 }
 
@@ -1228,3 +1260,74 @@ input:checked + .slider:before {
     transform: scale(1.2);
     transition: 0.5s ease;
 }
+
+.js .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    max-width: 80%;
+    font-size: 1.25rem;
+    /* 20px */
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.625rem 1.25rem;
+    /* 10px 20px */
+}
+
+.no-js .inputfile + label {
+    display: none;
+}
+.inputfile:focus + label,
+.inputfile.has-focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + label * {
+    /* pointer-events: none; */
+    /* in case of FastClick lib use */
+}
+
+.inputfile + label svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    margin-top: -0.25em;
+    /* 4px */
+    margin-right: 0.25em;
+    /* 4px */
+}
+
+
+/* style 1 */
+
+.inputfile-1 + label {
+    color: #f1e5e6;
+    background-color: #d3394c;
+}
+
+    .inputfile-1:focus + label,
+    .inputfile-1.has-focus + label,
+    .inputfile-1 + label:hover {
+        background-color: #722040;
+    }
+
+.box {
+    background-color: #dfc8ca;
+    padding: 6.25rem 1.25rem;
+}
+
+    .box + .box {
+        margin-top: 2.5rem;
+    }

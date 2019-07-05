@@ -11,7 +11,7 @@ namespace EduriaData.Models.TimeLineLayer
         public int TimeTableId { get; set; }
         [Required]
         public int UserId { get; set; }
-        [Required, MaxLength(100)]
+        [Required, StringLength(int.MaxValue)]
         public string Name { get; set; }
         [StringLength(int.MaxValue)]
         public string Description { get; set; }
