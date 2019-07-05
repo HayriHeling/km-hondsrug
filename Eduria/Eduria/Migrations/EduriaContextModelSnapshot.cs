@@ -79,7 +79,8 @@ namespace Eduria.Migrations
                     b.Property<int>("DataHasDefaultId");
 
                     b.Property<string>("Text")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(2147483647);
 
                     b.HasKey("DefaultDataInputId");
 
@@ -130,7 +131,7 @@ namespace Eduria.Migrations
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasMaxLength(256);
+                        .HasMaxLength(2147483647);
 
                     b.Property<DateTime>("EntryChangedAt");
 
@@ -184,7 +185,7 @@ namespace Eduria.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(256);
+                        .HasMaxLength(512);
 
                     b.Property<int>("IsActive");
 
@@ -224,6 +225,8 @@ namespace Eduria.Migrations
 
                     b.Property<DateTime>("FinishedAt");
 
+                    b.Property<int>("MaxScore");
+
                     b.Property<int>("Score");
 
                     b.Property<DateTime>("StartedAt");
@@ -247,7 +250,7 @@ namespace Eduria.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(200);
+                        .HasMaxLength(2147483647);
 
                     b.Property<int>("TimeTableId");
 
@@ -320,11 +323,11 @@ namespace Eduria.Migrations
                     b.Property<int>("BeforeChrist");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(256);
+                        .HasMaxLength(2147483647);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100);
+                        .HasMaxLength(2147483647);
 
                     b.Property<int>("TimeTableId");
 
@@ -343,9 +346,15 @@ namespace Eduria.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(2147483647);
+
                     b.Property<int>("MediaSourceId");
 
                     b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.Property<string>("TimeTableDesignId")
                         .IsRequired();
 
                     b.HasKey("TimeTableId");

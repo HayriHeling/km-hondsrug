@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace EduriaData.Models.TimeLineLayer
 {
@@ -13,9 +11,9 @@ namespace EduriaData.Models.TimeLineLayer
         public int TimeTableId { get; set; }
         [Required]
         public int UserId { get; set; }
-        [Required, MaxLength(100)]
+        [Required, StringLength(int.MaxValue)]
         public string Name { get; set; }
-        [MaxLength(256)]
+        [StringLength(int.MaxValue)]
         public string Description { get; set; }
         [Required]
         public int BeforeChrist { get; set; }

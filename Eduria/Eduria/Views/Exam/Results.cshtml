@@ -1,34 +1,38 @@
 ﻿
 @{
-    ViewData["Title"] = "Results";
+    ViewData["Title"] = "Resultaten";
 }
 
-<div>
-    @if (ViewBag.score > 55)
-    {
-        <h1 style="color: green;">GEFELICITEERD!</h1>
-    }
-    else
-    {
-        <h1 style="color: red;">Even dooroefenen.</h1>
-    }
+    <section id="content">
+        <div class="row medium">
+            <div>
+                @if (ViewBag.score > 55)
+                {
+                    <h1 class="alert green">GEFELICITEERD!</h1>
+                }
+                else
+                {
+                    <h1 class="alert red">Even dooroefenen.</h1>
+                }
 
-    <h2>@ViewBag.exam.Name</h2>
-    <p>Score: @ViewBag.score%</p>
+                <h2>@ViewBag.exam.Name</h2>
+                <p>Score: @ViewBag.score%</p>
 
-    @foreach (QuestionAnswerModel QA in ViewBag.questions)
-    {
-        if (QA.AnswerText != QA.GivenAnswerText)
-        {
-            <p style="color: red;"><b>@QA.QuestionText</b></p>
-        }
-        else
-        {
-            <p><b>@QA.QuestionText</b></p>
-        }
-        <p>Jouw Antwoord: @QA.GivenAnswerText</p>
-        <p style="color: green;"><i>Juist Antwoord: @QA.AnswerText</i></p>
-        <br />
-    }
+                @foreach (QuestionAnswerModel QA in ViewBag.questions)
+                {
+                    if (QA.AnswerText.ToLower() != QA.GivenAnswerText.ToLower())
+                    {
+                        <p style="color: red;"><b>@QA.QuestionText</b></p>
+                    }
+                    else
+                    {
+                        <p><b>@QA.QuestionText</b></p>
+                    }
+                    <p>Jouw Antwoord: @QA.GivenAnswerText</p>
+                    <p style="color: #74b027;"><i>Juist Antwoord: @QA.AnswerText</i></p>
+                    <br />
+                }
 
-</div>
+            </div>
+        </div>
+    </section>

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Eduria.Models
 {
     public class DataExamResultModel
     {
+        public int ExamResultId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int TotalTimesDone { get; set; }

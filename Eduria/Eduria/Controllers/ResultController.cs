@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Eduria.Models;
 using Eduria.Services;
 using EduriaData.Models;
@@ -114,7 +113,9 @@ namespace Eduria.Controllers
             {
                 TimeTableId = timeTable.TimeTableId,
                 Text = timeTable.Text,
-                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId))
+                MediaSourceModel = MediaSourceService.ConvertToModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
+                Description = timeTable.Description,
+                TimeTableDesignId = timeTable.TimeTableDesignId
             };
         }
         public UserModel ConvertToUserModel(User user)
@@ -219,6 +220,7 @@ namespace Eduria.Controllers
         public IActionResult ExamResult(int id)
         {
             Exam exam = ExamService.GetById(id);
+            ExamResult examResult = ExamResultService.GetById(id);
             ViewBag.examId = id;
 
             //Adds the total per month

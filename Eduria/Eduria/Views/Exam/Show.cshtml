@@ -1,6 +1,6 @@
 ﻿@model Eduria.Models.ExamModel
 @{
-    ViewData["Title"] = "Show";
+    ViewData["Title"] = "Tonen examen ";
 }
 
 <section id="exam">
@@ -35,9 +35,9 @@
                         <input id="10" type="radio" name="timeperiod" onclick="eventListener(this)" value="tv" />
                         <label class="timeperiod tv" for="10"></label>
                     </div>
-                    <div class="medium-offset-10 medium-4 columns">
+                    <div class="medium-offset-9 medium-3 columns">
                         <input id="SubmitPause" type="button" value="Pauzeer" onclick="Pause()" class="button" disabled="disabled"/>
-                        <input id="ExamButton" type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button"/>
+                        <input id="ExamButton" type="button" value="Start" onclick="ExamLogic(QuestionModelArray, AnswerModelArray, count)" class="button green"/>
                     </div>
                 </form>
             </div>
@@ -50,9 +50,14 @@
     var currentAnswersArray = [];
     var tempCurrentQuestion;
     var count = 0;
-    var score = 0;
-    var maxScore = @Model.Score;
+    var correct = 0;
+    var score = @Model.Score;
     if (@Model.Score < 0) {
+        score = 0;
+    }
+
+    var maxScore = @Model.MaxScore;
+    if (@Model.MaxScore < 0) {
         maxScore = 0;
     }
     var pointsPerQuestion = 5;
@@ -63,14 +68,19 @@
     var QuestionTime;
     var RepeatTime = 3;
     var ExamResultId = @Model.ExamResultId;
+    var UserId = @ViewBag.userId;
 
     var selected = 0;
     console.log("Model score is: " + @Model.Score);
+    console.log("Model maxscore is: " + @Model.MaxScore);
 
     // Function that creates an question object from the inputs
     function createTempQuestion(id, text, answerId) {
-        if (@Model.Score < 0) {
+        if (@Model.MaxScore < 0) {
             maxScore = maxScore + pointsPerQuestion;
+        }
+        if (@Model.Score < 0) {
+            score = score + pointsPerQuestion;
         }
         return { QuestionId: id, Text: text, AnswerId: answerId, TimesWrong: 0 };
     }
@@ -127,7 +137,6 @@
 
     // All logic for the exams is put in here.
     function ExamLogic(questionArray, answerArray, id) {
-        console.log(maxScore);
         if (id === 0) {
             StartExam(questionArray.splice(0, 1)[0], answerArray);
             StartTime = new Date();
@@ -138,9 +147,9 @@
             $("#answer").fadeIn();
             if (CheckAnswerT(tempCurrentQuestion, selected)) {
                 $("#answer").append("<p class='error correct'>Je hebt vraag" + tempCurrentQuestion.QuestionId + " goed beantwoord!</p>");
-                score = score + 1;
+                correct = correct + 1;
                 if (0 === questionArray.length) {
-                    FinishedExam(score);
+                    FinishedExam(correct);
                 } else {
                     NextQuestion(questionArray.splice(0, 1)[0], answerArray, id);
                 }
@@ -148,8 +157,8 @@
                 if (RepeatTime > tempCurrentQuestion.TimesWrong) {
                     questionArray.push(tempCurrentQuestion);
                 }
-                if (maxScore > 0) {
-                    maxScore = maxScore - 1;
+                if (score > 0) {
+                    score = score - 1;
                 }
                 if (0 === questionArray.length) {
                     FinishedExam(score);
@@ -162,6 +171,7 @@
             DeSelectRadioButton(selected);
         }
         count++;
+        console.log(score);
     }
 
 
@@ -229,15 +239,17 @@
         if (isPaused) {
             EndTime = null;
         } else {
+            var onePercent = 100.0 / maxScore;
+            score = onePercent * score;
             EndTime = EndTime.toJSON();
         }
         console.log(maxScore);
         $.ajax({
             type: "POST",
             url: "/Exam/SendResults",
-            data: { jsoninput : JSON.stringify(outputJson), examId : JSON.stringify(ExamId), userId : JSON.stringify(1), score : JSON.stringify(maxScore), starttime : JSON.stringify(StartTime), endtime: JSON.stringify(EndTime), examResultId: JSON.stringify(ExamResultId) },
+            data: { jsoninput : JSON.stringify(outputJson), examId : JSON.stringify(ExamId), userId : JSON.stringify(UserId), score : JSON.stringify(score), maxscore : JSON.stringify(maxScore), starttime : JSON.stringify(StartTime), endtime: JSON.stringify(EndTime), examResultId: JSON.stringify(ExamResultId) },
             success: function() {
-                window.location.href = "/Student/TestResults/";
+                window.location.href = "/Result/StudentResult/";
             },
             dataType: "text",
             traditional: true

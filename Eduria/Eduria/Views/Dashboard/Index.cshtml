@@ -1,40 +1,23 @@
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dashboard";
 }
 
 <section id="dashboardContent">
     <form>
-    <div class="row large">
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <input type="submit" class="button" value="Start toets" asp-controller="Exam" asp-action="Show" asp-route-id="1" />
-                <input type="button" class="button ghost" value="Bekijk resultaten" />
-            </div>
+        <div class="row large">
+            @if (User.IsInRole("Admin"))
+            {
+                <partial name="_AdminDashboardView" />
+            }
+            else if (User.IsInRole("Teacher"))
+            {
+                <partial name="_TeacherDashboardView" />
+            }
+            else
+            {
+                <partial name="_StudentDashboardView" />
+            }
         </div>
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <input type="submit" class="button" asp-controller="Admin" asp-action="Index" value="Database tool"/>
-            </div>
-        </div>
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <a asp-controller="CreateUser" asp-action="Create">
-                    Gebruiker aanmaken
-                </a>
-            </div>
-        </div>
-
-        <div class="medium-3 columns ">
-            <div class="columns dashboardItem">
-                <a asp-controller="Analytic" asp-action="Goal">
-                    Doel vaststellen
-                </a><br />
-                <a asp-controller="Analytic" asp-action="Index">
-                    Analytics
-                </a>
-            </div>
-        </div>
-    </div>
     </form>
 </section>

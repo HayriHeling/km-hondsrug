@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using EduriaData.Models.ExamLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eduria.Controllers
 {
@@ -37,18 +38,10 @@ namespace Eduria.Controllers
         }
 
         /// <summary>
-        /// Default ActionResult
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        /// <summary>
         /// Show the results from various tests in the database.
         /// </summary>
         /// <returns>An IActionResult that contains an IEnumerable<UserTest> with all its data.</returns>
+        [Authorize(Roles = "Teacher")]
         public IActionResult TestResults()
         {
             IEnumerable<ExamResult> examResults = ExamResultService.GetAll();
@@ -115,12 +108,7 @@ namespace Eduria.Controllers
                 ExamId = exam.ExamId,
                 Name = exam.Name,
                 QuestionModels = questionModels,
-                TimeTable = new TimeTableModel
-                {
-                    TimeTableId = timeTable.TimeTableId,
-                    MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
-                    Text = timeTable.Text
-                }
+                TimeTable = ConvertToTimeTableModel(timeTable)
             };
         }
 
@@ -230,7 +218,9 @@ namespace Eduria.Controllers
             {
                 TimeTableId = timeTable.TimeTableId,
                 MediaSourceModel = ConvertToMediaSourceModel(MediaSourceService.GetById(timeTable.MediaSourceId)),
-                Text = timeTable.Text
+                Text = timeTable.Text,
+                Description = timeTable.Description,
+                TimeTableDesignId = timeTable.TimeTableDesignId
             };
         }
     }

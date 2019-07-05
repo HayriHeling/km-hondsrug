@@ -1,5 +1,3 @@
-using System;
-
 namespace Eduria.Models
 {
     public class ErrorViewModel

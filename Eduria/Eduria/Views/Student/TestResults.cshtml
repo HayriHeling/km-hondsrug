@@ -67,12 +67,12 @@
                             {
                                 {"examResult", item.ExamResultId.ToString()}
                             };
-                            <a asp-controller="Exam" asp-action="Show" asp-all-route-data="parms">Resume</a>
+                            <a asp-controller="Exam" asp-action="Show" asp-all-route-data="parms">Verder gaan</a>
 
                         }
                         else
                         {
-                            <a asp-controller="Student" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId">Open data</a>
+                            <a asp-controller="Result" asp-action="StudentExamResult" asp-route-id="@item.ExamResultId" class="float-right">Bekijk</a>
                         }
                     </p>
                 </td>
