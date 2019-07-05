@@ -8,9 +8,9 @@
         <div class="medium-12 columns">
             @using (Html.BeginForm("Show", "Analytic", FormMethod.Get))
             {
-                <input type="submit" value="Terug" />
+                <input type="submit" class="button blue" value="<" />
             }
-
+            <div class="spacer-4"></div>
             @if (Model.Item1.Count() != 0)
             {
                 using (Html.BeginForm("AddMethodScore", "Analytic", FormMethod.Post, new { @class = "rating-form" }))
